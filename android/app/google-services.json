@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "422715348225",
+    "project_id": "supplement-ea35e",
+    "storage_bucket": "supplement-ea35e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422715348225:android:3dd63196db771fb57ff700",
+        "android_client_info": {
+          "package_name": "kr.co.codegroove.supplementary.supplementary_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmSuLNuXkJFycBYoSD_fhVzBFNFUyJ_QQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
