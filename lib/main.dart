@@ -21,7 +21,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -46,7 +45,7 @@ class AuthWrapper extends StatelessWidget {
           return const CircularProgressIndicator();
         }
         if (snapshot.hasData) {
-          return MainScreen();
+          return const MainScreen();
         }
         return const LoginScreen();
       },
