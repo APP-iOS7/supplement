@@ -6,11 +6,10 @@ import 'package:supplementary_app/secrets.dart';
 //파라메터와 리턴 수정해야함. -> 리런은 List<String>으로.
 
 class GeminiService {
-  Future<void> getRecommendSupplement() async {
-    final apiKey = Secrets.geminiApi;
-    final url =
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey';
+  final String _baseUrl =
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${Secrets.geminiApi}';
 
+  Future<List<String>> getRecommendSupplement() async {
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
       "contents": [
@@ -50,17 +49,26 @@ class GeminiService {
     });
 
     final response = await http.post(
-      Uri.parse(url),
+      Uri.parse(_baseUrl),
       headers: headers,
       body: body,
     );
 
     if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      print(jsonResponse); // JSON 데이터 출력
+      final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
+      String rawText =
+          jsonResponse['candidates'][0]['content']['parts'][0]['text'];
+      Map<String, dynamic> parsedJson = jsonDecode(rawText);
+
+      List<String> recommendations =
+          (parsedJson['recommendations'] as List)
+              .map((item) => item['name'] as String)
+              .toList();
+      return recommendations;
     } else {
       print('API 호출 실패: ${response.statusCode}');
       print(response.body);
+      throw '지미나이';
     }
   }
 }
