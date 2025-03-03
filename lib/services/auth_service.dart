@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supplementary_app/models/user_model.dart';
 import 'dart:io' show Platform;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   // Firebase 인증 인스턴스
@@ -121,6 +122,11 @@ class AuthService {
             'AuthService: Firebase 로그인 완료 - UID: ${userCredential.user?.uid}',
           ); // 디버깅 로그
 
+          // 자동 로그인 상태 저장
+          print('AuthService: 자동 로그인 상태 저장'); // 디버깅 로그
+          await setAutoLogin(true);
+          print('AuthService: 자동 로그인 상태 저장 완료'); // 디버깅 로그
+
           return userCredential;
         }
       } else {
@@ -139,7 +145,6 @@ class AuthService {
   Future<UserCredential?> signInWithApple() async {
     try {
       print('AuthService: 애플 로그인 시작'); // 디버깅 로그
-
       // 애플 로그인 서비스의 가용성 확인
       print('AuthService: 애플 로그인 가용성 확인'); // 디버깅 로그
       final isAvailable = await SignInWithApple.isAvailable();
@@ -148,7 +153,6 @@ class AuthService {
         throw Exception('이 기기에서는 Apple 로그인을 사용할 수 없습니다.');
       }
       print('AuthService: 애플 로그인 서비스 사용 가능'); // 디버깅 로그
-
       // 애플 로그인 요청
       print('AuthService: 애플 ID 인증 요청'); // 디버깅 로그
       final appleCredential = await SignInWithApple.getAppleIDCredential(
@@ -158,7 +162,6 @@ class AuthService {
         ],
       );
       print('AuthService: 애플 ID 인증 완료'); // 디버깅 로그
-
       // 디버깅 정보 출력
       print(
         'AuthService: 애플 인증 결과 - ID 토큰 있음: ${appleCredential.identityToken != null}',
@@ -170,21 +173,18 @@ class AuthService {
       print(
         'AuthService: 애플 인증 결과 - 성: ${appleCredential.familyName}, 이름: ${appleCredential.givenName}',
       ); // 디버깅 로그
-
       // Firebase 인증 정보 생성
       print('AuthService: Firebase 인증 정보 생성'); // 디버깅 로그
       final oauthCredential = OAuthProvider('apple.com').credential(
         idToken: appleCredential.identityToken,
         accessToken: appleCredential.authorizationCode,
       );
-
       // Firebase에 로그인
       print('AuthService: Firebase 로그인 시도'); // 디버깅 로그
       final userCredential = await _auth.signInWithCredential(oauthCredential);
       print(
         'AuthService: Firebase 로그인 성공 - UID: ${userCredential.user?.uid}',
       ); // 디버깅 로그
-
       // 사용자 프로필 업데이트 (이름 정보가 있는 경우)
       if (appleCredential.givenName != null && userCredential.user != null) {
         print('AuthService: 사용자 프로필 업데이트 시도'); // 디버깅 로그
@@ -195,12 +195,16 @@ class AuthService {
           if (displayName.isNotEmpty) displayName += ' ';
           displayName += appleCredential.familyName!;
         }
-
         if (displayName.isNotEmpty) {
           await userCredential.user!.updateDisplayName(displayName);
           print('AuthService: 사용자 프로필 업데이트 완료 - 이름: $displayName'); // 디버깅 로그
         }
       }
+
+      // 자동 로그인 상태 저장
+      print('AuthService: 자동 로그인 상태 저장'); // 디버깅 로그
+      await setAutoLogin(true);
+      print('AuthService: 자동 로그인 상태 저장 완료'); // 디버깅 로그
 
       return userCredential;
     } catch (e) {
@@ -260,20 +264,39 @@ class AuthService {
       final docRef = _firestore.collection('users').doc(uid);
       print('AuthService: Firestore 문서 경로: ${docRef.path}'); // 디버깅 로그
 
-      // 데이터 저장
-      await docRef.set({
+      // 저장할 데이터 객체 생성
+      final data = {
         'gender': gender,
         'birthDate': birthDate.millisecondsSinceEpoch,
         'lastUpdated': FieldValue.serverTimestamp(), // 마지막 업데이트 시간
-      }, SetOptions(merge: true));
+      };
+      print('AuthService: 저장할 데이터 객체: $data'); // 디버깅 로그
+
+      // 데이터 저장 시도
+      try {
+        print('AuthService: Firestore 데이터 저장 시도...'); // 디버깅 로그
+        await docRef.set(data, SetOptions(merge: true));
+        print('AuthService: Firestore 데이터 저장 성공'); // 디버깅 로그
+      } catch (setError) {
+        print('AuthService: Firestore set 작업 오류: $setError'); // 디버깅 로그
+        print('AuthService: 오류 타입: ${setError.runtimeType}'); // 디버깅 로그
+        rethrow;
+      }
 
       // 저장 확인
-      final docSnapshot = await docRef.get();
-      print(
-        'AuthService: Firestore 문서 저장 후 확인 - 존재함: ${docSnapshot.exists}',
-      ); // 디버깅 로그
-      if (docSnapshot.exists) {
-        print('AuthService: 저장된 데이터: ${docSnapshot.data()}'); // 디버깅 로그
+      try {
+        print('AuthService: 저장된 데이터 확인 시도...'); // 디버깅 로그
+        final docSnapshot = await docRef.get();
+        print(
+          'AuthService: Firestore 문서 존재 여부: ${docSnapshot.exists}',
+        ); // 디버깅 로그
+        if (docSnapshot.exists) {
+          print('AuthService: 저장된 데이터: ${docSnapshot.data()}'); // 디버깅 로그
+        } else {
+          print('AuthService: 문서가 존재하지 않음 - 저장 실패'); // 디버깅 로그
+        }
+      } catch (getError) {
+        print('AuthService: 저장 확인 중 오류: $getError'); // 디버깅 로그
       }
     } catch (e) {
       print('AuthService: 사용자 정보 저장 오류: $e'); // 디버깅 로그
@@ -285,13 +308,24 @@ class AuthService {
   // Firestore에서 사용자 정보 가져오기
   Future<UserModel?> getUserData(String uid) async {
     try {
+      print('AuthService: 사용자 정보 가져오기 시도 - UID: $uid'); // 디버깅 로그
       final doc = await _firestore.collection('users').doc(uid).get();
+
+      print('AuthService: Firestore 문서 존재 여부: ${doc.exists}'); // 디버깅 로그
       if (doc.exists && doc.data() != null) {
-        return UserModel.fromMap(doc.data()!, uid);
+        print('AuthService: 문서 데이터: ${doc.data()}'); // 디버깅 로그
+        final userModel = UserModel.fromMap(doc.data()!, uid);
+        print(
+          'AuthService: 사용자 모델 변환 - 성별: ${userModel.gender}, 생년월일: ${userModel.birthDate}',
+        ); // 디버깅 로그
+        return userModel;
       }
+
+      print('AuthService: 사용자 정보 없음'); // 디버깅 로그
       return null;
     } catch (e) {
-      print('사용자 정보 가져오기 오류: $e');
+      print('AuthService: 사용자 정보 가져오기 오류: $e'); // 디버깅 로그
+      print('AuthService: 스택 트레이스: ${StackTrace.current}'); // 디버깅 로그
       return null;
     }
   }
@@ -299,11 +333,67 @@ class AuthService {
   // 로그아웃
   Future<void> signOut() async {
     try {
-      await _googleSignIn.signOut(); // 구글 로그인 상태도 함께 로그아웃
+      print('AuthService: 로그아웃 시작'); // 디버깅 로그
+
+      // 자동 로그인 상태 해제
+      try {
+        print('AuthService: 자동 로그인 상태 해제 시도'); // 디버깅 로그
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('autoLogin', false);
+        print('AuthService: 자동 로그인 상태 해제 완료'); // 디버깅 로그
+      } catch (prefError) {
+        print('AuthService: 자동 로그인 상태 해제 오류 - $prefError'); // 디버깅 로그
+      }
+
+      // 기존 로그아웃 로직...
+      // 먼저 구글 로그인 상태 확인 및 로그아웃
+      try {
+        final isSignedIn = await _googleSignIn.isSignedIn();
+        print('AuthService: 구글 로그인 상태 - $isSignedIn'); // 디버깅 로그
+
+        if (isSignedIn) {
+          print('AuthService: 구글 로그아웃 시도'); // 디버깅 로그
+          await _googleSignIn.signOut();
+          print('AuthService: 구글 로그아웃 완료'); // 디버깅 로그
+        }
+      } catch (googleError) {
+        print('AuthService: 구글 로그아웃 오류 - $googleError'); // 디버깅 로그
+        // 구글 로그아웃 실패해도 Firebase 로그아웃은 시도
+      }
+
+      // Firebase 로그아웃
+      print('AuthService: Firebase 로그아웃 시도'); // 디버깅 로그
       await _auth.signOut();
+      print('AuthService: Firebase 로그아웃 완료'); // 디버깅 로그
+
+      print('AuthService: 로그아웃 완료'); // 디버깅 로그
     } catch (e) {
-      print('로그아웃 오류: $e');
+      print('AuthService: 로그아웃 오류 - $e'); // 디버깅 로그
+      print('AuthService: 스택 트레이스 - ${StackTrace.current}'); // 디버깅 로그
       rethrow;
+    }
+  }
+
+  Future<void> setAutoLogin(bool value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('autoLogin', value);
+      print('AuthService: 자동 로그인 상태 설정 - $value'); // 디버깅 로그
+    } catch (e) {
+      print('AuthService: 자동 로그인 상태 설정 오류 - $e'); // 디버깅 로그
+    }
+  }
+
+  // 자동 로그인 상태 확인
+  Future<bool> getAutoLogin() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final autoLogin = prefs.getBool('autoLogin') ?? false;
+      print('AuthService: 자동 로그인 상태 확인 - $autoLogin'); // 디버깅 로그
+      return autoLogin;
+    } catch (e) {
+      print('AuthService: 자동 로그인 상태 확인 오류 - $e'); // 디버깅 로그
+      return false;
     }
   }
 }

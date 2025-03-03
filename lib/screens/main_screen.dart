@@ -29,7 +29,10 @@ class _MainScreenState extends State<MainScreen> {
   // 로그아웃 함수
   Future<void> _signOut() async {
     try {
+      print('MainScreen: 로그아웃 시도'); // 디버깅 로그
       await _authService.signOut();
+      print('MainScreen: 로그아웃 성공'); // 디버깅 로그
+
       // 로그아웃 성공 메시지 (개발용)
       if (mounted) {
         ScaffoldMessenger.of(
@@ -37,6 +40,7 @@ class _MainScreenState extends State<MainScreen> {
         ).showSnackBar(const SnackBar(content: Text('로그아웃 완료')));
       }
     } catch (e) {
+      print('MainScreen: 로그아웃 오류 - $e'); // 디버깅 로그
       // 로그아웃 실패 메시지
       if (mounted) {
         ScaffoldMessenger.of(

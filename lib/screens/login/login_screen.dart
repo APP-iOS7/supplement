@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:supplementary_app/screens/login/get_info_screen.dart';
 import 'package:supplementary_app/services/auth_service.dart';
@@ -111,34 +110,34 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 16),
                     // 이용약관 동의 체크박스
-                    _buildAgreementCheckbox(
+                    _buildSimpleAgreementItem(
                       title: '[필수] 이용약관 동의',
                       value: _termsAgreed,
                       onChanged: (value) {
                         setState(() {
-                          _termsAgreed = value ?? false;
+                          _termsAgreed = value;
                         });
                       },
                       onViewTap: () => _showTermsDialog(context),
                     ),
                     // 개인정보 처리방침 동의 체크박스
-                    _buildAgreementCheckbox(
+                    _buildSimpleAgreementItem(
                       title: '[필수] 개인정보 처리방침 동의',
                       value: _privacyAgreed,
                       onChanged: (value) {
                         setState(() {
-                          _privacyAgreed = value ?? false;
+                          _privacyAgreed = value;
                         });
                       },
                       onViewTap: () => _showPrivacyDialog(context),
                     ),
                     // 마케팅 정보 수신 동의 체크박스
-                    _buildAgreementCheckbox(
+                    _buildSimpleAgreementItem(
                       title: '[선택] 마케팅 정보 수신 동의',
                       value: _marketingAgreed,
                       onChanged: (value) {
                         setState(() {
-                          _marketingAgreed = value ?? false;
+                          _marketingAgreed = value;
                         });
                       },
                       onViewTap: () => _showMarketingDialog(context),
@@ -159,19 +158,36 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // 약관 동의 체크박스 위젯
-  Widget _buildAgreementCheckbox({
+  // 체크박스 대신 사용할 커스텀 동의 위젯
+  Widget _buildSimpleAgreementItem({
     required String title,
     required bool value,
-    required Function(bool?) onChanged,
+    required Function(bool) onChanged,
     required VoidCallback onViewTap,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Checkbox(value: value, onChanged: onChanged),
-          Expanded(child: Text(title)),
+          // 체크박스 대신 GestureDetector와 아이콘 사용
+          GestureDetector(
+            onTap: () => onChanged(!value),
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              child: Icon(
+                value ? Icons.check_box : Icons.check_box_outline_blank,
+                color: value ? Theme.of(context).primaryColor : Colors.grey,
+                size: 24,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => onChanged(!value),
+              child: Text(title),
+            ),
+          ),
           TextButton(onPressed: onViewTap, child: const Text('보기')),
         ],
       ),
@@ -290,10 +306,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
             // 화면이 아직 유효한지 확인 후 추가 정보 입력 화면으로 이동
             if (mounted) {
-              print('추가 정보 입력 화면으로 이동'); // 디버깅 로그
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const GetInfoScreen()),
-              );
+              print('추가 정보 입력 화면으로 수동 이동'); // 디버깅 로그
+
+              // 이 부분에서 메인 스트림에 효과가 반영될 수 있도록 delay 추가
+              await Future.delayed(Duration(milliseconds: 500));
+
+              if (mounted) {
+                // 강제로 GetInfoScreen으로 이동
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const GetInfoScreen()),
+                );
+              }
             }
           } catch (firestoreError) {
             print('Firestore 저장 오류: $firestoreError'); // 디버깅 로그
@@ -362,14 +385,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
             // 화면이 아직 유효한지 확인 후 추가 정보 입력 화면으로 이동
             if (mounted) {
-              print('추가 정보 입력 화면(GetInfoScreen)으로 이동'); // 디버깅 로그
-              // 내비게이션 방식 변경 - 즉시 화면 전환
-              await Future.delayed(Duration.zero);
-              if (!mounted) return;
+              print('추가 정보 입력 화면(GetInfoScreen)으로 수동 이동'); // 디버깅 로그
 
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const GetInfoScreen()),
-              );
+              // 이 부분에서 메인 스트림에 효과가 반영될 수 있도록 delay 추가
+              await Future.delayed(Duration(milliseconds: 500));
+
+              if (mounted) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const GetInfoScreen()),
+                );
+              }
             }
           } catch (firestoreError) {
             print('Firestore 저장 오류: $firestoreError'); // 디버깅 로그
