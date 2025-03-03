@@ -25,17 +25,25 @@
     <string>$(FLUTTER_BUILD_NUMBER)</string>
     
     <!-- URL 스키마 추가 (Google 로그인용) -->
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>com.googleusercontent.apps.422715348225-058kfnssd6aar85phae3fkou1fr3k32g</string>
-            </array>
-        </dict>
-    </array>
+	<key>CFBundleURLTypes</key>
+	<array>
+    	<dict>
+        	<key>CFBundleTypeRole</key>
+        	<string>Editor</string>
+        	<key>CFBundleURLSchemes</key>
+        	<array>
+            	<string>com.googleusercontent.apps.422715348225-058kfnssd6aar85phae3fkou1fr3k32g</string>
+        	</array>
+    	</dict>
+    	<dict>
+        	<key>CFBundleTypeRole</key>
+        	<string>Editor</string>
+        	<key>CFBundleURLSchemes</key>
+        	<array>
+            	<string>app-1-422715348225-ios-fe9cb601792bd1617ff700</string>
+        	</array>
+    	</dict>
+	</array>
     
     <!-- Apple 로그인 설정 -->
     <key>com.apple.developer.applesignin</key>
