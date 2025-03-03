@@ -31,6 +31,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // 멀티덱스 활성화 추가
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -44,4 +47,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// 파일 맨 끝에 추가
+dependencies {
+    implementation("androidx.multidex:multidex:2.0.1")
 }
