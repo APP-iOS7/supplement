@@ -268,30 +268,59 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true; // 로딩 시작
       });
 
-      // 구글 로그인 실행
-      final credential = await _authService.signInWithGoogle();
+      print('구글 로그인 시작'); // 디버깅 로그
 
-      // 로그인이 성공했는지 확인
-      if (credential != null && credential.user != null) {
-        // 마케팅 동의 여부 저장
-        await _authService.saveMarketingAgreement(
-          credential.user!.uid,
-          _marketingAgreed,
-        );
+      try {
+        // 구글 로그인 실행
+        final credential = await _authService.signInWithGoogle();
+        print('구글 로그인 응답 받음: ${credential != null ? "성공" : "취소됨"}'); // 디버깅 로그
 
-        // 화면이 아직 유효한지 확인 후 추가 정보 입력 화면으로 이동
+        // 로그인이 성공했는지 확인
+        if (credential != null && credential.user != null) {
+          print('사용자 UID: ${credential.user!.uid}'); // 디버깅 로그
+
+          try {
+            // 마케팅 동의 여부 저장
+            print('마케팅 동의 정보 저장 시작'); // 디버깅 로그
+            await _authService.saveMarketingAgreement(
+              credential.user!.uid,
+              _marketingAgreed,
+            );
+            print('마케팅 동의 정보 저장 완료'); // 디버깅 로그
+
+            // 화면이 아직 유효한지 확인 후 추가 정보 입력 화면으로 이동
+            if (mounted) {
+              print('추가 정보 입력 화면으로 이동'); // 디버깅 로그
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const GetInfoScreen()),
+              );
+            }
+          } catch (firestoreError) {
+            print('Firestore 저장 오류: $firestoreError'); // 디버깅 로그
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('사용자 정보 저장 오류: $firestoreError')),
+              );
+            }
+          }
+        } else {
+          print('로그인 취소 또는 실패'); // 디버깅 로그
+        }
+      } catch (authError) {
+        print('인증 과정 오류: $authError'); // 디버깅 로그
         if (mounted) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const GetInfoScreen()),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('구글 로그인 오류: $authError')));
         }
       }
     } catch (e) {
-      // 오류 발생 시 스낵바로 메시지 표시
+      // 기타 오류 발생 시 스낵바로 메시지 표시
+      print('예상치 못한 오류: $e'); // 디버깅 로그
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('로그인 오류: $e')));
+        ).showSnackBar(SnackBar(content: Text('로그인 처리 중 오류 발생: $e')));
       }
     } finally {
       // 로딩 상태 종료
@@ -300,6 +329,7 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = false;
         });
       }
+      print('구글 로그인 처리 완료'); // 디버깅 로그
     }
   }
 
@@ -310,30 +340,64 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true; // 로딩 시작
       });
 
+      print('애플 로그인 시작'); // 디버깅 로그
+
       // 애플 로그인 실행
-      final credential = await _authService.signInWithApple();
+      try {
+        final credential = await _authService.signInWithApple();
+        print('애플 로그인 응답 받음: ${credential != null ? "성공" : "취소됨"}'); // 디버깅 로그
 
-      // 로그인이 성공했는지 확인
-      if (credential != null && credential.user != null) {
-        // 마케팅 동의 여부 저장
-        await _authService.saveMarketingAgreement(
-          credential.user!.uid,
-          _marketingAgreed,
-        );
+        // 로그인이 성공했는지 확인
+        if (credential != null && credential.user != null) {
+          print('애플 로그인 성공 - 사용자 UID: ${credential.user!.uid}'); // 디버깅 로그
 
-        // 화면이 아직 유효한지 확인 후 추가 정보 입력 화면으로 이동
+          try {
+            // 마케팅 동의 여부 저장
+            print('마케팅 동의 정보 Firestore에 저장 시작'); // 디버깅 로그
+            await _authService.saveMarketingAgreement(
+              credential.user!.uid,
+              _marketingAgreed,
+            );
+            print('마케팅 동의 정보 저장 완료'); // 디버깅 로그
+
+            // 화면이 아직 유효한지 확인 후 추가 정보 입력 화면으로 이동
+            if (mounted) {
+              print('추가 정보 입력 화면(GetInfoScreen)으로 이동'); // 디버깅 로그
+              // 내비게이션 방식 변경 - 즉시 화면 전환
+              await Future.delayed(Duration.zero);
+              if (!mounted) return;
+
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const GetInfoScreen()),
+              );
+            }
+          } catch (firestoreError) {
+            print('Firestore 저장 오류: $firestoreError'); // 디버깅 로그
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('사용자 정보 저장 오류: $firestoreError')),
+              );
+            }
+          }
+        } else {
+          print('애플 로그인 실패 또는 취소됨'); // 디버깅 로그
+        }
+      } catch (authError) {
+        print('애플 인증 과정 오류: $authError'); // 디버깅 로그
+        print('오류 타입: ${authError.runtimeType}'); // 디버깅 로그
         if (mounted) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const GetInfoScreen()),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('애플 로그인 오류: $authError')));
         }
       }
     } catch (e) {
-      // 오류 발생 시 스낵바로 메시지 표시
+      // 기타 오류 발생 시 스낵바로 메시지 표시
+      print('예상치 못한 오류: $e'); // 디버깅 로그
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('로그인 오류: $e')));
+        ).showSnackBar(SnackBar(content: Text('로그인 처리 중 오류 발생: $e')));
       }
     } finally {
       // 로딩 상태 종료
@@ -342,6 +406,7 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = false;
         });
       }
+      print('애플 로그인 처리 완료'); // 디버깅 로그
     }
   }
 }
