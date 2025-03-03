@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: AuthWrapper(),
+      home: TestScreen(), //AuthWrapper(), // 앱의 진입 지점입니다.
     );
   }
 }
@@ -50,5 +50,14 @@ class AuthWrapper extends StatelessWidget {
         return const LoginScreen();
       },
     );
+  }
+}
+
+class TestScreen extends StatelessWidget {
+  const TestScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('진입 성공.'));
   }
 }
