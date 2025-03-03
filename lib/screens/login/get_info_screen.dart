@@ -31,12 +31,18 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
     super.initState();
     // 현재 로그인된 사용자 확인
     _currentUser = FirebaseAuth.instance.currentUser;
+    print('GetInfoScreen: 현재 로그인된 사용자 - ${_currentUser?.uid}'); // 디버깅 로그
 
     // 로그인되지 않은 상태라면 로그인 화면으로 이동
     if (_currentUser == null) {
+      print('GetInfoScreen: 로그인된 사용자 없음, 로그인 화면으로 이동'); // 디버깅 로그
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).pop(); // 이전 화면으로 돌아가기
       });
+    } else {
+      print(
+        'GetInfoScreen: 로그인된 사용자 정보 - 이메일: ${_currentUser!.email}, 이름: ${_currentUser!.displayName}',
+      ); // 디버깅 로그
     }
   }
 
@@ -176,6 +182,13 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
         _isLoading = true;
       });
 
+      print(
+        'GetInfoScreen: 사용자 정보 저장 시작 - UID: ${_currentUser!.uid}',
+      ); // 디버깅 로그
+      print(
+        'GetInfoScreen: 저장할 정보 - 성별: $_selectedGender, 생년월일: ${_selectedDate!.toIso8601String()}',
+      ); // 디버깅 로그
+
       // 사용자 추가 정보 저장
       await _authService.saveUserInfo(
         _currentUser!.uid,
@@ -183,14 +196,18 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
         _selectedDate!,
       );
 
+      print('GetInfoScreen: 사용자 정보 저장 완료'); // 디버깅 로그
+
       // 메인 화면으로 이동
       if (mounted) {
+        print('GetInfoScreen: 메인 화면으로 이동'); // 디버깅 로그
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const MainScreen()),
         );
       }
     } catch (e) {
       // 오류 메시지 표시
+      print('GetInfoScreen: 정보 저장 오류 - $e'); // 디버깅 로그
       if (mounted) {
         ScaffoldMessenger.of(
           context,
