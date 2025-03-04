@@ -6,6 +6,8 @@ import 'package:supplementary_app/screens/home/home_screen.dart';
 import 'package:supplementary_app/screens/mypage/mypage_screen.dart';
 import 'package:supplementary_app/screens/search/search_screen.dart';
 import 'package:supplementary_app/services/auth_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supplementary_app/screens/login/login_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -29,28 +31,43 @@ class _MainScreenState extends State<MainScreen> {
   final AuthService _authService = AuthService();
 
   // 로그아웃 메서드
+  // main_screen.dart에서 _signOutDirect 메서드 개선
   Future<void> _signOutDirect() async {
     try {
       print('MainScreen: 직접 로그아웃 시도');
 
-      // Firebase 직접 로그아웃
+      // 로딩 표시 (선택사항)
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder:
+            (context) => const AlertDialog(
+              content: Row(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 16),
+                  Text('로그아웃 중...'),
+                ],
+              ),
+            ),
+      );
+
+      // 1. 먼저 사용자 UID 저장 (Firebase 로그아웃 후에는 UID를 가져올 수 없음)
+      final String? uid = FirebaseAuth.instance.currentUser?.uid;
+
+      // 2. Firebase 직접 로그아웃
       await FirebaseAuth.instance.signOut();
 
-      // Google Sign In 로그아웃 시도
+      // 3. Google Sign In 로그아웃
       try {
         final GoogleSignIn googleSignIn = GoogleSignIn();
-        final isSignedIn = await googleSignIn.isSignedIn();
-        if (isSignedIn) {
-          await googleSignIn.signOut();
-          print('MainScreen: Google 로그아웃 완료');
-        } else {
-          print('MainScreen: Google에 로그인되어 있지 않음');
-        }
+        await googleSignIn.signOut();
+        print('MainScreen: Google 로그아웃 완료');
       } catch (e) {
         print('MainScreen: Google 로그아웃 오류 - $e');
       }
 
-      // 자동 로그인 해제
+      // 4. 자동 로그인 해제
       try {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('autoLogin', false);
@@ -59,15 +76,39 @@ class _MainScreenState extends State<MainScreen> {
         print('MainScreen: 자동 로그인 해제 오류 - $e');
       }
 
+      // 5. Firestore에도 로그아웃 상태 저장 (UID가 있는 경우)
+      if (uid != null) {
+        try {
+          await FirebaseFirestore.instance.collection('users').doc(uid).set({
+            'isLoggedOut': true,
+            'lastLogoutTime': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true));
+          print('MainScreen: Firestore 로그아웃 상태 저장 완료');
+        } catch (e) {
+          print('MainScreen: Firestore 상태 저장 오류 - $e');
+        }
+      }
+
       print('MainScreen: 직접 로그아웃 성공');
 
-      // 성공 메시지
+      // 로딩 다이얼로그 닫기
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('로그아웃 완료')));
+        Navigator.of(context).pop();
+      }
+
+      // 로그인 화면으로 강제 이동 (선택사항)
+      if (mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          (route) => false,
+        );
       }
     } catch (e) {
+      // 로딩 다이얼로그 닫기
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+
       print('MainScreen: 직접 로그아웃 오류 - $e');
 
       if (mounted) {

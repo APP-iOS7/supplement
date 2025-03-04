@@ -403,12 +403,21 @@ class _LoginScreenState extends State<LoginScreen> {
           print('애플 로그인 실패 또는 취소됨'); // 디버깅 로그
         }
       } catch (authError) {
-        print('애플 인증 과정 오류: $authError'); // 디버깅 로그
-        print('오류 타입: ${authError.runtimeType}'); // 디버깅 로그
-        if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('애플 로그인 오류: $authError')));
+        print('애플 인증 과정 오류: $authError');
+        print('오류 타입: ${authError.runtimeType}');
+
+        // 사용자가 취소한 경우 조용히 처리
+        if (authError.toString().contains('canceled') ||
+            authError.toString().contains('error 1001')) {
+          print('사용자가 애플 로그인을 취소함');
+          // 취소 메시지 표시 안함
+        } else {
+          // 다른 오류는 메시지 표시
+          if (mounted) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('애플 로그인 오류: $authError')));
+          }
         }
       }
     } catch (e) {
