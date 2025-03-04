@@ -1,20 +1,22 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:supplementary_app/secrets.dart';
 
-//아직 미완성. 데이터 가공 및 리턴 받아야 함.
-
 class NaverService {
-  Future<void> searchNaverShopping(String query) async {
-    final baseUrl =
-        'https://openapi.naver.com/v1/search/shop.json?query=$query';
-    final headers = {
+  final String _baseUrl = 'https://openapi.naver.com/v1/search/shop.json';
+
+  Map<String, String> _getHeaders() {
+    return {
       'X-Naver-Client-Id': Secrets.naverClientId,
       'X-Naver-Client-Secret': Secrets.naverClientSecret,
     };
+  }
 
-    final response = await http.get(Uri.parse(baseUrl), headers: headers);
+  Future<void> searchNaverShopping(String query) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl?query=$query'),
+      headers: _getHeaders(),
+    );
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
@@ -26,14 +28,11 @@ class NaverService {
   }
 
   Future<String> getImageUrlFromNaverShopping(String query) async {
-    final baseUrl =
-        'https://openapi.naver.com/v1/search/shop.json?query=$query&display=1';
-    final headers = {
-      'X-Naver-Client-Id': Secrets.naverClientId,
-      'X-Naver-Client-Secret': Secrets.naverClientSecret,
-    };
+    final response = await http.get(
+      Uri.parse('$_baseUrl?query=$query&display=1'),
+      headers: _getHeaders(),
+    );
 
-    final response = await http.get(Uri.parse(baseUrl), headers: headers);
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
       final String imageUrl = jsonResponse['items'][0]['image'];
