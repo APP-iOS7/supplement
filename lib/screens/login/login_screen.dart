@@ -411,12 +411,29 @@ class _LoginScreenState extends State<LoginScreen> {
             await _authService.clearLogoutState(credential.user!.uid);
 
             // 화면이 아직 유효한지 확인 후 추가 정보 입력 화면으로 이동
+            // 화면이 아직 유효한지 확인 후 사용자 정보 확인
             if (mounted) {
-              print('추가 정보 입력 화면(GetInfoScreen)으로 이동'); // 디버깅 로그
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const GetInfoScreen()),
-                (route) => false, // 모든 이전 화면 제거
+              // 사용자 정보 확인
+              final userModel = await _authService.getUserData(
+                credential.user!.uid,
               );
+
+              // 성별과 생년월일이 있으면 메인 화면으로, 없으면 정보 입력 화면으로
+              if (userModel != null &&
+                  userModel.gender != null &&
+                  userModel.birthDate != null) {
+                print('사용자 정보 있음, 메인 화면으로 이동');
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const MainScreen()),
+                  (route) => false,
+                );
+              } else {
+                print('추가 정보 필요, 정보 입력 화면으로 이동');
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const GetInfoScreen()),
+                  (route) => false,
+                );
+              }
             }
           } catch (firestoreError) {
             print('Firestore 저장 오류: $firestoreError'); // 디버깅 로그
