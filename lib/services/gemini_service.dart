@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:supplementary_app/secrets.dart';
-
 //파라메터와 리턴 수정해야함. -> 리런은 List<String>으로.
 
 class GeminiService {
