@@ -12,6 +12,15 @@ class UserModel {
     this.marketingAgreed = false,
   });
 
+  // isMen getter 추가
+  bool get isMen => gender?.toLowerCase() == 'male';
+
+  // 포맷팅된 생년월일을 반환하는 getter
+  String get formattedBirthDate {
+    if (birthDate == null) return '';
+    return '${birthDate!.year}.${birthDate!.month.toString().padLeft(2, '0')}.${birthDate!.day.toString().padLeft(2, '0')}';
+  }
+
   // Firestore 데이터를 UserModel 객체로 변환
   factory UserModel.fromMap(Map<String, dynamic> map, String id) {
     return UserModel(
