@@ -1,10 +1,10 @@
 class SupplementSurveyModel {
-  final List<String> goal = [];
-  final bool isSmoker = false;
-  final bool isDerinker = false;
-  final List<String> alergy = [];
-  final List<String> prescribedDrugs = [];
-  final int exerciseFrequencyPerWeek = 0;
+  List<String> goal = [];
+  bool isSmoker = false;
+  bool isDerinker = false;
+  List<String> alergy = [];
+  List<String> prescribedDrugs = [];
+  int exerciseFrequencyPerWeek = 0;
 
   SupplementSurveyModel();
 }
