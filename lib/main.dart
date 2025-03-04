@@ -52,57 +52,98 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('AuthWrapper: 빌드 시작'); // 디버깅 로그
+    print('AuthWrapper: 빌드 시작');
 
-    // Firebase 인증 상태 변경을 구독하는 StreamBuilder
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-        // 인증 상태 로딩 중일 때 로딩 인디케이터 표시
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          print('AuthWrapper: 인증 상태 로딩 중'); // 디버깅 로그
+    // 자동 로그인 상태를 확인하는 FutureBuilder 추가
+    return FutureBuilder<bool>(
+      future: AuthService().getAutoLogin(),
+      builder: (context, autoLoginSnapshot) {
+        if (autoLoginSnapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        // 사용자가 로그인되어 있으면
-        if (snapshot.hasData) {
-          print('AuthWrapper: 사용자 로그인됨 - UID: ${snapshot.data!.uid}'); // 디버깅 로그
+        // 자동 로그인이 비활성화되었으면 로그인 화면으로 이동
+        final bool autoLogin = autoLoginSnapshot.data ?? false;
+        print('AuthWrapper: 자동 로그인 상태 - $autoLogin');
 
-          // 사용자 추가 정보 확인 (성별, 생년월일이 등록되어 있는지)
-          return FutureBuilder<UserModel?>(
-            future: AuthService().getUserData(snapshot.data!.uid),
-            builder: (context, userSnapshot) {
-              if (userSnapshot.connectionState == ConnectionState.waiting) {
-                print('AuthWrapper: 사용자 데이터 로딩 중'); // 디버깅 로그
-                return const Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
-                );
-              }
-
-              print(
-                'AuthWrapper: 사용자 데이터 로드 완료 - ${userSnapshot.data}',
-              ); // 디버깅 로그
-
-              // 사용자 정보가 없거나 성별/생년월일이 없으면 정보 입력 화면으로
-              if (userSnapshot.data == null ||
-                  userSnapshot.data!.gender == null ||
-                  userSnapshot.data!.birthDate == null) {
-                print('AuthWrapper: 추가 정보 필요, GetInfoScreen으로 이동'); // 디버깅 로그
-                return const GetInfoScreen();
-              }
-
-              // 모든 정보가 있으면 메인 화면으로
-              print('AuthWrapper: 모든 정보 있음, MainScreen으로 이동'); // 디버깅 로그
-              return const MainScreen();
-            },
-          );
+        if (!autoLogin) {
+          print('AuthWrapper: 자동 로그인 비활성화됨, 로그인 화면으로 이동');
+          return const LoginScreen();
         }
 
-        // 로그인되어 있지 않으면 로그인 화면으로
-        print('AuthWrapper: 로그인 안됨, LoginScreen으로 이동'); // 디버깅 로그
-        return const LoginScreen();
+        // 자동 로그인이 활성화된 경우 Firebase 인증 상태 확인
+        return StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              print('AuthWrapper: 인증 상태 로딩 중');
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            // 사용자가 로그인되어 있으면
+            if (snapshot.hasData) {
+              print('AuthWrapper: 사용자 로그인됨 - UID: ${snapshot.data!.uid}');
+
+              // 로그아웃 상태 확인
+              return FutureBuilder<bool>(
+                future: AuthService().isLoggedOut(snapshot.data!.uid),
+                builder: (context, logoutSnapshot) {
+                  if (logoutSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Scaffold(
+                      body: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  // 로그아웃 상태가 true면 로그인 화면으로
+                  final bool isLoggedOut = logoutSnapshot.data ?? false;
+                  if (isLoggedOut) {
+                    print('AuthWrapper: 사용자가 로그아웃 상태, 로그인 화면으로 이동');
+                    return const LoginScreen();
+                  }
+
+                  // 사용자 추가 정보 확인 (성별, 생년월일이 등록되어 있는지)
+                  return FutureBuilder<UserModel?>(
+                    future: AuthService().getUserData(snapshot.data!.uid),
+                    builder: (context, userSnapshot) {
+                      if (userSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        print('AuthWrapper: 사용자 데이터 로딩 중');
+                        return const Scaffold(
+                          body: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+
+                      print(
+                        'AuthWrapper: 사용자 데이터 로드 완료 - ${userSnapshot.data}',
+                      );
+
+                      // 사용자 정보가 없거나 성별/생년월일이 없으면 정보 입력 화면으로
+                      if (userSnapshot.data == null ||
+                          userSnapshot.data!.gender == null ||
+                          userSnapshot.data!.birthDate == null) {
+                        print('AuthWrapper: 추가 정보 필요, GetInfoScreen으로 이동');
+                        return const GetInfoScreen();
+                      }
+
+                      // 모든 정보가 있으면 메인 화면으로
+                      print('AuthWrapper: 모든 정보 있음, MainScreen으로 이동');
+                      return const MainScreen();
+                    },
+                  );
+                },
+              );
+            }
+
+            // 로그인되어 있지 않으면 로그인 화면으로
+            print('AuthWrapper: 로그인 안됨, LoginScreen으로 이동');
+            return const LoginScreen();
+          },
+        );
       },
     );
   }
