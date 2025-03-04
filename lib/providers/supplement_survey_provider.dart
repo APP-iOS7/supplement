@@ -44,4 +44,8 @@ class SupplementSurveyProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void removeSurveyModel() {
+    supplementSurveyModel = null;
+  }
 }
