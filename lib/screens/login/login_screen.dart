@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:supplementary_app/screens/login/get_info_screen.dart';
 import 'package:supplementary_app/services/auth_service.dart';
+import 'package:lottie/lottie.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -55,6 +55,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
                             ),
+                          ),
+                          Lottie.asset(
+                            'assets/animations/login.json',
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.contain,
                           ),
                           const SizedBox(height: 8),
                           const Text(
