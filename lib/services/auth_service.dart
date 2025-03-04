@@ -78,6 +78,13 @@ class AuthService {
         try {
           // 구글 Provider를 통한 로그인
           print('AuthService: GoogleAuthProvider를 통한 로그인 시도');
+
+          // iOS에서 계정 선택 화면 강제 표시
+          GoogleAuthProvider googleProvider = GoogleAuthProvider();
+          googleProvider.setCustomParameters({
+            'prompt': 'select_account', // 강제로 계정 선택 화면 표시
+          });
+
           final userCredential = await _auth.signInWithProvider(
             GoogleAuthProvider(),
           );
