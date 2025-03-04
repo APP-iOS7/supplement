@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'supplement-ea35e.firebasestorage.app',
     iosBundleId: 'kr.co.codegroove.supplementary.supplementaryApp',
   );
-
 }
