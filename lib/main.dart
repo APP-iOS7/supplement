@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/models/user_model.dart';
+import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/providers/theme_provider.dart';
 import 'package:supplementary_app/screens/login/get_info_screen.dart';
 import 'package:supplementary_app/screens/login/login_screen.dart';
@@ -21,7 +22,10 @@ void main() async {
   runApp(
     // 앱 전체에서 테마 상태를 공유하기 위한 Provider 설정
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => ThemeProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => SupplementSurveyProvider()),
+      ],
       child: const MyApp(),
     ),
   );

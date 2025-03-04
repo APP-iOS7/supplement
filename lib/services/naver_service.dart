@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:supplementary_app/models/naver_search_Item_model.dart';
 import 'package:supplementary_app/secrets.dart';
 
 class NaverService {
@@ -12,7 +13,7 @@ class NaverService {
     };
   }
 
-  Future<void> searchNaverShopping(String query) async {
+  Future<List<SearchItem>> searchNaverShopping(String query) async {
     final response = await http.get(
       Uri.parse('$_baseUrl?query=$query'),
       headers: _getHeaders(),
@@ -20,10 +21,12 @@ class NaverService {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-      print(jsonResponse);
+      final items = jsonResponse['items'] as List;
+      return items.map((item) => SearchItem.fromJson(item)).toList();
     } else {
       print('API 호출 실패: ${response.statusCode}');
       print(response.body);
+      throw '네이버 쇼핑 검색 실패';
     }
   }
 
