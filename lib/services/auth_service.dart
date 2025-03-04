@@ -34,6 +34,17 @@ class AuthService {
             : "기타"}',
       );
 
+      // 먼저 기존 로그인 상태 초기화 시도
+      try {
+        if (await _googleSignIn.isSignedIn()) {
+          await _googleSignIn.disconnect(); // 모든 계정 연결 해제
+          await _googleSignIn.signOut();
+          print('AuthService: 기존 구글 로그인 상태 초기화 완료');
+        }
+      } catch (e) {
+        print('AuthService: 기존 로그인 상태 초기화 오류 - $e');
+      }
+
       // 안드로이드와 iOS에서 플랫폼별 처리 방식 분리
       if (Platform.isAndroid) {
         // Android에서는 일반적인 구글 로그인 방식 사용
@@ -75,19 +86,19 @@ class AuthService {
       } else if (Platform.isIOS) {
         // iOS에서는 Firebase Auth의 내장 Provider 방식 사용 시도
         print('AuthService: iOS 방식으로 구글 로그인 시도');
+
+        // 구글 로그인의 웹뷰 캐시 강제 삭제를 위한 설정
+        GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        googleProvider.setCustomParameters({
+          'prompt': 'select_account', // 계정 선택 화면 강제 표시
+          'login_hint': '', // 이전 이메일 힌트 제거
+          'access_type': 'offline', // 새 토큰 발급 요청
+        });
+
         try {
-          // 구글 Provider를 통한 로그인
+          // 수정된 Provider를 통한 로그인 시도
           print('AuthService: GoogleAuthProvider를 통한 로그인 시도');
-
-          // iOS에서 계정 선택 화면 강제 표시
-          GoogleAuthProvider googleProvider = GoogleAuthProvider();
-          googleProvider.setCustomParameters({
-            'prompt': 'select_account', // 강제로 계정 선택 화면 표시
-          });
-
-          final userCredential = await _auth.signInWithProvider(
-            GoogleAuthProvider(),
-          );
+          final userCredential = await _auth.signInWithProvider(googleProvider);
           print(
             'AuthService: Firebase 로그인 완료 - UID: ${userCredential.user?.uid}',
           );
@@ -98,6 +109,10 @@ class AuthService {
 
           // 구글 로그인 흐름 시작
           print('AuthService: GoogleSignIn.signIn() 호출');
+
+          // 기존 세션 초기화 시도
+          await _googleSignIn.signOut();
+
           final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
           if (googleUser == null) {

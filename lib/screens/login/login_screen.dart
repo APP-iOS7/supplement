@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supplementary_app/screens/login/get_info_screen.dart';
+import 'package:supplementary_app/screens/main_screen.dart';
 import 'package:supplementary_app/services/auth_service.dart';
 import 'package:lottie/lottie.dart';
 
@@ -43,34 +45,28 @@ class _LoginScreenState extends State<LoginScreen> {
                     Center(
                       child: Column(
                         children: [
-                          Icon(
-                            Icons.medical_services_outlined,
-                            size: 80,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            '영양제 추천',
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
+                          ClipOval(
+                            child: Lottie.asset(
+                              'assets/animations/login.json',
+                              width: 230, // 원형 크기 (지름)
+                              height: 230, // 원형 크기 (지름)
+                              fit:
+                                  BoxFit
+                                      .cover, // 전체 원형을 채우기 위해 비율 조정 (필요 시 contain으로 변경)
                             ),
-                          ),
-                          Lottie.asset(
-                            'assets/animations/login.json',
-                            width: 200,
-                            height: 200,
-                            fit: BoxFit.contain,
                           ),
                           const SizedBox(height: 8),
                           const Text(
                             '당신에게 맞는 영양제를 추천해드립니다',
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Color.fromARGB(255, 33, 33, 33),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 64),
+                    const SizedBox(height: 30),
                     // 소셜 로그인 버튼들
                     Column(
                       children: [
@@ -109,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                       ],
                     ),
-                    const SizedBox(height: 48),
+                    const SizedBox(height: 30),
                     // 약관 동의 섹션
                     const Text(
                       '약관 동의',
@@ -176,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
     required VoidCallback onViewTap,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Row(
         children: [
           // 체크박스 대신 GestureDetector와 아이콘 사용
@@ -297,6 +293,11 @@ class _LoginScreenState extends State<LoginScreen> {
       print('구글 로그인 시작'); // 디버깅 로그
 
       try {
+        // 로그인 전 구글 로그인 상태 초기화 시도
+        final GoogleSignIn tempGoogleSignIn = GoogleSignIn();
+        await tempGoogleSignIn.signOut(); // 기존 로그인 상태 초기화
+        print('구글 로그인 상태 초기화 완료');
+
         // 구글 로그인 실행
         final credential = await _authService.signInWithGoogle();
         print('구글 로그인 응답 받음: ${credential != null ? "성공" : "취소됨"}'); // 디버깅 로그
@@ -317,13 +318,29 @@ class _LoginScreenState extends State<LoginScreen> {
             // 로그아웃 상태 제거 (자동 로그인 활성화)
             await _authService.clearLogoutState(credential.user!.uid);
 
-            // 화면이 아직 유효한지 확인 후 추가 정보 입력 화면으로 이동
+            // 화면이 아직 유효한지 확인 후 사용자 정보 확인
             if (mounted) {
-              print('추가 정보 입력 화면으로 이동'); // 디버깅 로그
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const GetInfoScreen()),
-                (route) => false, // 모든 이전 화면 제거
+              // 사용자 정보 확인
+              final userModel = await _authService.getUserData(
+                credential.user!.uid,
               );
+
+              // 성별과 생년월일이 있으면 메인 화면으로, 없으면 정보 입력 화면으로
+              if (userModel != null &&
+                  userModel.gender != null &&
+                  userModel.birthDate != null) {
+                print('사용자 정보 있음, 메인 화면으로 이동');
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const MainScreen()),
+                  (route) => false,
+                );
+              } else {
+                print('추가 정보 필요, 정보 입력 화면으로 이동');
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const GetInfoScreen()),
+                  (route) => false,
+                );
+              }
             }
           } catch (firestoreError) {
             print('Firestore 저장 오류: $firestoreError'); // 디버깅 로그

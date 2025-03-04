@@ -52,22 +52,20 @@ class _MainScreenState extends State<MainScreen> {
             ),
       );
 
-      // 1. 먼저 사용자 UID 저장 (Firebase 로그아웃 후에는 UID를 가져올 수 없음)
+      // 현재 사용자의 UID 저장
       final String? uid = FirebaseAuth.instance.currentUser?.uid;
 
-      // 2. Firebase 직접 로그아웃
-      await FirebaseAuth.instance.signOut();
-
-      // 3. Google Sign In 로그아웃
+      // 1. 구글 로그인 상태 확인 및 로그아웃 처리 강화
       try {
         final GoogleSignIn googleSignIn = GoogleSignIn();
+        await googleSignIn.disconnect(); // 모든 계정 연결 해제
         await googleSignIn.signOut();
         print('MainScreen: Google 로그아웃 완료');
       } catch (e) {
         print('MainScreen: Google 로그아웃 오류 - $e');
       }
 
-      // 4. 자동 로그인 해제
+      // 2. 자동 로그인 해제
       try {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('autoLogin', false);
@@ -76,7 +74,11 @@ class _MainScreenState extends State<MainScreen> {
         print('MainScreen: 자동 로그인 해제 오류 - $e');
       }
 
-      // 5. Firestore에도 로그아웃 상태 저장 (UID가 있는 경우)
+      // 3. Firebase 로그아웃
+      await FirebaseAuth.instance.signOut();
+      print('MainScreen: Firebase 로그아웃 완료');
+
+      // 4. UID가 있으면 Firestore에 로그아웃 상태 저장
       if (uid != null) {
         try {
           await FirebaseFirestore.instance.collection('users').doc(uid).set({
@@ -96,7 +98,7 @@ class _MainScreenState extends State<MainScreen> {
         Navigator.of(context).pop();
       }
 
-      // 로그인 화면으로 강제 이동 (선택사항)
+      // 로그인 화면으로 이동
       if (mounted) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const LoginScreen()),
