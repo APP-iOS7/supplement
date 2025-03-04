@@ -8,7 +8,7 @@ import 'package:supplementary_app/screens/login/login_screen.dart';
 import 'package:supplementary_app/screens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:supplementary_app/services/auth_service.dart';
-import 'firebase_options.dart';
+import 'package:supplementary_app/firebase_options.dart'; // 수정된 임포트 경로
 
 void main() async {
   // Flutter 위젯 바인딩 초기화

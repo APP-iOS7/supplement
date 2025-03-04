@@ -1,3 +1,4 @@
+// 수정된 get_info_screen.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:supplementary_app/screens/main_screen.dart';
@@ -31,18 +32,20 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
     super.initState();
     // 현재 로그인된 사용자 확인
     _currentUser = FirebaseAuth.instance.currentUser;
-    print('GetInfoScreen: 현재 로그인된 사용자 - ${_currentUser?.uid}'); // 디버깅 로그
+    print('GetInfoScreen: 현재 로그인된 사용자 - ${_currentUser?.uid}');
 
     // 로그인되지 않은 상태라면 로그인 화면으로 이동
     if (_currentUser == null) {
-      print('GetInfoScreen: 로그인된 사용자 없음, 로그인 화면으로 이동'); // 디버깅 로그
+      print('GetInfoScreen: 로그인된 사용자 없음, 로그인 화면으로 이동');
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context).pop(); // 이전 화면으로 돌아가기
+        if (mounted) {
+          Navigator.of(context).pop(); // 이전 화면으로 돌아가기
+        }
       });
     } else {
       print(
         'GetInfoScreen: 로그인된 사용자 정보 - 이메일: ${_currentUser!.email}, 이름: ${_currentUser!.displayName}',
-      ); // 디버깅 로그
+      );
     }
   }
 
@@ -175,15 +178,15 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
 
   // 사용자 정보 저장 및 메인 화면으로 이동
   Future<void> _saveUserInfoAndProceed() async {
-    print('GetInfoScreen: _saveUserInfoAndProceed 함수 시작'); // 디버깅 로그
+    print('GetInfoScreen: _saveUserInfoAndProceed 함수 시작');
 
     if (_currentUser == null) {
-      print('GetInfoScreen: 현재 사용자 없음, 작업 중단'); // 디버깅 로그
+      print('GetInfoScreen: 현재 사용자 없음, 작업 중단');
       return;
     }
 
     if (!_canProceed()) {
-      print('GetInfoScreen: 필수 정보 미입력, 작업 중단'); // 디버깅 로그
+      print('GetInfoScreen: 필수 정보 미입력, 작업 중단');
       return;
     }
 
@@ -192,44 +195,31 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
         _isLoading = true;
       });
 
-      print(
-        'GetInfoScreen: 사용자 정보 저장 시작 - UID: ${_currentUser!.uid}',
-      ); // 디버깅 로그
+      print('GetInfoScreen: 사용자 정보 저장 시작 - UID: ${_currentUser!.uid}');
       print(
         'GetInfoScreen: 저장할 정보 - 성별: $_selectedGender, 생년월일: ${_selectedDate!.toIso8601String()}',
-      ); // 디버깅 로그
+      );
 
       // 사용자 추가 정보 저장
-      try {
-        await _authService.saveUserInfo(
-          _currentUser!.uid,
-          _selectedGender!,
-          _selectedDate!,
-        );
-        print('GetInfoScreen: 사용자 정보 저장 완료'); // 디버깅 로그
-      } catch (saveError) {
-        print('GetInfoScreen: 사용자 정보 저장 실패: $saveError'); // 디버깅 로그
-        // 오류를 상위로 전달하여 catch 블록에서 처리
-        throw saveError;
-      }
+      await _authService.saveUserInfo(
+        _currentUser!.uid,
+        _selectedGender!,
+        _selectedDate!,
+      );
+      print('GetInfoScreen: 사용자 정보 저장 완료');
 
       // 메인 화면으로 이동
       if (mounted) {
-        print('GetInfoScreen: 메인 화면으로 이동 시도'); // 디버깅 로그
-        // 잠시 지연 후 화면 전환 (Firestore 업데이트가 반영될 시간 확보)
-        await Future.delayed(Duration(milliseconds: 500));
-
-        if (mounted) {
-          print('GetInfoScreen: 메인 화면으로 이동 실행'); // 디버깅 로그
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const MainScreen()),
-          );
-        }
+        print('GetInfoScreen: 메인 화면으로 이동 시도');
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+          (route) => false, // 모든 이전 화면 제거
+        );
       }
     } catch (e) {
       // 오류 메시지 표시
-      print('GetInfoScreen: 정보 저장 오류 - $e'); // 디버깅 로그
-      print('GetInfoScreen: 오류 타입 - ${e.runtimeType}'); // 디버깅 로그
+      print('GetInfoScreen: 정보 저장 오류 - $e');
+      print('GetInfoScreen: 오류 타입 - ${e.runtimeType}');
       if (mounted) {
         ScaffoldMessenger.of(
           context,
@@ -241,7 +231,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
           _isLoading = false;
         });
       }
-      print('GetInfoScreen: _saveUserInfoAndProceed 함수 종료'); // 디버깅 로그
+      print('GetInfoScreen: _saveUserInfoAndProceed 함수 종료');
     }
   }
 }
