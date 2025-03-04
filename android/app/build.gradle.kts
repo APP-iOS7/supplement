@@ -11,7 +11,7 @@ plugins {
 android {
     namespace = "kr.co.codegroove.supplementary.supplementary_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -27,10 +27,13 @@ android {
         applicationId = "kr.co.codegroove.supplementary.supplementary_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // 멀티덱스 활성화 추가
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -44,4 +47,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// 파일 맨 끝에 추가
+dependencies {
+    implementation("androidx.multidex:multidex:2.0.1")
 }
