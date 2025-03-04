@@ -5,6 +5,7 @@ import 'package:supplementary_app/screens/login/get_info_screen.dart';
 import 'package:supplementary_app/screens/main_screen.dart';
 import 'package:supplementary_app/services/auth_service.dart';
 import 'package:lottie/lottie.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -283,24 +284,24 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // 구글 로그인 처리
-  Future<void> _handleGoogleSignIn() async {
+  // 공통 로그인 처리 메서드
+  Future<void> _handleSignIn(
+    Future<UserCredential?> Function() signInMethod,
+    String provider,
+  ) async {
     try {
       setState(() {
         _isLoading = true; // 로딩 시작
       });
 
-      print('구글 로그인 시작'); // 디버깅 로그
+      print('$provider 로그인 시작'); // 디버깅 로그
 
       try {
-        // 로그인 전 구글 로그인 상태 초기화 시도
-        final GoogleSignIn tempGoogleSignIn = GoogleSignIn();
-        await tempGoogleSignIn.signOut(); // 기존 로그인 상태 초기화
-        print('구글 로그인 상태 초기화 완료');
-
-        // 구글 로그인 실행
-        final credential = await _authService.signInWithGoogle();
-        print('구글 로그인 응답 받음: ${credential != null ? "성공" : "취소됨"}'); // 디버깅 로그
+        // 로그인 실행
+        final credential = await signInMethod();
+        print(
+          '$provider 로그인 응답 받음: ${credential != null ? "성공" : "취소됨"}',
+        ); // 디버깅 로그
 
         // 로그인이 성공했는지 확인
         if (credential != null && credential.user != null) {
@@ -354,11 +355,20 @@ class _LoginScreenState extends State<LoginScreen> {
           print('로그인 취소 또는 실패'); // 디버깅 로그
         }
       } catch (authError) {
-        print('인증 과정 오류: $authError'); // 디버깅 로그
-        if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('구글 로그인 오류: $authError')));
+        print('$provider 인증 과정 오류: $authError'); // 디버깅 로그
+
+        // 애플 로그인의 경우 취소 처리 특별 관리
+        if (provider == '애플' &&
+            (authError.toString().contains('canceled') ||
+                authError.toString().contains('error 1001'))) {
+          print('사용자가 애플 로그인을 취소함');
+          // 취소 메시지 표시 안함
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('$provider 로그인 오류: $authError')),
+            );
+          }
         }
       }
     } catch (e) {
@@ -376,110 +386,23 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = false;
         });
       }
-      print('구글 로그인 처리 완료'); // 디버깅 로그
+      print('$provider 로그인 처리 완료'); // 디버깅 로그
     }
+  }
+
+  // 구글 로그인 처리
+  Future<void> _handleGoogleSignIn() async {
+    // 구글 로그인 상태 초기화
+    final GoogleSignIn tempGoogleSignIn = GoogleSignIn();
+    await tempGoogleSignIn.signOut();
+    print('구글 로그인 상태 초기화 완료');
+
+    // 공통 로그인 메서드 호출
+    await _handleSignIn(() => _authService.signInWithGoogle(), '구글');
   }
 
   // 애플 로그인 처리
   Future<void> _handleAppleSignIn() async {
-    try {
-      setState(() {
-        _isLoading = true; // 로딩 시작
-      });
-
-      print('애플 로그인 시작'); // 디버깅 로그
-
-      // 애플 로그인 실행
-      try {
-        final credential = await _authService.signInWithApple();
-        print('애플 로그인 응답 받음: ${credential != null ? "성공" : "취소됨"}'); // 디버깅 로그
-
-        // 로그인이 성공했는지 확인
-        if (credential != null && credential.user != null) {
-          print('애플 로그인 성공 - 사용자 UID: ${credential.user!.uid}'); // 디버깅 로그
-
-          try {
-            // 마케팅 동의 여부 저장
-            print('마케팅 동의 정보 Firestore에 저장 시작'); // 디버깅 로그
-            await _authService.saveMarketingAgreement(
-              credential.user!.uid,
-              _marketingAgreed,
-            );
-            print('마케팅 동의 정보 저장 완료'); // 디버깅 로그
-
-            // 로그아웃 상태 제거 (자동 로그인 활성화)
-            await _authService.clearLogoutState(credential.user!.uid);
-
-            // 화면이 아직 유효한지 확인 후 추가 정보 입력 화면으로 이동
-            // 화면이 아직 유효한지 확인 후 사용자 정보 확인
-            if (mounted) {
-              // 사용자 정보 확인
-              final userModel = await _authService.getUserData(
-                credential.user!.uid,
-              );
-
-              // 성별과 생년월일이 있으면 메인 화면으로, 없으면 정보 입력 화면으로
-              if (userModel != null &&
-                  userModel.gender != null &&
-                  userModel.birthDate != null) {
-                print('사용자 정보 있음, 메인 화면으로 이동');
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const MainScreen()),
-                  (route) => false,
-                );
-              } else {
-                print('추가 정보 필요, 정보 입력 화면으로 이동');
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const GetInfoScreen()),
-                  (route) => false,
-                );
-              }
-            }
-          } catch (firestoreError) {
-            print('Firestore 저장 오류: $firestoreError'); // 디버깅 로그
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('사용자 정보 저장 오류: $firestoreError')),
-              );
-            }
-          }
-        } else {
-          print('애플 로그인 실패 또는 취소됨'); // 디버깅 로그
-        }
-      } catch (authError) {
-        print('애플 인증 과정 오류: $authError');
-        print('오류 타입: ${authError.runtimeType}');
-
-        // 사용자가 취소한 경우 조용히 처리
-        if (authError.toString().contains('canceled') ||
-            authError.toString().contains('error 1001')) {
-          print('사용자가 애플 로그인을 취소함');
-          // 취소 메시지 표시 안함
-        } else {
-          // 다른 오류는 메시지 표시
-          if (mounted) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('애플 로그인 오류: $authError')));
-          }
-        }
-      }
-    } catch (e) {
-      // 기타 오류 발생 시 스낵바로 메시지 표시
-      print('예상치 못한 오류: $e'); // 디버깅 로그
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('로그인 처리 중 오류 발생: $e')));
-      }
-    } finally {
-      // 로딩 상태 종료
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-      print('애플 로그인 처리 완료'); // 디버깅 로그
-    }
+    await _handleSignIn(() => _authService.signInWithApple(), '애플');
   }
 }
