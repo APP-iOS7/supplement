@@ -1,19 +1,19 @@
-class GeminiAnswerModel {
-  final String name;
-  final String caution;
-  final String functionality;
-  final List<String> ingredients;
-  final String mainEffect;
-  final String manufacturer;
-  final String dosageAndForm;
-  final String recommendedFor;
-  final String sideEffects;
-  final String storage;
-  final String imageLink;
-  final String price;
-  final double rating;
+class AnswerModel {
+  String name;
+  String caution;
+  String functionality;
+  List<String> ingredients;
+  String mainEffect;
+  String manufacturer;
+  String dosageAndForm;
+  String recommendedFor;
+  String sideEffects;
+  String storage;
+  String price;
+  double rating;
+  String? imageLink;
 
-  GeminiAnswerModel({
+  AnswerModel({
     required this.name,
     required this.caution,
     required this.functionality,
@@ -24,13 +24,13 @@ class GeminiAnswerModel {
     required this.recommendedFor,
     required this.sideEffects,
     required this.storage,
-    required this.imageLink,
     required this.price,
     required this.rating,
+    this.imageLink,
   });
 
-  factory GeminiAnswerModel.fromJson(Map<String, dynamic> json) {
-    return GeminiAnswerModel(
+  factory AnswerModel.fromJson(Map<String, dynamic> json) {
+    return AnswerModel(
       name: json['name'],
       caution: json['caution'],
       functionality: json['functionality'],
@@ -41,9 +41,9 @@ class GeminiAnswerModel {
       recommendedFor: json['recommendedFor'],
       sideEffects: json['sideEffects'],
       storage: json['storage'],
-      imageLink: json['imageLink'],
       price: json['price'],
       rating: json['rating'].toDouble(),
+      imageLink: json['imageLink'],
     );
   }
 
@@ -59,9 +59,9 @@ class GeminiAnswerModel {
       'recommendedFor': recommendedFor,
       'sideEffects': sideEffects,
       'storage': storage,
-      'imageLink': imageLink,
       'price': price,
       'rating': rating,
+      'imageLink': imageLink,
     };
   }
 }

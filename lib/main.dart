@@ -5,6 +5,7 @@ import 'package:supplementary_app/providers/theme_provider.dart';
 import 'package:supplementary_app/screens/login/login_screen.dart';
 import 'package:supplementary_app/screens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:supplementary_app/test.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -50,14 +51,5 @@ class AuthWrapper extends StatelessWidget {
         return const LoginScreen();
       },
     );
-  }
-}
-
-class TestScreen extends StatelessWidget {
-  const TestScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('진입 성공.'));
   }
 }
