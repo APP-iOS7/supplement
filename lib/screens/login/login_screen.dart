@@ -304,19 +304,16 @@ class _LoginScreenState extends State<LoginScreen> {
             );
             print('마케팅 동의 정보 저장 완료'); // 디버깅 로그
 
+            // 로그아웃 상태 제거 (자동 로그인 활성화)
+            await _authService.clearLogoutState(credential.user!.uid);
+
             // 화면이 아직 유효한지 확인 후 추가 정보 입력 화면으로 이동
             if (mounted) {
-              print('추가 정보 입력 화면으로 수동 이동'); // 디버깅 로그
-
-              // 이 부분에서 메인 스트림에 효과가 반영될 수 있도록 delay 추가
-              await Future.delayed(Duration(milliseconds: 500));
-
-              if (mounted) {
-                // 강제로 GetInfoScreen으로 이동
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const GetInfoScreen()),
-                );
-              }
+              print('추가 정보 입력 화면으로 이동'); // 디버깅 로그
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const GetInfoScreen()),
+                (route) => false, // 모든 이전 화면 제거
+              );
             }
           } catch (firestoreError) {
             print('Firestore 저장 오류: $firestoreError'); // 디버깅 로그
@@ -383,18 +380,16 @@ class _LoginScreenState extends State<LoginScreen> {
             );
             print('마케팅 동의 정보 저장 완료'); // 디버깅 로그
 
+            // 로그아웃 상태 제거 (자동 로그인 활성화)
+            await _authService.clearLogoutState(credential.user!.uid);
+
             // 화면이 아직 유효한지 확인 후 추가 정보 입력 화면으로 이동
             if (mounted) {
-              print('추가 정보 입력 화면(GetInfoScreen)으로 수동 이동'); // 디버깅 로그
-
-              // 이 부분에서 메인 스트림에 효과가 반영될 수 있도록 delay 추가
-              await Future.delayed(Duration(milliseconds: 500));
-
-              if (mounted) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const GetInfoScreen()),
-                );
-              }
+              print('추가 정보 입력 화면(GetInfoScreen)으로 이동'); // 디버깅 로그
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const GetInfoScreen()),
+                (route) => false, // 모든 이전 화면 제거
+              );
             }
           } catch (firestoreError) {
             print('Firestore 저장 오류: $firestoreError'); // 디버깅 로그

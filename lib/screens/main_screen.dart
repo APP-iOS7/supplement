@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supplementary_app/screens/home/home_screen.dart';
 import 'package:supplementary_app/screens/mypage/mypage_screen.dart';
 import 'package:supplementary_app/screens/search/search_screen.dart';
@@ -26,22 +28,48 @@ class _MainScreenState extends State<MainScreen> {
   // 인증 서비스
   final AuthService _authService = AuthService();
 
-  // 로그아웃 함수
-  Future<void> _signOut() async {
+  // 로그아웃 메서드
+  Future<void> _signOutDirect() async {
     try {
-      print('MainScreen: 로그아웃 시도'); // 디버깅 로그
-      await _authService.signOut();
-      print('MainScreen: 로그아웃 성공'); // 디버깅 로그
+      print('MainScreen: 직접 로그아웃 시도');
 
-      // 로그아웃 성공 메시지 (개발용)
+      // Firebase 직접 로그아웃
+      await FirebaseAuth.instance.signOut();
+
+      // Google Sign In 로그아웃 시도
+      try {
+        final GoogleSignIn googleSignIn = GoogleSignIn();
+        final isSignedIn = await googleSignIn.isSignedIn();
+        if (isSignedIn) {
+          await googleSignIn.signOut();
+          print('MainScreen: Google 로그아웃 완료');
+        } else {
+          print('MainScreen: Google에 로그인되어 있지 않음');
+        }
+      } catch (e) {
+        print('MainScreen: Google 로그아웃 오류 - $e');
+      }
+
+      // 자동 로그인 해제
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('autoLogin', false);
+        print('MainScreen: 자동 로그인 해제 완료');
+      } catch (e) {
+        print('MainScreen: 자동 로그인 해제 오류 - $e');
+      }
+
+      print('MainScreen: 직접 로그아웃 성공');
+
+      // 성공 메시지
       if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('로그아웃 완료')));
       }
     } catch (e) {
-      print('MainScreen: 로그아웃 오류 - $e'); // 디버깅 로그
-      // 로그아웃 실패 메시지
+      print('MainScreen: 직접 로그아웃 오류 - $e');
+
       if (mounted) {
         ScaffoldMessenger.of(
           context,
@@ -59,7 +87,7 @@ class _MainScreenState extends State<MainScreen> {
           // 로그아웃 버튼 (개발용)
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: _signOut,
+            onPressed: _signOutDirect,
             tooltip: "로그아웃",
           ),
         ],
