@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:supplementary_app/screens/login/get_info_screen.dart';
 import 'package:supplementary_app/services/auth_service.dart';
@@ -81,22 +83,24 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        // 애플 로그인 버튼
-                        ElevatedButton.icon(
-                          onPressed:
-                              _requiredAgreementsChecked
-                                  ? _handleAppleSignIn
-                                  : null,
-                          icon: const Icon(Icons.apple),
-                          label: const Text('Apple로 로그인'),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            textStyle: const TextStyle(fontSize: 16),
-                            backgroundColor: Colors.black,
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size(double.infinity, 0),
+
+                        // 애플 로그인 버튼 - iOS에서만 표시
+                        if (Platform.isIOS)
+                          ElevatedButton.icon(
+                            onPressed:
+                                _requiredAgreementsChecked
+                                    ? _handleAppleSignIn
+                                    : null,
+                            icon: const Icon(Icons.apple),
+                            label: const Text('Apple로 로그인'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              textStyle: const TextStyle(fontSize: 16),
+                              backgroundColor: Colors.black,
+                              foregroundColor: Colors.white,
+                              minimumSize: const Size(double.infinity, 0),
+                            ),
                           ),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 48),
