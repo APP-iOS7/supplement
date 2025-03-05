@@ -11,4 +11,20 @@ class StoreService {
       'createdAt': usermodel.createdAt,
     });
   }
+
+  Future<UserModel> getUserInfoByUid(String uid) async {
+    final doc = await _store.collection('users').doc(uid).get();
+
+    if (!doc.exists) {
+      throw Exception('User not found');
+    }
+
+    final data = doc.data()!;
+    return UserModel(
+      uid: uid,
+      gender: data['gender'],
+      birthDate: (data['birthDate'] as Timestamp).toDate(),
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+    );
+  }
 }
