@@ -4,12 +4,22 @@ class UserModel {
   final String? gender; // 성별 ('male' 또는 'female')
   final DateTime? birthDate; // 생년월일
   final bool marketingAgreed; // 마케팅 수신 동의 여부
+  final DateTime createdAt; // 생성일
+  final bool isLoggedOut; // 로그아웃 여부
+  final DateTime lastLoginTime; // 마지막 로그인 시간
+  final DateTime lastLogoutTime; // 마지막 로그아웃 시간
+  final DateTime lastUpdated; // 마지막 업데이트 시간
 
   UserModel({
     required this.uid,
     this.gender,
     this.birthDate,
     this.marketingAgreed = false,
+    required this.createdAt,
+    required this.isLoggedOut,
+    required this.lastLoginTime,
+    required this.lastLogoutTime,
+    required this.lastUpdated,
   });
 
   // isMen getter 추가
@@ -31,6 +41,13 @@ class UserModel {
               ? DateTime.fromMillisecondsSinceEpoch(map['birthDate'])
               : null,
       marketingAgreed: map['marketingAgreed'] ?? false,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
+      isLoggedOut: map['isLoggedOut'] ?? false,
+      lastLoginTime: DateTime.fromMillisecondsSinceEpoch(map['lastLoginTime']),
+      lastLogoutTime: DateTime.fromMillisecondsSinceEpoch(
+        map['lastLogoutTime'],
+      ),
+      lastUpdated: DateTime.fromMillisecondsSinceEpoch(map['lastUpdated']),
     );
   }
 
@@ -40,6 +57,11 @@ class UserModel {
       'gender': gender,
       'birthDate': birthDate?.millisecondsSinceEpoch,
       'marketingAgreed': marketingAgreed,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'isLoggedOut': isLoggedOut,
+      'lastLoginTime': lastLoginTime.millisecondsSinceEpoch,
+      'lastLogoutTime': lastLogoutTime.millisecondsSinceEpoch,
+      'lastUpdated': lastUpdated.millisecondsSinceEpoch,
     };
   }
 }
