@@ -1,12 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:supplementary_app/screens/login/get_info_screen.dart';
-import 'package:supplementary_app/screens/main_screen.dart';
-import 'package:supplementary_app/services/auth_service.dart';
 import 'package:lottie/lottie.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:supplementary_app/viewmodels/login_screen_viewmodel.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -22,8 +17,6 @@ class LoginScreen extends StatelessWidget {
 }
 
 class _LoginScreen extends StatelessWidget {
-  const _LoginScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<LoginScreenViewModel>(context);
@@ -81,7 +74,7 @@ class _LoginScreen extends StatelessWidget {
                     // 애플 로그인 버튼 - iOS에서만 표시
                     if (Platform.isIOS)
                       ElevatedButton.icon(
-                        onPressed: vm.signInWithGoogle, // 애플로 변경해야 함
+                        onPressed: vm.signInWithApple,
                         icon: const Icon(Icons.apple),
                         label: const Text('Apple로 로그인'),
                         style: ElevatedButton.styleFrom(
