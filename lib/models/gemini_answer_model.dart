@@ -64,8 +64,4 @@ class AnswerModel {
       'imageLink': imageLink,
     };
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> dev
