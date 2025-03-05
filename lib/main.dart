@@ -19,17 +19,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // 앱 실행
-  runApp(
-    // 앱 전체에서 테마 상태를 공유하기 위한 Provider 설정
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => ThemeProvider()),
-        ChangeNotifierProvider(create: (context) => SupplementSurveyProvider()),
-        ChangeNotifierProvider(create: (context) => UserProvider()),
-      ],
-      child: const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -73,7 +63,15 @@ class AuthWrapper extends StatelessWidget {
             if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
               return GetInfoScreen();
             }
-            return MainScreen();
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (context) => SupplementSurveyProvider(),
+                ),
+                ChangeNotifierProvider(create: (context) => UserProvider()),
+              ],
+              child: MainScreen(),
+            );
           },
         );
       },
