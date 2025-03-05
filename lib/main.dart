@@ -6,7 +6,11 @@ import 'package:supplementary_app/screens/login/login_screen.dart';
 import 'package:supplementary_app/screens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:supplementary_app/screens/health_concern_screen.dart';
+import 'package:supplementary_app/screens/healthcheck/health_concern_screen.dart';
+import 'package:supplementary_app/screens/healthcheck/smoking_screen.dart';
+import 'package:supplementary_app/screens/healthcheck/drinking_screen.dart';
+import 'package:supplementary_app/screens/healthcheck/allergy_screen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +33,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: HealthConcernScreen(), //AuthWrapper(), // 앱의 진입 지점입니다.
+      home: HealthConcernScreen(), // 시작 화면을 HealthConcernScreen으로 설정
     );
   }
 }
