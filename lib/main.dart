@@ -9,7 +9,8 @@ import 'package:supplementary_app/screens/login/login_screen.dart';
 import 'package:supplementary_app/screens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:supplementary_app/services/auth_service.dart';
-import 'package:supplementary_app/firebase_options.dart'; // 수정된 임포트 경로
+import 'package:supplementary_app/firebase_options.dart';
+import 'package:supplementary_app/providers/user_provider.dart';
 
 void main() async {
   // Flutter 위젯 바인딩 초기화
@@ -25,6 +26,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => SupplementSurveyProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
       ],
       child: const MyApp(),
     ),
@@ -39,12 +41,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '영양제 추천',
       theme: ThemeData(
-        // 메인 컬러 설정
         primarySwatch: Colors.blue,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      // 인증 상태에 따라 화면 전환을 담당하는 AuthWrapper를 홈 화면으로 설정
       home: const AuthWrapper(),
     );
   }
@@ -53,7 +53,6 @@ class MyApp extends StatelessWidget {
 // 인증 상태에 따라 로그인 화면 또는 메인 화면을 보여주는 위젯
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
-
   @override
   Widget build(BuildContext context) {
     print('AuthWrapper: 빌드 시작');
