@@ -1,5 +1,5 @@
 class SearchItem {
-  final String title;
+  String title;
   final String link;
   final String image;
   final String lprice;

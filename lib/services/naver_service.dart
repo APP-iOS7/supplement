@@ -13,6 +13,11 @@ class NaverService {
     };
   }
 
+  String _removeHtmlTags(String htmlString) {
+    final RegExp exp = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: true);
+    return htmlString.replaceAll(exp, '');
+  }
+
   Future<List<SearchItem>> searchNaverShopping(String query) async {
     final response = await http.get(
       Uri.parse('$_baseUrl?query=$query'),
@@ -22,7 +27,11 @@ class NaverService {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
       final items = jsonResponse['items'] as List;
-      return items.map((item) => SearchItem.fromJson(item)).toList();
+      return items.map((item) {
+        final searchItem = SearchItem.fromJson(item);
+        searchItem.title = _removeHtmlTags(searchItem.title);
+        return searchItem;
+      }).toList();
     } else {
       print('API 호출 실패: ${response.statusCode}');
       print(response.body);
