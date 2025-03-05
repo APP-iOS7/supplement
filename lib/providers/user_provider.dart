@@ -12,21 +12,5 @@ class UserProvider with ChangeNotifier {
     _initUser();
   }
 
-  Future<void> _initUser() async {
-    final currentUser = _authService.currentUser;
-    if (currentUser != null) {
-      final userData = await _authService.getUserData(currentUser.uid);
-      setUser(userData);
-    }
-  }
-
-  void setUser(UserModel? user) {
-    _user = user;
-    notifyListeners();
-  }
-
-  void clearUser() {
-    _user = null;
-    notifyListeners();
-  }
+  Future<void> _initUser() async {}
 }
