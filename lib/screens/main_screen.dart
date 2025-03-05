@@ -7,28 +7,36 @@ class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainPageState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainPageState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> {
+  // 현재 선택된 탭 인덱스
   int _currentIndex = 0;
-  final List<Widget> _pages = [HomeScreen(), SearchScreen(), MypageScreen()];
+
+  // 각 탭에 해당하는 화면 위젯들
+  final List<Widget> _pages = [
+    const HomeScreen(),
+    const SearchScreen(),
+    const MypageScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_currentIndex],
+      // 하단 탭 네비게이션
       bottomNavigationBar: BottomNavigationBar(
-        onTap: (value) {
+        currentIndex: _currentIndex,
+        onTap: (index) {
           setState(() {
-            _currentIndex = value;
+            _currentIndex = index;
           });
         },
-        currentIndex: _currentIndex,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.pin_drop), label: 'My Page'),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: '검색'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: '마이페이지'),
         ],
       ),
     );

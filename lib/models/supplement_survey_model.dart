@@ -8,4 +8,8 @@ class SupplementSurveyModel {
   int exerciseFrequencyPerWeek = 0;
 
   SupplementSurveyModel();
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dev
