@@ -69,7 +69,7 @@ class AuthWrapper extends StatelessWidget {
                   .get(),
           builder: (context, userSnapshot) {
             if (userSnapshot.connectionState == ConnectionState.waiting) {
-              return Scaffold(body: CircularProgressIndicator());
+              return Scaffold(body: Center(child: CircularProgressIndicator()));
             }
 
             if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
