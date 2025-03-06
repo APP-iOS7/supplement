@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
-import 'package:supplementary_app/screens/result_screen.dart';
+import 'package:supplementary_app/screens/healthcheck/result_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/exercise_frequency_viewmodel.dart';
 
 class ExerciseFrequencyScreen extends StatelessWidget {
