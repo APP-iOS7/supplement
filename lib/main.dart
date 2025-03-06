@@ -11,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:supplementary_app/services/auth_service.dart';
 import 'package:supplementary_app/firebase_options.dart';
 import 'package:supplementary_app/providers/user_provider.dart';
+import 'package:supplementary_app/screens/healthcheck/health_concern_screen.dart';
 
 void main() async {
   // Flutter 위젯 바인딩 초기화
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const AuthWrapper(),
+      home: const HealthConcernScreen(),
     );
   }
 }

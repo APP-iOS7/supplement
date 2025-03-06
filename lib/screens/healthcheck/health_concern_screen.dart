@@ -19,7 +19,6 @@ class _HealthConcernScreenState extends State<HealthConcernScreen> {
     },
     {
       'title': '체중 감량/근육 증가',
-      'fontSize': 1,
       'icon': 'assets/icons/muscle.png',
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
