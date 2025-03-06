@@ -175,7 +175,7 @@ class _AllergyScreenView extends StatelessWidget {
                   ],
                 ),
               ),
-            const Spacer(),
+            // const Spacer(),
             SizedBox(
               width: double.infinity,
               height: 56,

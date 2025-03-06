@@ -55,7 +55,7 @@ class AllergyViewModel extends ChangeNotifier {
   }
 
   void toggleAllergySelection(String type, bool selected) {
-    if (selected && type != '특정 알러지') {
+    if (selected) {
       selectedAllergies.add(type);
     } else {
       selectedAllergies.remove(type);
@@ -76,6 +76,7 @@ class AllergyViewModel extends ChangeNotifier {
     if (allergies.contains('특정 알러지') && specificAllergyInput.isNotEmpty) {
       allergies.add(specificAllergyInput);
     }
+    allergies.remove('특정 알러지');
     _surveyProvider.addAlergies(allergies);
   }
 
