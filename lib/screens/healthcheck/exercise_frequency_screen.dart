@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:supplementary_app/providers/supplement_survey_provider.dart';
+import 'package:supplementary_app/screens/result/result_screen.dart';
+import 'package:supplementary_app/viewmodels/exercise_frequency_viewmodel.dart';
 
-class ExerciseFrequencyScreen extends StatefulWidget {
+class ExerciseFrequencyScreen extends StatelessWidget {
   const ExerciseFrequencyScreen({super.key});
 
   @override
-  State<ExerciseFrequencyScreen> createState() => _ExerciseFrequencyScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create:
+          (_) => ExerciseFrequencyViewModel(
+            surveyProvider: Provider.of<SupplementSurveyProvider>(
+              context,
+              listen: false,
+            ),
+          ),
+      child: const _ExerciseFrequencyScreenView(),
+    );
+  }
 }
 
-class _ExerciseFrequencyScreenState extends State<ExerciseFrequencyScreen> {
-  String? selectedOption;
-  
-  final List<Map<String, String>> exerciseOptions = [
-    {'title': '거의 안 함', 'value': '거의 안 함'},
-    {'title': '가볍게 주 1~2회', 'value': '가볍게 주 1~2회'},
-    {'title': '중강도 운동 주 3~4회', 'value': '중강도 운동 주 3~4회'},
-    {'title': '고강도 운동 주 5회 이상', 'value': '고강도 운동 주 5회 이상'},
-  ];
+class _ExerciseFrequencyScreenView extends StatelessWidget {
+  const _ExerciseFrequencyScreenView();
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<ExerciseFrequencyViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -37,40 +47,47 @@ class _ExerciseFrequencyScreenState extends State<ExerciseFrequencyScreen> {
           children: [
             const Text(
               '운동 빈도',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             const Text(
               '운동을 얼마나 자주 하나요?',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.grey, fontSize: 16),
             ),
             const SizedBox(height: 30),
-            
-            // 운동 빈도 옵션들
-            ...exerciseOptions.map((option) => Column(
-              children: [
-                _buildOptionCard(option['title']!, option['value']!),
-                const SizedBox(height: 16),
-              ],
-            )).toList(),
-            
+
+            ...viewModel.exerciseOptions.map(
+              (option) => Column(
+                children: [
+                  _buildOptionCard(
+                    option['title']!,
+                    option['value']!,
+                    viewModel,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+
             const Spacer(),
-            
+
             SizedBox(
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
-                onPressed: selectedOption != null
-                    ? () {
-                        Navigator.pop(context, selectedOption);
-                      }
-                    : null,
+                onPressed:
+                    viewModel.selectedOption != null
+                        ? () {
+                          viewModel.addToSurvey();
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ResultScreen(),
+                            ),
+                            (route) => false, // 모든 이전 화면 제거
+                          );
+                        }
+                        : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.deepPurple,
                   shape: RoundedRectangleBorder(
@@ -93,24 +110,25 @@ class _ExerciseFrequencyScreenState extends State<ExerciseFrequencyScreen> {
     );
   }
 
-  Widget _buildOptionCard(String title, String value) {
-    final isSelected = selectedOption == value;
-    
+  Widget _buildOptionCard(
+    String title,
+    String value,
+    ExerciseFrequencyViewModel viewModel,
+  ) {
+    final isSelected = viewModel.selectedOption == value;
+
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedOption = value;
-        });
-      },
+      onTap: () => viewModel.selectOption(value),
       child: Container(
         width: double.infinity,
         height: 80,
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.shade50 : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(16),
-          border: isSelected
-              ? Border.all(color: Colors.deepPurple, width: 2)
-              : null,
+          border:
+              isSelected
+                  ? Border.all(color: Colors.deepPurple, width: 2)
+                  : null,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -132,11 +150,7 @@ class _ExerciseFrequencyScreenState extends State<ExerciseFrequencyScreen> {
                     color: Colors.deepPurple,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.check,
-                    color: Colors.white,
-                    size: 16,
-                  ),
+                  child: const Icon(Icons.check, color: Colors.white, size: 16),
                 ),
             ],
           ),

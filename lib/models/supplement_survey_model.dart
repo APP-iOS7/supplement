@@ -1,7 +1,7 @@
 class SupplementSurveyModel {
   List<String> goal = [];
   bool isSmoker = false;
-  bool isDerinker = false;
+  bool isDrinker = false;
   List<String> alergy = [];
   List<String> havingSupplement = [];
   List<String> prescribedDrugs = [];

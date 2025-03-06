@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/smoking_screen.dart';
 import 'package:supplementary_app/viewmodels/health_concern_viewmodel.dart';
 
@@ -9,7 +10,13 @@ class HealthConcernScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => HealthConcernViewModel(),
+      create:
+          (_) => HealthConcernViewModel(
+            surveyProvider: Provider.of<SupplementSurveyProvider>(
+              context,
+              listen: false,
+            ),
+          ),
       child: _HealthConcernScreen(),
     );
   }
@@ -18,7 +25,10 @@ class HealthConcernScreen extends StatelessWidget {
 class _HealthConcernScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<HealthConcernViewModel>();
+    final viewModel = Provider.of<HealthConcernViewModel>(
+      context,
+      listen: true,
+    );
 
     return Scaffold(
       appBar: AppBar(),
@@ -119,6 +129,7 @@ class _HealthConcernScreen extends StatelessWidget {
               onPressed:
                   viewModel.selectedCount > 0
                       ? () {
+                        viewModel.addToSurvey(); // 선택된 데이터 저장
                         Navigator.push(
                           context,
                           MaterialPageRoute(

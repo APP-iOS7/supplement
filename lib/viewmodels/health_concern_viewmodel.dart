@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 
 class HealthConcernViewModel extends ChangeNotifier {
+  final SupplementSurveyProvider _surveyProvider;
+
+  HealthConcernViewModel({required SupplementSurveyProvider surveyProvider})
+    : _surveyProvider = surveyProvider;
+
   final List<Map<String, dynamic>> healthConcerns = [
     {
       'title': '면역력 강화',
@@ -103,5 +109,15 @@ class HealthConcernViewModel extends ChangeNotifier {
       _selectedCount++;
     }
     notifyListeners();
+  }
+
+  void addToSurvey() {
+    List<String> selectedConcerns =
+        healthConcerns
+            .where((concern) => concern['isSelected'])
+            .map((concern) => concern['title'] as String)
+            .toList();
+
+    _surveyProvider.addGoals(selectedConcerns);
   }
 }

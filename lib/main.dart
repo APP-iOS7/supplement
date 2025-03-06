@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
-import 'package:supplementary_app/providers/theme_provider.dart';
 import 'package:supplementary_app/screens/login/get_info_screen.dart';
 import 'package:supplementary_app/screens/login/login_screen.dart';
 import 'package:supplementary_app/screens/main_screen.dart';
@@ -27,14 +26,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '영양제 추천',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => SupplementSurveyProvider()),
+      ],
+      child: MaterialApp(
+        title: '영양제 추천',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          useMaterial3: true,
+        ),
+        home: const AuthWrapper(),
       ),
-      home: const AuthWrapper(),
     );
   }
 }
@@ -65,9 +70,6 @@ class AuthWrapper extends StatelessWidget {
             }
             return MultiProvider(
               providers: [
-                ChangeNotifierProvider(
-                  create: (context) => SupplementSurveyProvider(),
-                ),
                 ChangeNotifierProvider(create: (context) => UserProvider()),
               ],
               child: MainScreen(),

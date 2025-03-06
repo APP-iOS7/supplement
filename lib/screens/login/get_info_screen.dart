@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:supplementary_app/viewmodels/get_info_viewmodel.dart';
+import 'package:supplementary_app/viewmodels/login/get_info_viewmodel.dart';
 
 class GetInfoScreen extends StatelessWidget {
   const GetInfoScreen({super.key});
