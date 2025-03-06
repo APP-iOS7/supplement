@@ -9,11 +9,7 @@ class UserProvider with ChangeNotifier {
   UserModel? _user;
   UserModel? get user => _user;
 
-  UserProvider() {
-    _initUser();
-  }
-
-  Future<void> _initUser() async {
+  Future<void> initUser() async {
     final String uid = _auth.currentUserUid;
     _user = await _store.getUserInfoByUid(uid);
     print('user init completed $uid');

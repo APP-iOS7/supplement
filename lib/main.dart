@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => SupplementSurveyProvider()),
+        ChangeNotifierProvider(create: (context) => SupplementSurveyProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
       ],
       child: MaterialApp(
         title: '영양제 추천',
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
         ),
-        home: const AuthWrapper(),
+        home: AuthWrapper(),
       ),
     );
   }
@@ -46,34 +46,37 @@ class MyApp extends StatelessWidget {
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text('Error');
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
         }
+
         if (!snapshot.hasData) {
           return LoginScreen();
         }
-        return StreamBuilder(
-          stream:
+
+        final user = snapshot.data!;
+        return FutureBuilder<DocumentSnapshot>(
+          future:
               FirebaseFirestore.instance
                   .collection('users')
-                  .doc(snapshot.data!.uid)
-                  .snapshots(),
+                  .doc(user.uid)
+                  .get(),
           builder: (context, userSnapshot) {
-            if (userSnapshot.hasError) return Text('err');
+            if (userSnapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }
+
             if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
               return GetInfoScreen();
             }
-            return MultiProvider(
-              providers: [
-                ChangeNotifierProvider(create: (context) => UserProvider()),
-              ],
-              child: MainScreen(),
-            );
+
+            return MainScreen();
           },
         );
       },

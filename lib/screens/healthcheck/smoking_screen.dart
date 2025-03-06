@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/drinking_screen.dart';
-import 'package:supplementary_app/viewmodels/smoking_viewmodel.dart';
+import 'package:supplementary_app/viewmodels/health_check/smoking_viewmodel.dart';
 
 class SmokingScreen extends StatelessWidget {
   const SmokingScreen({super.key});
