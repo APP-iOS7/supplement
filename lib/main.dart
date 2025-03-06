@@ -11,13 +11,8 @@ import 'package:supplementary_app/firebase_options.dart';
 import 'package:supplementary_app/providers/user_provider.dart';
 
 void main() async {
-  // Flutter 위젯 바인딩 초기화
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Firebase 초기화
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // 앱 실행
   runApp(const MyApp());
 }
 
@@ -53,7 +48,7 @@ class AuthWrapper extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Scaffold(body: Center(child: CircularProgressIndicator()));
         }
 
         if (!snapshot.hasData) {
@@ -69,13 +64,12 @@ class AuthWrapper extends StatelessWidget {
                   .get(),
           builder: (context, userSnapshot) {
             if (userSnapshot.connectionState == ConnectionState.waiting) {
-              return Scaffold(body: CircularProgressIndicator());
+              return Scaffold(body: Center(child: CircularProgressIndicator()));
             }
 
             if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
               return GetInfoScreen();
             }
-
             return MainScreen();
           },
         );
