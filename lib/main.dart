@@ -10,7 +10,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:supplementary_app/firebase_options.dart';
 import 'package:supplementary_app/providers/user_provider.dart';
 
-
 void main() async {
   // Flutter 위젯 바인딩 초기화
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,7 +69,7 @@ class AuthWrapper extends StatelessWidget {
                   .get(),
           builder: (context, userSnapshot) {
             if (userSnapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return Scaffold(body: CircularProgressIndicator());
             }
 
             if (!userSnapshot.hasData || !userSnapshot.data!.exists) {

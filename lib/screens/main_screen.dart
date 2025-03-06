@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:supplementary_app/screens/home/home_screen.dart';
-import 'package:supplementary_app/screens/mypage/mypage_screen.dart';
 import 'package:supplementary_app/screens/search/search_screen.dart';
 import 'package:supplementary_app/screens/settings/settings_screen.dart';
 
@@ -17,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     const HomeScreen(),
     const SearchScreen(),
-    const SettingsScreen(), // MypageScreen에서 SettingsScreen으로 변경
+    const SettingsScreen(),
   ];
 
   @override
