@@ -17,213 +17,217 @@ class AllergyScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: const _AllergyScreenView(),
+      child: const _AllergyScreen(),
     );
   }
 }
 
-class _AllergyScreenView extends StatelessWidget {
-  const _AllergyScreenView();
+class _AllergyScreen extends StatelessWidget {
+  const _AllergyScreen();
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<AllergyViewModel>(context);
+    return Consumer<AllergyViewModel>(
+      builder: (context, viewModel, child) {
+        return Scaffold(
+          appBar: AppBar(),
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 30),
+                _buildOptions(viewModel),
+                if (viewModel.selectedOption == '알러지가 있어요')
+                  _buildAllergySelectionSection(context, viewModel),
+                _buildNextButton(context, viewModel),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+  Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        Text(
+          '갖고있는 알러지가 있다면 \n선택해주세요',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
-        title: const Text('', style: TextStyle(color: Colors.grey)),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        SizedBox(height: 10),
+        Text(
+          '각 상태에서 피해야 하는 영양성분을 분석해드릴게요',
+          style: TextStyle(color: Colors.grey, fontSize: 16),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOptions(AllergyViewModel viewModel) {
+    return Column(
+      children: [
+        _buildOptionCard('알러지가 없어요', '알러지가 없어요', viewModel),
+        const SizedBox(height: 16),
+        _buildOptionCard('알러지가 있어요', '알러지가 있어요', viewModel),
+      ],
+    );
+  }
+
+  Widget _buildAllergySelectionSection(
+    BuildContext context,
+    AllergyViewModel viewModel,
+  ) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 20),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildAllergyTypeChips(context, viewModel),
+                  if (viewModel.selectedAllergies.contains('특정 알러지') &&
+                      viewModel.selectedAllergies.isNotEmpty)
+                    _buildSpecificAllergyInput(context, viewModel),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
+    );
+  }
+
+  Widget _buildAllergyTypeChips(
+    BuildContext context,
+    AllergyViewModel viewModel,
+  ) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children:
+          viewModel.allergyTypes.map((type) {
+            final isSelected = viewModel.selectedAllergies.contains(type);
+            return _buildFilterChip(context, viewModel, type, isSelected);
+          }).toList(),
+    );
+  }
+
+  Widget _buildFilterChip(
+    BuildContext context,
+    AllergyViewModel viewModel,
+    String type,
+    bool isSelected,
+  ) {
+    return FilterChip(
+      selected: isSelected,
+      backgroundColor: Colors.grey.shade200,
+      selectedColor: Colors.deepPurple.shade100,
+      checkmarkColor: Colors.deepPurple,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side:
+            isSelected ? BorderSide(color: Colors.deepPurple) : BorderSide.none,
+      ),
+      label: Text(type),
+      onSelected: (selected) {
+        viewModel.toggleAllergySelection(type, selected);
+        if (selected && type == '특정 알러지') {
+          _showSpecificAllergyDialog(context, viewModel);
+        }
+      },
+    );
+  }
+
+  Widget _buildSpecificAllergyInput(
+    BuildContext context,
+    AllergyViewModel viewModel,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.deepPurple.shade50,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.deepPurple.shade200),
+        ),
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '갖고있는 알러지가 있다면\n선택해주세요',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              '특정 알러지:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
             ),
-            const SizedBox(height: 10),
-            const Text(
-              '각 상태에서 피해야 하는 영양성분을\n분석해드릴게요',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                viewModel.specificAllergyInput,
+                style: const TextStyle(color: Colors.black87),
+              ),
             ),
-            const SizedBox(height: 30),
-            _buildOptionCard('알러지가 없어요', '알러지가 없어요', viewModel),
-            const SizedBox(height: 16),
-            _buildOptionCard('알러지가 있어요', '알러지가 있어요', viewModel),
+            IconButton(
+              icon: const Icon(Icons.edit, size: 18),
+              color: Colors.deepPurple,
+              onPressed: () => _showSpecificAllergyDialog(context, viewModel),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-            if (viewModel.selectedOption == '알러지가 있어요')
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children:
-                                  viewModel.allergyTypes.map((type) {
-                                    final isSelected = viewModel
-                                        .selectedAllergies
-                                        .contains(type);
-                                    return FilterChip(
-                                      selected: isSelected,
-                                      backgroundColor: Colors.grey.shade200,
-                                      selectedColor: Colors.deepPurple.shade100,
-                                      checkmarkColor: Colors.deepPurple,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                        side:
-                                            isSelected
-                                                ? BorderSide(
-                                                  color: Colors.deepPurple,
-                                                )
-                                                : BorderSide.none,
-                                      ),
-                                      label: Text(type),
-                                      onSelected: (selected) {
-                                        viewModel.toggleAllergySelection(
-                                          type,
-                                          selected,
-                                        );
-                                        // 특정 알러지가 선택되었을 때 다이얼로그 표시
-                                        if (selected && type == '특정 알러지') {
-                                          _showSpecificMedicineDialog(
-                                            context,
-                                            viewModel,
-                                          );
-                                        }
-                                      },
-                                    );
-                                  }).toList(),
-                            ),
-                            // 특정 약 성분이 선택되었고 입력값이 있는 경우 표시
-                            if (viewModel.selectedAllergies.contains(
-                                  '특정 알러지',
-                                ) &&
-                                viewModel.selectedAllergies.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 16.0),
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.deepPurple.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.deepPurple.shade200,
-                                    ),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text(
-                                            '특정 알러지:',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.deepPurple,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              viewModel.specificAllergyInput,
-                                              style: const TextStyle(
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                          ),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.edit,
-                                              size: 18,
-                                            ),
-                                            color: Colors.deepPurple,
-                                            onPressed:
-                                                () =>
-                                                    _showSpecificMedicineDialog(
-                                                      context,
-                                                      viewModel,
-                                                    ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
+  Widget _buildNextButton(BuildContext context, AllergyViewModel viewModel) {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed:
+            viewModel.isNextButtonEnabled
+                ? () {
+                  viewModel.addToSurvey();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MedicationScreen(),
                     ),
-                  ],
-                ),
-              ),
-            // const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed:
-                    viewModel.isNextButtonEnabled
-                        ? () {
-                          viewModel.addToSurvey();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MedicationScreen(),
-                            ),
-                          );
-                        }
-                        : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      '다음',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    if (viewModel.selectedAllergies.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          '${viewModel.selectedAllergies.length}개',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
+                  );
+                }
+                : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.deepPurple,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              '다음',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
+            if (viewModel.selectedAllergies.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  '${viewModel.selectedAllergies.length}개',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
           ],
         ),
       ),
@@ -280,7 +284,7 @@ class _AllergyScreenView extends StatelessWidget {
     );
   }
 
-  void _showSpecificMedicineDialog(
+  void _showSpecificAllergyDialog(
     BuildContext context,
     AllergyViewModel viewModel,
   ) {
@@ -309,7 +313,7 @@ class _AllergyScreenView extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  viewModel.setSpecificMedicineInput(controller.text);
+                  viewModel.setSpecificAllergyInput(controller.text);
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
