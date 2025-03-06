@@ -5,22 +5,22 @@ import 'package:supplementary_app/models/naver_search_Item_model.dart';
 class SearchViewModel extends ChangeNotifier {
   final TextEditingController controller = TextEditingController();
   final NaverService _naverService = NaverService();
-  List<SearchItem> searchResults = [];
-  bool isLoading = false;
+  Future<List<SearchItem>>? searchFuture;
 
-  void search() async {
-    isLoading = true;
-    notifyListeners();
-
+  Future<List<SearchItem>> search() async {
     try {
       final results = await _naverService.searchNaverShopping(controller.text);
-      searchResults =
-          results.where((item) => item.category2 == "건강식품").toList();
+      notifyListeners();
+      return results.where((item) => item.category2 == "건강식품").toList();
     } catch (e) {
       print('검색 실패: $e');
-    } finally {
-      isLoading = false;
       notifyListeners();
+      return [];
     }
+  }
+
+  void executeSearch() {
+    searchFuture = search();
+    notifyListeners();
   }
 }

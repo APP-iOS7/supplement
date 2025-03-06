@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supplementary_app/models/naver_search_Item_model.dart';
 import 'package:supplementary_app/viewmodels/search/search_view_model.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -12,7 +13,7 @@ class SearchScreen extends StatelessWidget {
       child: Consumer<SearchViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            appBar: _buildAppBar(),
+            appBar: AppBar(title: Text('Search')),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -27,17 +28,6 @@ class SearchScreen extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: const Text(
-        'Search',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-      ),
-      centerTitle: true,
-      backgroundColor: Colors.deepPurpleAccent,
     );
   }
 
@@ -79,7 +69,7 @@ class SearchScreen extends StatelessWidget {
 
   Widget _buildSearchButton(SearchViewModel viewModel) {
     return ElevatedButton(
-      onPressed: viewModel.search,
+      onPressed: viewModel.executeSearch,
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.deepPurpleAccent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
@@ -90,36 +80,52 @@ class SearchScreen extends StatelessWidget {
   }
 
   Widget _buildSearchResults(SearchViewModel viewModel) {
-    if (viewModel.isLoading) {
-      return const CircularProgressIndicator();
+    if (viewModel.searchFuture == null) {
+      return const Center(
+        child: Text(
+          '검색어를 입력하세요',
+          style: TextStyle(fontSize: 18, color: Colors.grey),
+        ),
+      );
     }
 
     return Expanded(
-      child:
-          viewModel.searchResults.isEmpty
-              ? _buildEmptyResults()
-              : _buildResultsList(viewModel),
-    );
-  }
+      child: FutureBuilder<List<SearchItem>>(
+        future: viewModel.searchFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-  Widget _buildEmptyResults() {
-    return const Center(
-      child: Text(
-        'No results found',
-        style: TextStyle(fontSize: 18, color: Colors.grey),
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                '오류가 발생했습니다: ${snapshot.error}',
+                style: const TextStyle(fontSize: 18, color: Colors.red),
+              ),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text(
+                '검색 결과가 없습니다',
+                style: TextStyle(fontSize: 18, color: Colors.grey),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder:
+                (context, index) => _buildResultCard(snapshot.data![index]),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildResultsList(SearchViewModel viewModel) {
-    return ListView.builder(
-      itemCount: viewModel.searchResults.length,
-      itemBuilder:
-          (context, index) => _buildResultCard(viewModel.searchResults[index]),
-    );
-  }
-
-  Widget _buildResultCard(dynamic item) {
+  Widget _buildResultCard(SearchItem item) {
     return Card(
       elevation: 3,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
