@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/drinking_screen.dart';
+import 'package:supplementary_app/viewmodels/smoking_viewmodel.dart';
 
-class SmokingScreen extends StatefulWidget {
+class SmokingScreen extends StatelessWidget {
   const SmokingScreen({super.key});
 
   @override
-  State<SmokingScreen> createState() => _SmokingScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create:
+          (_) => SmokingViewModel(
+            surveyProvider: Provider.of<SupplementSurveyProvider>(
+              context,
+              listen: false,
+            ),
+          ),
+      child: const _SmokingScreenContent(),
+    );
+  }
 }
 
-class _SmokingScreenState extends State<SmokingScreen> {
-  String? selectedOption;
+class _SmokingScreenContent extends StatelessWidget {
+  const _SmokingScreenContent();
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<SmokingViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -31,41 +47,34 @@ class _SmokingScreenState extends State<SmokingScreen> {
           children: [
             const Text(
               '흡연 여부에 대해\n알려주세요',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             const Text(
               '흡연을 하시는 경우 조심해야 할\n영양 성분이 있어요',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.grey, fontSize: 16),
             ),
             const SizedBox(height: 30),
-            _buildOptionCard('비흡연', '비흡연'),
+            _buildOptionCard('비흡연', '비흡연', viewModel),
             const SizedBox(height: 16),
-            _buildOptionCard('흡연', '흡연'),
+            _buildOptionCard('흡연', '흡연', viewModel),
             const Spacer(),
             SizedBox(
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
-                onPressed: selectedOption != null
-                    ? () {
-                        // 다음 화면(DrinkingScreen)으로 이동
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const DrinkingScreen(),
-                          ),
-                        ).then((drinkingData) {
-                          // 필요한 경우 여기서 drinkingData 처리
-                        });
-                      }
-                    : null,
+                onPressed:
+                    viewModel.selectedOption != null
+                        ? () {
+                          viewModel.saveSmokingStatus();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DrinkingScreen(),
+                            ),
+                          );
+                        }
+                        : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.deepPurple,
                   shape: RoundedRectangleBorder(
@@ -88,24 +97,25 @@ class _SmokingScreenState extends State<SmokingScreen> {
     );
   }
 
-  Widget _buildOptionCard(String title, String value) {
-    final isSelected = selectedOption == value;
-    
+  Widget _buildOptionCard(
+    String title,
+    String value,
+    SmokingViewModel viewModel,
+  ) {
+    final isSelected = viewModel.selectedOption == value;
+
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedOption = value;
-        });
-      },
+      onTap: () => viewModel.setSelectedOption(value),
       child: Container(
         width: double.infinity,
         height: 80,
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.shade50 : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(16),
-          border: isSelected
-              ? Border.all(color: Colors.deepPurple, width: 2)
-              : null,
+          border:
+              isSelected
+                  ? Border.all(color: Colors.deepPurple, width: 2)
+                  : null,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -127,11 +137,7 @@ class _SmokingScreenState extends State<SmokingScreen> {
                     color: Colors.deepPurple,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.check,
-                    color: Colors.white,
-                    size: 16,
-                  ),
+                  child: const Icon(Icons.check, color: Colors.white, size: 16),
                 ),
             ],
           ),

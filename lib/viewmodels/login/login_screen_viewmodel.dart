@@ -5,7 +5,7 @@ class LoginScreenViewModel with ChangeNotifier {
   final _auth = AuthService();
 
   Future<void> signInWithGoogle() async {
-    await _auth.signInWithGoogle(); // await 키워드 추가
+    await _auth.signInWithGoogle();
   }
 
   Future<void> signInWithApple() async {

@@ -1,23 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/allergy_screen.dart';
+import 'package:supplementary_app/viewmodels/drinking_viewmodel.dart';
 
-class DrinkingScreen extends StatefulWidget {
+class DrinkingScreen extends StatelessWidget {
   const DrinkingScreen({super.key});
 
   @override
-  State<DrinkingScreen> createState() => _DrinkingScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create:
+          (_) => DrinkingViewModel(
+            surveyProvider: Provider.of<SupplementSurveyProvider>(
+              context,
+              listen: false,
+            ),
+          ),
+      child: const _DrinkingScreenContent(),
+    );
+  }
 }
 
-class _DrinkingScreenState extends State<DrinkingScreen> {
-  String? selectedOption;
+class _DrinkingScreenContent extends StatelessWidget {
+  const _DrinkingScreenContent();
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<DrinkingViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
         title: const Text('', style: TextStyle(color: Colors.grey)),
         centerTitle: true,
@@ -31,41 +49,34 @@ class _DrinkingScreenState extends State<DrinkingScreen> {
           children: [
             const Text(
               '음주 여부에 대해\n알려주세요',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             const Text(
               '음주를 하시는 경우 조심해야 할\n영양 성분이 있어요',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.grey, fontSize: 16),
             ),
             const SizedBox(height: 30),
-            _buildOptionCard('비음주', '비음주'),
+            _buildOptionCard('비음주', '비음주', viewModel),
             const SizedBox(height: 16),
-            _buildOptionCard('음주', '음주'),
+            _buildOptionCard('음주', '음주', viewModel),
             const Spacer(),
             SizedBox(
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
-                onPressed: selectedOption != null
-                    ? () {
-                        // 다음 화면(AllergyScreen)으로 이동
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AllergyScreen(),
-                          ),
-                        ).then((allergyData) {
-                          // 필요한 경우 여기서 allergyData 처리
-                        });
-                      }
-                    : null,
+                onPressed:
+                    viewModel.selectedOption != null
+                        ? () {
+                          viewModel.saveDrinkingStatus();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AllergyScreen(),
+                            ),
+                          );
+                        }
+                        : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.deepPurple,
                   shape: RoundedRectangleBorder(
@@ -88,24 +99,25 @@ class _DrinkingScreenState extends State<DrinkingScreen> {
     );
   }
 
-  Widget _buildOptionCard(String title, String value) {
-    final isSelected = selectedOption == value;
-    
+  Widget _buildOptionCard(
+    String title,
+    String value,
+    DrinkingViewModel viewModel,
+  ) {
+    final isSelected = viewModel.selectedOption == value;
+
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedOption = value;
-        });
-      },
+      onTap: () => viewModel.setSelectedOption(value),
       child: Container(
         width: double.infinity,
         height: 80,
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.shade50 : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(16),
-          border: isSelected
-              ? Border.all(color: Colors.deepPurple, width: 2)
-              : null,
+          border:
+              isSelected
+                  ? Border.all(color: Colors.deepPurple, width: 2)
+                  : null,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -127,11 +139,7 @@ class _DrinkingScreenState extends State<DrinkingScreen> {
                     color: Colors.deepPurple,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.check,
-                    color: Colors.white,
-                    size: 16,
-                  ),
+                  child: const Icon(Icons.check, color: Colors.white, size: 16),
                 ),
             ],
           ),

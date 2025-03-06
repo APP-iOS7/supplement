@@ -21,7 +21,7 @@ class GeminiService {
             {
               "text": '''
 정보 : [나이 : ${user.birthDate.year}년생, 성별 : ${user.gender}, 목적 : ${survey.goal}, 흡연 유무 : ${survey.isSmoker ? '흡연자' : '비흡연자'} 
-음주 : ${survey.isDerinker}, 알러지: ${survey.alergy}, 복용중인 약: ${survey.prescribedDrugs}, 주당 운동 횟수: 주${survey.exerciseFrequencyPerWeek}회
+음주 : ${survey.isDrinker}, 알러지: ${survey.alergy}, 복용중인 약: ${survey.prescribedDrugs}, 주당 운동 횟수: 주${survey.exerciseFrequencyPerWeek}회
 ]
       이를 위해 도움이 되는 영양제 제품 3개를 추천해줘. 
       브랜드명을 포함한 정확한 제품명을 제공해줘. 
