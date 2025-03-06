@@ -66,7 +66,7 @@ class AllergyViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSpecificMedicineInput(String input) {
+  void setSpecificAllergyInput(String input) {
     specificAllergyInput = input.trim();
     notifyListeners();
   }
@@ -78,14 +78,6 @@ class AllergyViewModel extends ChangeNotifier {
     }
     allergies.remove('특정 알러지');
     _surveyProvider.addAlergies(allergies);
-  }
-
-  Map<String, dynamic> getResult() {
-    return {
-      'hasAllergy': selectedOption == '알러지가 있어요',
-      'allergies': selectedAllergies,
-      'specificAllergy': specificAllergyInput,
-    };
   }
 
   void selectOption(String value) {
