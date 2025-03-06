@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/models/gemini_answer_model.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/providers/user_provider.dart';
-import 'package:supplementary_app/viewmodels/result_viewmodel.dart';
+import 'package:supplementary_app/viewmodels/health_check/result_viewmodel.dart';
 import 'package:supplementary_app/screens/main_screen.dart';
 
 class ResultScreen extends StatelessWidget {
