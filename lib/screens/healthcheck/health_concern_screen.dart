@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/smoking_screen.dart';
-import 'package:supplementary_app/viewmodels/health_concern_viewmodel.dart';
+import 'package:supplementary_app/viewmodels/health_check/health_concern_viewmodel.dart';
 
 class HealthConcernScreen extends StatelessWidget {
   const HealthConcernScreen({super.key});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/exercise_frequency_screen.dart';
-import 'package:supplementary_app/viewmodels/medication_viewmodel.dart';
+import 'package:supplementary_app/viewmodels/health_check/medication_viewmodel.dart';
 
 class MedicationScreen extends StatelessWidget {
   const MedicationScreen({super.key});

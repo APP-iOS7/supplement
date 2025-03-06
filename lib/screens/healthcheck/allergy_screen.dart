@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/medication_screen.dart';
-import 'package:supplementary_app/viewmodels/allergy_viewmodel.dart';
+import 'package:supplementary_app/viewmodels/health_check/allergy_viewmodel.dart';
 
 class AllergyScreen extends StatelessWidget {
   const AllergyScreen({super.key});
@@ -183,9 +183,7 @@ class _AllergyScreenView extends StatelessWidget {
                 onPressed:
                     viewModel.isNextButtonEnabled
                         ? () {
-                          // 프로바이더에 데이터 저장
                           viewModel.addToSurvey();
-                          // 다음 화면으로 이동
                           Navigator.push(
                             context,
                             MaterialPageRoute(

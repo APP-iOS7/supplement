@@ -11,10 +11,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  // 현재 선택된 탭 인덱스
   int _currentIndex = 0;
 
-  // 각 탭에 해당하는 화면 위젯들
   final List<Widget> _pages = [
     const HomeScreen(),
     const SearchScreen(),
@@ -25,7 +23,6 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_currentIndex],
-      // 하단 탭 네비게이션
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {

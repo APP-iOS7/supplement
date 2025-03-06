@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
-import 'package:supplementary_app/screens/result/result_screen.dart';
-import 'package:supplementary_app/viewmodels/exercise_frequency_viewmodel.dart';
+import 'package:supplementary_app/screens/result_screen.dart';
+import 'package:supplementary_app/viewmodels/health_check/exercise_frequency_viewmodel.dart';
 
 class ExerciseFrequencyScreen extends StatelessWidget {
   const ExerciseFrequencyScreen({super.key});
@@ -84,7 +84,7 @@ class _ExerciseFrequencyScreenView extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => const ResultScreen(),
                             ),
-                            (route) => false, // 모든 이전 화면 제거
+                            (route) => false,
                           );
                         }
                         : null,

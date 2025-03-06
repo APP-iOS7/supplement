@@ -1,4 +1,3 @@
-// 사용자 정보를 담는 모델 클래스
 class UserModel {
   final String uid;
   final String gender;
@@ -11,4 +10,22 @@ class UserModel {
     required this.birthDate,
     required this.createdAt,
   });
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      uid: json['uid'] as String,
+      gender: json['gender'] as String,
+      birthDate: (json['birthDate'] as DateTime),
+      createdAt: (json['createdAt'] as DateTime),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'gender': gender,
+      'birthDate': birthDate,
+      'createdAt': createdAt,
+    };
+  }
 }
