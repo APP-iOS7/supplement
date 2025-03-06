@@ -23,7 +23,6 @@ class MedicationScreen extends StatelessWidget {
 }
 
 class _MedicationScreenView extends StatelessWidget {
-  // StatefulWidget에서 StatelessWidget으로 변경
   const _MedicationScreenView();
 
   @override
