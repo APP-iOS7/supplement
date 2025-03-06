@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:supplementary_app/models/user_model.dart';
 import 'package:supplementary_app/services/auth_service.dart';
+import 'package:supplementary_app/services/store_service.dart';
 
 class UserProvider with ChangeNotifier {
+  final AuthService _auth = AuthService();
+  final StoreService _store = StoreService();
   UserModel? _user;
-  final AuthService _authService = AuthService();
-
   UserModel? get user => _user;
 
   UserProvider() {
@@ -13,20 +14,9 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> _initUser() async {
-    final currentUser = _authService.currentUser;
-    if (currentUser != null) {
-      final userData = await _authService.getUserData(currentUser.uid);
-      setUser(userData);
-    }
-  }
-
-  void setUser(UserModel? user) {
-    _user = user;
-    notifyListeners();
-  }
-
-  void clearUser() {
-    _user = null;
+    final String uid = _auth.currentUserUid;
+    _user = await _store.getUserInfoByUid(uid);
+    print('user init completed $uid');
     notifyListeners();
   }
 }
