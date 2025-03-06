@@ -17,31 +17,20 @@ class DrinkingScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: const _DrinkingScreenContent(),
+      child: const _DrinkingScreen(),
     );
   }
 }
 
-class _DrinkingScreenContent extends StatelessWidget {
-  const _DrinkingScreenContent();
+class _DrinkingScreen extends StatelessWidget {
+  const _DrinkingScreen();
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<DrinkingViewModel>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: const Text('', style: TextStyle(color: Colors.grey)),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -61,38 +50,7 @@ class _DrinkingScreenContent extends StatelessWidget {
             const SizedBox(height: 16),
             _buildOptionCard('음주', '음주', viewModel),
             const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed:
-                    viewModel.selectedOption != null
-                        ? () {
-                          viewModel.saveDrinkingStatus();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AllergyScreen(),
-                            ),
-                          );
-                        }
-                        : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  '다음',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
+            _buildNextButton(context, viewModel),
           ],
         ),
       ),
@@ -142,6 +100,41 @@ class _DrinkingScreenContent extends StatelessWidget {
                   child: const Icon(Icons.check, color: Colors.white, size: 16),
                 ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNextButton(BuildContext context, DrinkingViewModel viewModel) {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed:
+            viewModel.selectedOption != null
+                ? () {
+                  viewModel.saveDrinkingStatus();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AllergyScreen(),
+                    ),
+                  );
+                }
+                : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.deepPurple,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: const Text(
+          '다음',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

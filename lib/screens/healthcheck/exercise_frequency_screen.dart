@@ -30,16 +30,7 @@ class _ExerciseFrequencyScreenView extends StatelessWidget {
     final viewModel = Provider.of<ExerciseFrequencyViewModel>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text('', style: TextStyle(color: Colors.grey)),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
