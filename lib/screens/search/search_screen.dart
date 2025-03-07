@@ -20,7 +20,7 @@ class SearchScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  _buildSearchBar(viewModel),
+                  _buildSearchBar(context, viewModel),
                   const SizedBox(height: 20),
                   _buildSearchResults(viewModel),
                 ],
@@ -33,17 +33,20 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchBar(SearchViewModel viewModel) {
+  Widget _buildSearchBar(BuildContext context, SearchViewModel viewModel) {
     return Row(
       children: [
-        Expanded(child: _buildSearchTextField(viewModel)),
+        Expanded(child: _buildSearchTextField(context, viewModel)),
         const SizedBox(width: 10),
-        _buildSearchButton(viewModel),
+        _buildSearchButton(context, viewModel),
       ],
     );
   }
 
-  Widget _buildSearchTextField(SearchViewModel viewModel) {
+  Widget _buildSearchTextField(
+    BuildContext context,
+    SearchViewModel viewModel,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -59,21 +62,24 @@ class SearchScreen extends StatelessWidget {
       ),
       child: TextField(
         controller: viewModel.controller,
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           hintText: 'Search...',
           border: InputBorder.none,
-          prefixIcon: Icon(Icons.search, color: Colors.deepPurpleAccent),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Theme.of(context).colorScheme.primary,
+          ),
           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
       ),
     );
   }
 
-  Widget _buildSearchButton(SearchViewModel viewModel) {
+  Widget _buildSearchButton(BuildContext context, SearchViewModel viewModel) {
     return ElevatedButton(
       onPressed: viewModel.executeSearch,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.deepPurpleAccent,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       ),
