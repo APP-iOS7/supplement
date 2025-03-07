@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/models/naver_search_Item_model.dart';
 import 'package:supplementary_app/viewmodels/search/search_view_model.dart';
 import 'package:supplementary_app/screens/search/item_detail_screen.dart';
+import 'package:supplementary_app/widgets/loading.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -96,11 +96,7 @@ class SearchScreen extends StatelessWidget {
         future: viewModel.searchFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Lottie.asset(
-              'assets/animations/loading.json',
-              width: 230, // 원형 크기 (지름)
-              height: 230,
-            );
+            return Loading();
           }
 
           if (snapshot.hasError) {

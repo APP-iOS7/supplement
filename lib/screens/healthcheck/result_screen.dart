@@ -5,6 +5,7 @@ import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/providers/user_provider.dart';
 import 'package:supplementary_app/viewmodels/health_check/result_viewmodel.dart';
 import 'package:supplementary_app/screens/main_screen.dart';
+import 'package:supplementary_app/widgets/loading.dart';
 
 class ResultScreen extends StatelessWidget {
   const ResultScreen({super.key});
@@ -45,7 +46,7 @@ class _ResultScreen extends StatelessWidget {
         future: viewModel.getRecommendations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Loading();
           }
 
           if (snapshot.hasError) {
