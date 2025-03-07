@@ -30,9 +30,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: '영양제 추천',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
           colorScheme: ColorScheme.fromSeed(
             seedColor: const Color(0xFF51B47B),
+            primary: const Color(0xFF51B47B),
             secondary: const Color(0xFF6D6D6D),
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
