@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/models/naver_search_Item_model.dart';
 import 'package:supplementary_app/viewmodels/search/search_view_model.dart';
@@ -95,7 +96,11 @@ class SearchScreen extends StatelessWidget {
         future: viewModel.searchFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Lottie.asset(
+              'assets/animations/loading.json',
+              width: 230, // 원형 크기 (지름)
+              height: 230,
+            );
           }
 
           if (snapshot.hasError) {
@@ -149,7 +154,12 @@ class SearchScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ItemDetailScreen(itemTitle: item.title),
+              builder:
+                  (context) => ItemDetailScreen(
+                    itemTitle: item.title,
+                    imageUrl: item.image,
+                    price: item.lprice,
+                  ),
             ),
           );
         },

@@ -85,7 +85,11 @@ JSON 코드 블록( ```json ... ``` )을 사용하지 마.
     }
   }
 
-  Future<ItemDetail> getDetailByName(String productName) async {
+  Future<ItemDetail> getDetailByName(
+    String productName,
+    String imageUrl,
+    String price,
+  ) async {
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
       "contents": [
@@ -103,6 +107,7 @@ JSON 코드 블록( ```json ... ``` )을 사용하지 마.
 {
   "detail": {
     "name": "제품명",
+    "imageUrl": "$imageUrl"
     "description": "설명",
     "ingredients": ["성분1", "성분2", "성분3"],
     "functionality": "기능",
@@ -110,9 +115,8 @@ JSON 코드 블록( ```json ... ``` )을 사용하지 마.
     "sideEffects": "부작용",
     "caution": "주의사항",
     "manufacturer": "제조사",
-    "price": "가격",
+    "price": "$price",
     "rating": 4.5,
-    "reviews": ["리뷰1", "리뷰2"]
   }
 }
 

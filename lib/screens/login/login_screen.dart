@@ -35,7 +35,7 @@ class _LoginScreen extends StatelessWidget {
                     children: [
                       ClipOval(
                         child: Lottie.asset(
-                          'assets/animations/login.json',
+                          'assets/animations/loading.json',
                           width: 230, // 원형 크기 (지름)
                           height: 230, // 원형 크기 (지름)
                           fit:

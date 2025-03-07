@@ -1,26 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/models/item_detail_model.dart';
 import 'package:supplementary_app/viewmodels/search/item_detail_view_model.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final String itemTitle;
+  final String imageUrl;
+  final String price;
 
-  const ItemDetailScreen({super.key, required this.itemTitle});
+  const ItemDetailScreen({
+    super.key,
+    required this.itemTitle,
+    required this.imageUrl,
+    required this.price,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) {
         final viewModel = ItemDetailViewModel();
-        viewModel.fetchItemDetail(itemTitle);
+        viewModel.fetchItemDetail(itemTitle, imageUrl, price);
         return viewModel;
       },
       child: Consumer<ItemDetailViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.isLoading) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
+            return Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      'assets/animations/loading.json',
+                      width: 230, // 원형 크기 (지름)
+                      height: 230,
+                    ),
+                    SizedBox(height: 100),
+                    Text('로딩중 입니다.'),
+                  ],
+                ),
+              ),
             );
           }
 
@@ -63,6 +84,7 @@ class ItemDetailScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Image.network(itemDetail.imageUrl),
           Text(
             itemDetail.name,
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -77,7 +99,6 @@ class ItemDetailScreen extends StatelessWidget {
           _buildSection('부작용', itemDetail.sideEffects),
           _buildSection('주의사항', itemDetail.caution),
           _buildRatingSection(itemDetail.rating),
-          _buildReviewsSection(itemDetail.reviews),
         ],
       ),
     );
@@ -87,7 +108,7 @@ class ItemDetailScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Text(
-        '가격: $price원',
+        '가격: $price',
         style: const TextStyle(
           fontSize: 20,
           color: Colors.blue,
@@ -113,28 +134,6 @@ class ItemDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildReviewsSection(List<String> reviews) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          '리뷰',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        ...reviews.map(
-          (review) => Card(
-            margin: const EdgeInsets.symmetric(vertical: 4),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(review),
-            ),
-          ),
-        ),
-      ],
     );
   }
 
