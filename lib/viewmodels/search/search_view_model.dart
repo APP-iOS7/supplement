@@ -22,9 +22,17 @@ class SearchViewModel extends ChangeNotifier {
     }
   }
 
-  Future<ItemDetail> fetchItemDetail(String productName) async {
+  Future<ItemDetail> fetchItemDetail(
+    String productName,
+    String imageUrl,
+    String price,
+  ) async {
     try {
-      final itemDetail = await _geminiService.getDetailByName(productName);
+      final itemDetail = await _geminiService.getDetailByName(
+        productName,
+        imageUrl,
+        price,
+      );
       notifyListeners();
       return itemDetail;
     } catch (e) {

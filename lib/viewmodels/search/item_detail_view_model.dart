@@ -13,13 +13,21 @@ class ItemDetailViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  Future<void> fetchItemDetail(String itemTitle) async {
+  Future<void> fetchItemDetail(
+    String itemTitle,
+    String imageUrl,
+    String price,
+  ) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _itemDetail = await _geminiService.getDetailByName(itemTitle);
+      _itemDetail = await _geminiService.getDetailByName(
+        itemTitle,
+        imageUrl,
+        price,
+      );
     } catch (e) {
       _error = e.toString();
     } finally {

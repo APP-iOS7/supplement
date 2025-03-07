@@ -1,5 +1,6 @@
 class ItemDetail {
   final String name;
+  final String imageUrl;
   final String description;
   final List<String> ingredients;
   final String functionality;
@@ -9,10 +10,10 @@ class ItemDetail {
   final String manufacturer;
   final String price;
   final double rating;
-  final List<String> reviews;
 
   ItemDetail({
     required this.name,
+    required this.imageUrl,
     required this.description,
     required this.ingredients,
     required this.functionality,
@@ -22,12 +23,12 @@ class ItemDetail {
     required this.manufacturer,
     required this.price,
     required this.rating,
-    required this.reviews,
   });
 
   factory ItemDetail.fromJson(Map<String, dynamic> json) {
     return ItemDetail(
       name: json['name'],
+      imageUrl: json['imageUrl'],
       description: json['description'],
       ingredients: List<String>.from(json['ingredients']),
       functionality: json['functionality'],
@@ -37,7 +38,6 @@ class ItemDetail {
       manufacturer: json['manufacturer'],
       price: json['price'],
       rating: json['rating'].toDouble(),
-      reviews: List<String>.from(json['reviews']),
     );
   }
 }
