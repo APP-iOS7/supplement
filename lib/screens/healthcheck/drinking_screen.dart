@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/allergy_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/drinking_viewmodel.dart';
+import 'package:supplementary_app/widgets/option_card.dart';
 
 class DrinkingScreen extends StatelessWidget {
   const DrinkingScreen({super.key});
@@ -17,31 +18,20 @@ class DrinkingScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: const _DrinkingScreenContent(),
+      child: const _DrinkingScreen(),
     );
   }
 }
 
-class _DrinkingScreenContent extends StatelessWidget {
-  const _DrinkingScreenContent();
+class _DrinkingScreen extends StatelessWidget {
+  const _DrinkingScreen();
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<DrinkingViewModel>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: const Text('', style: TextStyle(color: Colors.grey)),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -57,91 +47,56 @@ class _DrinkingScreenContent extends StatelessWidget {
               style: TextStyle(color: Colors.grey, fontSize: 16),
             ),
             const SizedBox(height: 30),
-            _buildOptionCard('비음주', '비음주', viewModel),
-            const SizedBox(height: 16),
-            _buildOptionCard('음주', '음주', viewModel),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed:
-                    viewModel.selectedOption != null
-                        ? () {
-                          viewModel.saveDrinkingStatus();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AllergyScreen(),
-                            ),
-                          );
-                        }
-                        : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  '다음',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            OptionCard(
+              title: '비음주',
+              value: '비음주',
+              selectedValue: viewModel.selectedOption ?? '',
+              onTap: viewModel.setSelectedOption,
             ),
+            const SizedBox(height: 16),
+            OptionCard(
+              title: '음주',
+              value: '음주',
+              selectedValue: viewModel.selectedOption ?? '',
+              onTap: viewModel.setSelectedOption,
+            ),
+            const Spacer(),
+            _buildNextButton(context, viewModel),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildOptionCard(
-    String title,
-    String value,
-    DrinkingViewModel viewModel,
-  ) {
-    final isSelected = viewModel.selectedOption == value;
-
-    return GestureDetector(
-      onTap: () => viewModel.setSelectedOption(value),
-      child: Container(
-        width: double.infinity,
-        height: 80,
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.shade50 : Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(16),
-          border:
-              isSelected
-                  ? Border.all(color: Colors.deepPurple, width: 2)
-                  : null,
+  Widget _buildNextButton(BuildContext context, DrinkingViewModel viewModel) {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed:
+            viewModel.selectedOption != null
+                ? () {
+                  viewModel.saveDrinkingStatus();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AllergyScreen(),
+                    ),
+                  );
+                }
+                : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-              if (isSelected)
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: const BoxDecoration(
-                    color: Colors.deepPurple,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.check, color: Colors.white, size: 16),
-                ),
-            ],
+        child: const Text(
+          '다음',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

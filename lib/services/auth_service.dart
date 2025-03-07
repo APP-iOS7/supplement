@@ -12,7 +12,6 @@ class AuthService {
   }
 
   AuthService._internal();
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -173,15 +172,12 @@ class AuthService {
       print('AuthService: 애플 ID 인증 완료');
       // 디버깅 정보 출력
       print(
-        'AuthService: 애플 인증 결과 - ID 토큰 있음: ${appleCredential.identityToken != null}',
+        'AuthService: 애플 인증 결과 - ID 토큰 있음: ${appleCredential.identityToken}',
       );
       print(
-        'AuthService: 애플 인증 결과 - 인증 코드 있음: ${appleCredential.authorizationCode != null}',
+        'AuthService: 애플 인증 결과 - 인증 코드 있음: ${appleCredential.authorizationCode}',
       );
       print('AuthService: 애플 인증 결과 - 이메일: ${appleCredential.email}');
-      print(
-        'AuthService: 애플 인증 결과 - 성: ${appleCredential.familyName}, 이름: ${appleCredential.givenName}',
-      );
       // Firebase 인증 정보 생성
       print('AuthService: Firebase 인증 정보 생성');
       final oauthCredential = OAuthProvider('apple.com').credential(
@@ -192,22 +188,6 @@ class AuthService {
       print('AuthService: Firebase 로그인 시도');
       final userCredential = await _auth.signInWithCredential(oauthCredential);
       print('AuthService: Firebase 로그인 성공 - UID: ${userCredential.user?.uid}');
-      // 사용자 프로필 업데이트 (이름 정보가 있는 경우)
-      if (appleCredential.givenName != null && userCredential.user != null) {
-        print('AuthService: 사용자 프로필 업데이트 시도');
-        String displayName = '';
-        if (appleCredential.givenName != null) {
-          displayName += appleCredential.givenName!;
-        }
-        if (appleCredential.familyName != null) {
-          if (displayName.isNotEmpty) displayName += ' ';
-          displayName += appleCredential.familyName!;
-        }
-        if (displayName.isNotEmpty) {
-          await userCredential.user!.updateDisplayName(displayName);
-          print('AuthService: 사용자 프로필 업데이트 완료 - 이름: $displayName');
-        }
-      }
       return userCredential;
     } catch (e) {
       print('AuthService: 애플 로그인 에러: $e');

@@ -18,23 +18,22 @@ class ResultViewModel extends ChangeNotifier {
   }) : _userProvider = userProvider,
        _surveyProvider = surveyProvider;
 
-  Future<List<AnswerModel>> getRecommendations() async {
+  Future<AnswerModel> getRecommendations() async {
     await _userProvider.initUser();
-    final recommendations = await _geminiService.getRecommendSupplement(
+    final recommendation = await _geminiService.getRecommendSupplement(
       user: _userProvider.user!,
       survey: _surveyProvider.supplementSurveyModel!,
     );
 
-    for (var recommendation in recommendations) {
-      try {
-        final imageUrl = await _naverService.getImageUrlFromNaverShopping(
-          recommendation.name,
-        );
-        recommendation.imageLink = imageUrl;
-      } catch (e) {
-        print('이미지 로딩 실패: ${recommendation.name}');
-      }
+    try {
+      final imageUrl = await _naverService.getImageUrlFromNaverShopping(
+        recommendation.name,
+      );
+      recommendation.imageLink = imageUrl;
+    } catch (e) {
+      print('이미지 로딩 실패: ${recommendation.name}');
     }
-    return recommendations;
+
+    return recommendation;
   }
 }

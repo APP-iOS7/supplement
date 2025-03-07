@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/result_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/exercise_frequency_viewmodel.dart';
+import 'package:supplementary_app/widgets/option_card.dart';
 
 class ExerciseFrequencyScreen extends StatelessWidget {
   const ExerciseFrequencyScreen({super.key});
@@ -30,16 +31,7 @@ class _ExerciseFrequencyScreenView extends StatelessWidget {
     final viewModel = Provider.of<ExerciseFrequencyViewModel>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text('', style: TextStyle(color: Colors.grey)),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -59,10 +51,11 @@ class _ExerciseFrequencyScreenView extends StatelessWidget {
             ...viewModel.exerciseOptions.map(
               (option) => Column(
                 children: [
-                  _buildOptionCard(
-                    option['title']!,
-                    option['value']!,
-                    viewModel,
+                  OptionCard(
+                    title: option['title']!,
+                    value: option['value']!,
+                    selectedValue: viewModel.selectedOption ?? '',
+                    onTap: viewModel.selectOption,
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -89,7 +82,7 @@ class _ExerciseFrequencyScreenView extends StatelessWidget {
                         }
                         : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -105,55 +98,6 @@ class _ExerciseFrequencyScreenView extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOptionCard(
-    String title,
-    String value,
-    ExerciseFrequencyViewModel viewModel,
-  ) {
-    final isSelected = viewModel.selectedOption == value;
-
-    return GestureDetector(
-      onTap: () => viewModel.selectOption(value),
-      child: Container(
-        width: double.infinity,
-        height: 80,
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.shade50 : Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(16),
-          border:
-              isSelected
-                  ? Border.all(color: Colors.deepPurple, width: 2)
-                  : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-              if (isSelected)
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: const BoxDecoration(
-                    color: Colors.deepPurple,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.check, color: Colors.white, size: 16),
-                ),
-            ],
-          ),
         ),
       ),
     );

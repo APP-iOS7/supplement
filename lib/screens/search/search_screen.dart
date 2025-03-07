@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/models/naver_search_Item_model.dart';
 import 'package:supplementary_app/viewmodels/search/search_view_model.dart';
+import 'package:supplementary_app/screens/search/item_detail_screen.dart';
+import 'package:supplementary_app/widgets/loading.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -18,7 +20,7 @@ class SearchScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  _buildSearchBar(viewModel),
+                  _buildSearchBar(context, viewModel),
                   const SizedBox(height: 20),
                   _buildSearchResults(viewModel),
                 ],
@@ -31,17 +33,20 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchBar(SearchViewModel viewModel) {
+  Widget _buildSearchBar(BuildContext context, SearchViewModel viewModel) {
     return Row(
       children: [
-        Expanded(child: _buildSearchTextField(viewModel)),
+        Expanded(child: _buildSearchTextField(context, viewModel)),
         const SizedBox(width: 10),
-        _buildSearchButton(viewModel),
+        _buildSearchButton(context, viewModel),
       ],
     );
   }
 
-  Widget _buildSearchTextField(SearchViewModel viewModel) {
+  Widget _buildSearchTextField(
+    BuildContext context,
+    SearchViewModel viewModel,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -57,21 +62,24 @@ class SearchScreen extends StatelessWidget {
       ),
       child: TextField(
         controller: viewModel.controller,
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           hintText: 'Search...',
           border: InputBorder.none,
-          prefixIcon: Icon(Icons.search, color: Colors.deepPurpleAccent),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Theme.of(context).colorScheme.primary,
+          ),
           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
       ),
     );
   }
 
-  Widget _buildSearchButton(SearchViewModel viewModel) {
+  Widget _buildSearchButton(BuildContext context, SearchViewModel viewModel) {
     return ElevatedButton(
       onPressed: viewModel.executeSearch,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.deepPurpleAccent,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       ),
@@ -94,7 +102,7 @@ class SearchScreen extends StatelessWidget {
         future: viewModel.searchFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Loading();
           }
 
           if (snapshot.hasError) {
@@ -118,14 +126,19 @@ class SearchScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder:
-                (context, index) => _buildResultCard(snapshot.data![index]),
+                (context, index) =>
+                    _buildResultCard(snapshot.data![index], context, viewModel),
           );
         },
       ),
     );
   }
 
-  Widget _buildResultCard(SearchItem item) {
+  Widget _buildResultCard(
+    SearchItem item,
+    BuildContext context,
+    SearchViewModel viewModel,
+  ) {
     return Card(
       elevation: 3,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
@@ -136,7 +149,22 @@ class SearchScreen extends StatelessWidget {
           item.title,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
-        subtitle: Text(item.mallName),
+        subtitle: Row(
+          children: [Text('${item.lprice}원'), Spacer(), Text(item.brand)],
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => ItemDetailScreen(
+                    itemTitle: item.title,
+                    imageUrl: item.image,
+                    price: item.lprice,
+                  ),
+            ),
+          );
+        },
       ),
     );
   }
