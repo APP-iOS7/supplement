@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/exercise_frequency_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/medication_viewmodel.dart';
+import 'package:supplementary_app/widgets/option_card.dart';
 
 class MedicationScreen extends StatelessWidget {
   const MedicationScreen({super.key});
@@ -46,9 +47,19 @@ class _MedicationScreenView extends StatelessWidget {
               style: TextStyle(color: Colors.grey, fontSize: 16),
             ),
             const SizedBox(height: 30),
-            _buildOptionCard('복용중인 약 없음', '복용중인 약 없음', viewModel),
+            OptionCard(
+              title: '복용중인 약 없음',
+              value: '복용중인 약 없음',
+              selectedValue: viewModel.selectedOption ?? '',
+              onTap: viewModel.selectOption,
+            ),
             const SizedBox(height: 16),
-            _buildOptionCard('복용중인 약 있음', '복용중인 약 있음', viewModel),
+            OptionCard(
+              title: '복용중인 약 있음',
+              value: '복용중인 약 있음',
+              selectedValue: viewModel.selectedOption ?? '',
+              onTap: viewModel.selectOption,
+            ),
 
             if (viewModel.selectedOption == '복용중인 약 있음')
               Expanded(
@@ -78,7 +89,7 @@ class _MedicationScreenView extends StatelessWidget {
                               ),
                               IconButton(
                                 icon: const Icon(Icons.edit, size: 20),
-                                color: Colors.deepPurple,
+                                color: Theme.of(context).colorScheme.primary,
                                 onPressed:
                                     () => _showMedicationDialog(
                                       context,
@@ -130,7 +141,7 @@ class _MedicationScreenView extends StatelessWidget {
                         }
                         : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -188,54 +199,6 @@ class _MedicationScreenView extends StatelessWidget {
               ),
             ],
           ),
-    );
-  }
-
-  Widget _buildOptionCard(
-    String title,
-    String value,
-    MedicationViewModel viewModel,
-  ) {
-    final isSelected = viewModel.selectedOption == value;
-    return GestureDetector(
-      onTap: () => viewModel.selectOption(value),
-      child: Container(
-        width: double.infinity,
-        height: 80,
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.shade50 : Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(16),
-          border:
-              isSelected
-                  ? Border.all(color: Colors.deepPurple, width: 2)
-                  : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-              if (isSelected)
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: const BoxDecoration(
-                    color: Colors.deepPurple,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.check, color: Colors.white, size: 16),
-                ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
