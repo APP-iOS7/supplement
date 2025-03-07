@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/models/naver_search_Item_model.dart';
 import 'package:supplementary_app/viewmodels/search/search_view_model.dart';
+import 'package:supplementary_app/screens/search/item_detail_screen.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -118,14 +119,19 @@ class SearchScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder:
-                (context, index) => _buildResultCard(snapshot.data![index]),
+                (context, index) =>
+                    _buildResultCard(snapshot.data![index], context, viewModel),
           );
         },
       ),
     );
   }
 
-  Widget _buildResultCard(SearchItem item) {
+  Widget _buildResultCard(
+    SearchItem item,
+    BuildContext context,
+    SearchViewModel viewModel,
+  ) {
     return Card(
       elevation: 3,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
@@ -139,6 +145,14 @@ class SearchScreen extends StatelessWidget {
         subtitle: Row(
           children: [Text('${item.lprice}원'), Spacer(), Text(item.brand)],
         ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ItemDetailScreen(itemTitle: item.title),
+            ),
+          );
+        },
       ),
     );
   }
