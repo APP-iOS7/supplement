@@ -31,7 +31,16 @@ class MyApp extends StatelessWidget {
         title: '영양제 추천',
         theme: ThemeData(
           primarySwatch: Colors.blue,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF51B47B),
+            secondary: const Color(0xFF6D6D6D),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF51B47B),
+              foregroundColor: Colors.white,
+            ),
+          ),
           useMaterial3: true,
         ),
         home: AuthWrapper(),

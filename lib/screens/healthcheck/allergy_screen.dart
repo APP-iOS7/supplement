@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/medication_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/allergy_viewmodel.dart';
+import 'package:supplementary_app/widgets/option_card.dart';
 
 class AllergyScreen extends StatelessWidget {
   const AllergyScreen({super.key});
@@ -38,7 +39,7 @@ class _AllergyScreen extends StatelessWidget {
               children: [
                 _buildHeader(),
                 const SizedBox(height: 30),
-                _buildOptions(viewModel),
+                _buildOptions(context, viewModel),
                 if (viewModel.selectedOption == '알러지가 있어요')
                   _buildAllergySelectionSection(context, viewModel),
                 _buildNextButton(context, viewModel),
@@ -67,12 +68,22 @@ class _AllergyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOptions(AllergyViewModel viewModel) {
+  Widget _buildOptions(BuildContext context, AllergyViewModel viewModel) {
     return Column(
       children: [
-        _buildOptionCard('알러지가 없어요', '알러지가 없어요', viewModel),
+        OptionCard(
+          title: '알러지가 없어요',
+          value: '알러지가 없어요',
+          selectedValue: viewModel.selectedOption ?? '',
+          onTap: viewModel.selectOption,
+        ),
         const SizedBox(height: 16),
-        _buildOptionCard('알러지가 있어요', '알러지가 있어요', viewModel),
+        OptionCard(
+          title: '알러지가 있어요',
+          value: '알러지가 있어요',
+          selectedValue: viewModel.selectedOption ?? '',
+          onTap: viewModel.selectOption,
+        ),
       ],
     );
   }
@@ -127,13 +138,15 @@ class _AllergyScreen extends StatelessWidget {
   ) {
     return FilterChip(
       selected: isSelected,
-      backgroundColor: Colors.grey.shade200,
-      selectedColor: Colors.deepPurple.shade100,
-      checkmarkColor: Colors.deepPurple,
+      backgroundColor: Colors.grey.shade100,
+      selectedColor: Theme.of(context).colorScheme.primaryContainer,
+      checkmarkColor: Theme.of(context).colorScheme.primary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side:
-            isSelected ? BorderSide(color: Colors.deepPurple) : BorderSide.none,
+            isSelected
+                ? BorderSide(color: Theme.of(context).colorScheme.primary)
+                : BorderSide.none,
       ),
       label: Text(type),
       onSelected: (selected) {
@@ -154,18 +167,22 @@ class _AllergyScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.deepPurple.shade50,
+          color: Theme.of(
+            context,
+          ).colorScheme.primaryContainer.withOpacity(0.3),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.deepPurple.shade200),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+          ),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               '특정 알러지:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.deepPurple,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(width: 8),
@@ -177,7 +194,7 @@ class _AllergyScreen extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.edit, size: 18),
-              color: Colors.deepPurple,
+              color: Theme.of(context).colorScheme.primary,
               onPressed: () => _showSpecificAllergyDialog(context, viewModel),
             ),
           ],
@@ -204,7 +221,7 @@ class _AllergyScreen extends StatelessWidget {
                 }
                 : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.deepPurple,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -229,56 +246,6 @@ class _AllergyScreen extends StatelessWidget {
                 ),
               ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOptionCard(
-    String title,
-    String value,
-    AllergyViewModel viewModel,
-  ) {
-    final isSelected = viewModel.selectedOption == value;
-    return GestureDetector(
-      onTap: () {
-        viewModel.selectOption(value);
-      },
-      child: Container(
-        width: double.infinity,
-        height: 80,
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.shade50 : Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(16),
-          border:
-              isSelected
-                  ? Border.all(color: Colors.deepPurple, width: 2)
-                  : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-              if (isSelected)
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: const BoxDecoration(
-                    color: Colors.deepPurple,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.check, color: Colors.white, size: 16),
-                ),
-            ],
-          ),
         ),
       ),
     );
@@ -317,7 +284,7 @@ class _AllergyScreen extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
                 child: const Text('확인', style: TextStyle(color: Colors.white)),
               ),

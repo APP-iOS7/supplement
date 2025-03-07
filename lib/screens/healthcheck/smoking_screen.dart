@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/drinking_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/smoking_viewmodel.dart';
+import 'package:supplementary_app/widgets/option_card.dart';
 
 class SmokingScreen extends StatelessWidget {
   const SmokingScreen({super.key});
@@ -46,9 +47,19 @@ class _SmokingScreenContent extends StatelessWidget {
               style: TextStyle(color: Colors.grey, fontSize: 16),
             ),
             const SizedBox(height: 30),
-            _buildOptionCard('비흡연', '비흡연', viewModel),
+            OptionCard(
+              title: '비흡연',
+              value: '비흡연',
+              selectedValue: viewModel.selectedOption ?? '',
+              onTap: viewModel.setSelectedOption,
+            ),
             const SizedBox(height: 16),
-            _buildOptionCard('흡연', '흡연', viewModel),
+            OptionCard(
+              title: '흡연',
+              value: '흡연',
+              selectedValue: viewModel.selectedOption ?? '',
+              onTap: viewModel.setSelectedOption,
+            ),
             const Spacer(),
             SizedBox(
               width: double.infinity,
@@ -67,7 +78,7 @@ class _SmokingScreenContent extends StatelessWidget {
                         }
                         : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -83,55 +94,6 @@ class _SmokingScreenContent extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOptionCard(
-    String title,
-    String value,
-    SmokingViewModel viewModel,
-  ) {
-    final isSelected = viewModel.selectedOption == value;
-
-    return GestureDetector(
-      onTap: () => viewModel.setSelectedOption(value),
-      child: Container(
-        width: double.infinity,
-        height: 80,
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.shade50 : Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(16),
-          border:
-              isSelected
-                  ? Border.all(color: Colors.deepPurple, width: 2)
-                  : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-              if (isSelected)
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: const BoxDecoration(
-                    color: Colors.deepPurple,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.check, color: Colors.white, size: 16),
-                ),
-            ],
-          ),
         ),
       ),
     );

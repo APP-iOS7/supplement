@@ -75,13 +75,14 @@ class _HealthConcernScreen extends StatelessWidget {
         itemCount: viewModel.healthConcerns.length,
         itemBuilder: (context, index) {
           final concern = viewModel.healthConcerns[index];
-          return _buildGridItem(concern, viewModel, index);
+          return _buildGridItem(context, concern, viewModel, index);
         },
       ),
     );
   }
 
   Widget _buildGridItem(
+    BuildContext context,
     Map<String, dynamic> concern,
     HealthConcernViewModel viewModel,
     int index,
@@ -90,11 +91,17 @@ class _HealthConcernScreen extends StatelessWidget {
       onTap: () => viewModel.toggleSelection(index),
       child: Container(
         decoration: BoxDecoration(
-          color: concern['color'],
+          color:
+              concern['isSelected']
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(16),
           border:
               concern['isSelected']
-                  ? Border.all(color: Colors.blue, width: 2)
+                  ? Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 2,
+                  )
                   : null,
         ),
         child: Column(
@@ -153,7 +160,7 @@ class _HealthConcernScreen extends StatelessWidget {
                 }
                 : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.purple,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           minimumSize: const Size(double.infinity, 56),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
