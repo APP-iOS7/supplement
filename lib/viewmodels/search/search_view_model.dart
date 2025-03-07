@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:supplementary_app/models/item_detail_model.dart';
 import 'package:supplementary_app/services/naver_service.dart';
 import 'package:supplementary_app/models/naver_search_Item_model.dart';
+import 'package:supplementary_app/services/gemini_service.dart';
 
 class SearchViewModel extends ChangeNotifier {
   final TextEditingController controller = TextEditingController();
   final NaverService _naverService = NaverService();
+  final GeminiService _geminiService = GeminiService();
   Future<List<SearchItem>>? searchFuture;
 
   Future<List<SearchItem>> search() async {
@@ -16,6 +19,17 @@ class SearchViewModel extends ChangeNotifier {
       print('검색 실패: $e');
       notifyListeners();
       return [];
+    }
+  }
+
+  Future<ItemDetail> fetchItemDetail(String productName) async {
+    try {
+      final itemDetail = await _geminiService.getDetailByName(productName);
+      notifyListeners();
+      return itemDetail;
+    } catch (e) {
+      print('아이템 상세 정보 가져오기 실패: $e');
+      throw '디테일 fetchItemDetail에 문제 생김 문제: $e';
     }
   }
 
