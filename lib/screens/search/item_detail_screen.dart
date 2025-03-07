@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/models/item_detail_model.dart';
 import 'package:supplementary_app/viewmodels/search/item_detail_view_model.dart';
+import 'package:supplementary_app/widgets/loading.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final String itemTitle;
@@ -27,22 +27,7 @@ class ItemDetailScreen extends StatelessWidget {
       child: Consumer<ItemDetailViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.isLoading) {
-            return Scaffold(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset(
-                      'assets/animations/loading.json',
-                      width: 230, // 원형 크기 (지름)
-                      height: 230,
-                    ),
-                    SizedBox(height: 100),
-                    Text('로딩중 입니다.'),
-                  ],
-                ),
-              ),
-            );
+            return Scaffold(body: Loading());
           }
 
           if (viewModel.error != null) {
