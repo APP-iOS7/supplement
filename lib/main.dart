@@ -9,6 +9,7 @@ import 'package:supplementary_app/screens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:supplementary_app/firebase_options.dart';
 import 'package:supplementary_app/providers/user_provider.dart';
+import 'package:supplementary_app/widgets/loading.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,7 +49,7 @@ class AuthWrapper extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(body: Center(child: CircularProgressIndicator()));
+          return Scaffold(body: Loading());
         }
 
         if (!snapshot.hasData) {
@@ -64,7 +65,7 @@ class AuthWrapper extends StatelessWidget {
                   .get(),
           builder: (context, userSnapshot) {
             if (userSnapshot.connectionState == ConnectionState.waiting) {
-              return Scaffold(body: Center(child: CircularProgressIndicator()));
+              return Scaffold(body: Loading());
             }
 
             if (!userSnapshot.hasData || !userSnapshot.data!.exists) {

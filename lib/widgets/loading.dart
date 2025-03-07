@@ -3,7 +3,6 @@ import 'package:lottie/lottie.dart';
 
 Widget Loading() {
   return Container(
-    color: Colors.white,
     child: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
