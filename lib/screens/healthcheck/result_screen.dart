@@ -41,7 +41,7 @@ class _ResultScreen extends StatelessWidget {
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      body: FutureBuilder<List<AnswerModel>>(
+      body: FutureBuilder<AnswerModel>(
         future: viewModel.getRecommendations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -70,7 +70,7 @@ class _ResultScreen extends StatelessWidget {
             );
           }
 
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          if (!snapshot.hasData) {
             return const Center(child: Text('추천 결과가 없습니다.'));
           }
 
@@ -79,11 +79,9 @@ class _ResultScreen extends StatelessWidget {
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: snapshot.data!.length,
+                  itemCount: 1,
                   itemBuilder: (context, index) {
-                    return _RecommendationCard(
-                      recommendation: snapshot.data![index],
-                    );
+                    return _RecommendationCard(recommendation: snapshot.data!);
                   },
                 ),
               ),
