@@ -82,7 +82,7 @@ class AuthWrapper extends StatelessWidget {
         }
 
         if (!snapshot.hasData) {
-          return LoginScreen();
+          return const LoginScreen();
         }
 
         final user = snapshot.data!;
@@ -98,7 +98,7 @@ class AuthWrapper extends StatelessWidget {
             }
 
             if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
-              return GetInfoScreen();
+              return const GetInfoScreen();
             }
             Provider.of<UserProvider>(context, listen: false).initUser();
             return MainScreen();
