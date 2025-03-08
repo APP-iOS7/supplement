@@ -69,7 +69,7 @@ class ItemDetailScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(itemDetail.imageUrl),
+          Image.network(imageUrl),
           Text(
             itemDetail.name,
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),

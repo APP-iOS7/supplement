@@ -38,7 +38,6 @@ dependencies:
   cloud_firestore: ^5.6.5
   google_sign_in: ^6.2.2
   sign_in_with_apple: ^6.1.4
-  shared_preferences: ^2.5.2
   lottie: ^3.1.2 # 최신 버전 사용 권장
   url_launcher: ^6.3.1 # 앱에서 외부 링크(브라우저 등)를 열기
   cached_network_image: ^3.4.1 # 네트워크 이미지 캐싱으로 로딩 속도 개선

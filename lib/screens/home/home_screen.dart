@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/screens/healthcheck/health_concern_screen.dart';
+import 'package:supplementary_app/screens/search/item_detail_screen.dart';
 import 'package:supplementary_app/services/auth_service.dart';
 import 'package:supplementary_app/screens/banner/banner_screen.dart';
 import 'package:supplementary_app/viewmodels/home/home_screen_view_model.dart';
@@ -82,42 +83,57 @@ class _HomeScreen extends StatelessWidget {
                 itemCount: viewModel.recommendList.length,
                 itemBuilder: (context, index) {
                   final item = viewModel.recommendList[index];
-                  return Card(
-                    margin: EdgeInsets.symmetric(horizontal: 2),
-                    clipBehavior: Clip.antiAlias,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Image.network(
-                              item.imageLink!,
-                              fit: BoxFit.cover,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => ItemDetailScreen(
+                                itemTitle: item.name,
+                                imageUrl: item.imageLink!,
+                                price: item.price,
+                              ),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      margin: EdgeInsets.symmetric(horizontal: 2),
+                      clipBehavior: Clip.antiAlias,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: Image.network(
+                                item.imageLink!,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item.name,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(item.price),
-                                Text('평점: ${item.rating}'),
-                              ],
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.name,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(item.price),
+                                  Text('평점: ${item.rating}'),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },
