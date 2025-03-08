@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:supplementary_app/providers/theme_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -21,19 +23,19 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         children: [
           // Personal Settings Section
-          _buildSettingItem(context, '내 정보 수정', Icons.chevron_right),
-          _buildSettingItem(context, '알림 설정', Icons.chevron_right),
-          _buildSettingItem(context, '진동 설정', Icons.chevron_right),
-          _buildSettingItem(context, '개인화 설정', Icons.chevron_right),
+          _buildSettingItem(context, '내 정보 수정', Icons.chevron_right, () {}),
+          _buildSettingItem(context, '알림 설정', Icons.chevron_right, () {}),
+          _buildSettingItem(context, '진동 설정', Icons.chevron_right, () {}),
+          _buildThemeToggle(context), // 라이트/다크모드 토글 수정
 
           // Divider
           const Divider(height: 16, thickness: 8, color: Color(0xFFF5F5F5)),
 
           // Service Settings Section
-          _buildSettingItem(context, '서비스 이용약관', Icons.chevron_right),
-          _buildSettingItem(context, '개인정보 처리방침', Icons.chevron_right),
-          _buildSettingItem(context, '청소년 보호 약관', Icons.chevron_right),
-          _buildSettingItem(context, '고객센터', Icons.chevron_right),
+          _buildSettingItem(context, '서비스 이용약관', Icons.chevron_right, () {}),
+          _buildSettingItem(context, '개인정보 처리방침', Icons.chevron_right, () {}),
+          _buildSettingItem(context, '청소년 보호 약관', Icons.chevron_right, () {}),
+          _buildSettingItem(context, '고객센터', Icons.chevron_right, () {}),
 
           // Divider
           const Divider(height: 16, thickness: 8, color: Color(0xFFF5F5F5)),
@@ -54,17 +56,22 @@ class SettingsScreen extends StatelessWidget {
           ),
 
           // Logout Button
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Icon(Icons.logout, color: Colors.red[400]),
-                const SizedBox(width: 8),
-                Text(
-                  '로그아웃',
-                  style: TextStyle(color: Colors.red[400], fontSize: 16),
-                ),
-              ],
+          InkWell(
+            onTap: () {
+              // 로그아웃 기능 추가 예정
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Icon(Icons.logout, color: Colors.red[400]),
+                  const SizedBox(width: 8),
+                  Text(
+                    '로그아웃',
+                    style: TextStyle(color: Colors.red[400], fontSize: 16),
+                  ),
+                ],
+              ),
             ),
           ),
 
@@ -79,11 +86,10 @@ class SettingsScreen extends StatelessWidget {
     BuildContext context,
     String title,
     IconData trailingIcon,
+    VoidCallback onTap,
   ) {
     return InkWell(
-      onTap: () {
-        // Handle tap on setting item
-      },
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Row(
@@ -94,6 +100,28 @@ class SettingsScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildThemeToggle(BuildContext context) {
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('라이트/다크모드', style: TextStyle(fontSize: 16)),
+              Switch(
+                value: themeProvider.themeMode == ThemeMode.dark,
+                onChanged: (value) {
+                  themeProvider.toggleTheme();
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

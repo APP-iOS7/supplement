@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:supplementary_app/firebase_options.dart';
 import 'package:supplementary_app/providers/user_provider.dart';
 import 'package:supplementary_app/widgets/loading.dart';
+import 'package:supplementary_app/providers/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,26 +29,31 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => SupplementSurveyProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
-        ChangeNotifierProvider(create: (context) => RecommendationProvider()),
-        ChangeNotifierProvider(create: (context) => PageRouteProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ],
-      child: MaterialApp(
-        title: '영양제 추천',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF51B47B),
-            primary: const Color(0xFF51B47B),
-            secondary: const Color(0xFF6D6D6D),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF51B47B),
-              foregroundColor: Colors.white,
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: '영양제 추천',
+            theme: ThemeData.light().copyWith(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color(0xFF51B47B),
+                primary: const Color(0xFF51B47B),
+                secondary: const Color(0xFF6D6D6D),
+              ),
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF51B47B),
+                  foregroundColor: Colors.white,
+                ),
+              ),
+              useMaterial3: true,
             ),
-          ),
-          useMaterial3: true,
-        ),
-        home: AuthWrapper(),
+            darkTheme: ThemeData.dark(),
+            themeMode: themeProvider.themeMode,
+            home: const AuthWrapper(),
+          );
+        },
       ),
     );
   }
@@ -66,7 +72,7 @@ class AuthWrapper extends StatelessWidget {
         }
 
         if (!snapshot.hasData) {
-          return LoginScreen();
+          return const LoginScreen();
         }
 
         final user = snapshot.data!;
@@ -82,7 +88,7 @@ class AuthWrapper extends StatelessWidget {
             }
 
             if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
-              return GetInfoScreen();
+              return const GetInfoScreen();
             }
             Provider.of<UserProvider>(context, listen: false).initUser();
             return MainScreen();
