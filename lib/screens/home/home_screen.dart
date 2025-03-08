@@ -33,76 +33,58 @@ class _HomeScreen extends StatelessWidget {
       children: [
         // 배너 캐러셀 화면을 상단에 추가
         BannerScreen(),
-        ElevatedButton(
-          onPressed: () => _supplementRecommendButtonPressed(context),
-          child: Text('추천해줘'),
-        ),
+        Divider(),
+        _recommendations(),
+        Divider(),
+        itemRecommendButton(context),
         ElevatedButton(
           onPressed: () => AuthService().signOut(),
           child: Text('로그아웃'),
         ),
-        Divider(),
-        _recommendations(),
-        Divider(),
       ],
+    );
+  }
+
+  ElevatedButton itemRecommendButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed:
+          () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => HealthConcernScreen()),
+          ),
+      child: Text('추천해줘'),
     );
   }
 
   Widget _recommendations() {
     return SizedBox(
-      height: 200,
+      height: 250,
+      width: 150,
       child: GridView.builder(
         scrollDirection: Axis.horizontal,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 1,
-          childAspectRatio: 0.75,
           mainAxisSpacing: 8,
         ),
         itemCount: viewModel.recommendList.length,
         itemBuilder: (context, index) {
           final item = viewModel.recommendList[index];
-          return Card(
-            elevation: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (item.imageLink != null)
-                    Expanded(
-                      flex: 2,
-                      child: Image.network(item.imageLink!, fit: BoxFit.cover),
-                    ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          item.price,
-                          style: const TextStyle(color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+          if (item == 0) Text('없어요');
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.network(item.imageLink!, fit: BoxFit.cover),
+              const SizedBox(height: 8),
+              Text(
+                item.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
+              Text(item.price, style: const TextStyle(color: Colors.blue)),
+            ],
           );
         },
       ),
     );
-  }
-
-  void _supplementRecommendButtonPressed(BuildContext context) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (context) => HealthConcernScreen()));
   }
 }
