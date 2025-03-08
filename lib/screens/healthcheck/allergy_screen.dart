@@ -18,13 +18,18 @@ class AllergyScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: const _AllergyScreen(),
+      child: Consumer<AllergyViewModel>(
+        builder: (context, viewModel, child) {
+          return _AllergyScreen(viewModel: viewModel);
+        },
+      ),
     );
   }
 }
 
 class _AllergyScreen extends StatelessWidget {
-  const _AllergyScreen();
+  const _AllergyScreen({required this.viewModel});
+  final AllergyViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {

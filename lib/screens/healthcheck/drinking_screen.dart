@@ -18,18 +18,21 @@ class DrinkingScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: const _DrinkingScreen(),
+      child: Consumer<DrinkingViewModel>(
+        builder: (context, viewModel, child) {
+          return _DrinkingScreen(viewModel: viewModel);
+        },
+      ),
     );
   }
 }
 
 class _DrinkingScreen extends StatelessWidget {
-  const _DrinkingScreen();
+  const _DrinkingScreen({required this.viewModel});
+  final DrinkingViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<DrinkingViewModel>(context);
-
     return Scaffold(
       appBar: AppBar(),
       body: Padding(

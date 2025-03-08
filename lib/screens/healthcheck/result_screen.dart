@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:supplementary_app/models/gemini_answer_model.dart';
-import 'package:supplementary_app/providers/supplement_survey_provider.dart';
-import 'package:supplementary_app/providers/user_provider.dart';
+import 'package:supplementary_app/models/recommend_item_model.dart';
 import 'package:supplementary_app/viewmodels/health_check/result_viewmodel.dart';
 import 'package:supplementary_app/screens/main_screen.dart';
 import 'package:supplementary_app/widgets/loading.dart';
@@ -12,37 +10,30 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final surveyProvider = Provider.of<SupplementSurveyProvider>(
-      context,
-      listen: false,
-    );
-
     return ChangeNotifierProvider(
-      create:
-          (_) => ResultViewModel(
-            userProvider: userProvider,
-            surveyProvider: surveyProvider,
-          ),
-      child: const _ResultScreen(),
+      create: (context) => ResultViewModel(context),
+      child: Consumer<ResultViewModel>(
+        builder: (context, viewModel, child) {
+          return _ResultScreen(viewModel: viewModel);
+        },
+      ),
     );
   }
 }
 
 class _ResultScreen extends StatelessWidget {
-  const _ResultScreen();
+  const _ResultScreen({required this.viewModel});
+  final ResultViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<ResultViewModel>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('맞춤 영양제 추천'),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      body: FutureBuilder<AnswerModel>(
+      body: FutureBuilder<RecommendItemModel>(
         future: viewModel.getRecommendations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -127,7 +118,7 @@ class _ResultScreen extends StatelessWidget {
 }
 
 class _RecommendationCard extends StatelessWidget {
-  final AnswerModel recommendation;
+  final RecommendItemModel recommendation;
 
   const _RecommendationCard({required this.recommendation});
 

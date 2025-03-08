@@ -61,7 +61,7 @@ class _LoginScreen extends StatelessWidget {
                     // 구글 로그인 버튼
                     ElevatedButton.icon(
                       onPressed: vm.signInWithGoogle,
-                      icon: const Icon(Icons.g_mobiledata, size: 24),
+                      // icon: const Icon(Icons.g_mobiledata, size: 24),
                       label: const Text('Google로 로그인'),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),

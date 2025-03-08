@@ -53,7 +53,7 @@ class BannerDetailScreen extends StatelessWidget {
               bannerItem.imageUrl, // 배너 이미지 URL
               width: double.infinity, // 화면 너비에 꽉 차게
               height: 250, // 이미지 높이 고정
-              fit: BoxFit.cover, // 이미지가 영역을 꽉 채우도록 조정
+              fit: BoxFit.fill, // 이미지가 영역을 꽉 채우도록 조정
               errorBuilder: (context, error, stackTrace) {
                 // 이미지 로딩 실패 시 실행
                 print('이미지 로딩 오류: $error'); // 오류 메시지 출력
