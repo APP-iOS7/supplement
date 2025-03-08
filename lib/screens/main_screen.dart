@@ -23,18 +23,18 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _pages),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
+      bottomNavigationBar: NavigationBar(
+        destinations: [
+          NavigationDestination(icon: Icon(Icons.home), label: '홈'),
+          NavigationDestination(icon: Icon(Icons.search), label: '검색'),
+          NavigationDestination(icon: Icon(Icons.person), label: '마이페이지'),
+        ],
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (value) {
           setState(() {
-            _currentIndex = index;
+            _currentIndex = value;
           });
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: '검색'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: '마이페이지'),
-        ],
       ),
     );
   }

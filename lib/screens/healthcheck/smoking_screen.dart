@@ -18,14 +18,12 @@ class SmokingScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: const _SmokingScreenContent(),
+      child: _SmokingScreen(),
     );
   }
 }
 
-class _SmokingScreenContent extends StatelessWidget {
-  const _SmokingScreenContent();
-
+class _SmokingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<SmokingViewModel>(context);

@@ -18,13 +18,13 @@ class ExerciseFrequencyScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: const _ExerciseFrequencyScreenView(),
+      child: const _ExerciseFrequencyScreen(),
     );
   }
 }
 
-class _ExerciseFrequencyScreenView extends StatelessWidget {
-  const _ExerciseFrequencyScreenView();
+class _ExerciseFrequencyScreen extends StatelessWidget {
+  const _ExerciseFrequencyScreen();
 
   @override
   Widget build(BuildContext context) {
