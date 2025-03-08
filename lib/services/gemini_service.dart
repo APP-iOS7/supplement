@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:supplementary_app/models/gemini_answer_model.dart';
+import 'package:supplementary_app/models/recommend_item_model.dart';
 import 'package:supplementary_app/models/item_detail_model.dart';
 import 'package:supplementary_app/models/supplement_survey_model.dart';
 import 'package:supplementary_app/models/user_model.dart';
@@ -10,7 +10,7 @@ class GeminiService {
   final String _baseUrl =
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${Secrets.geminiApi}';
 
-  Future<AnswerModel> getRecommendSupplement({
+  Future<RecommendItemModel> getRecommendSupplement({
     required UserModel user,
     required SupplementSurveyModel survey,
   }) async {
@@ -73,7 +73,7 @@ JSON 코드 블록( ```json ... ``` )을 사용하지 마.
         final parsedJson = jsonDecode(jsonText) as Map<String, dynamic>;
         final recommendation =
             parsedJson['recommendation'] as Map<String, dynamic>;
-        return AnswerModel.fromJson(recommendation);
+        return RecommendItemModel.fromJson(recommendation);
       } catch (e) {
         print('JSON 파싱 오류: $e');
         throw '데이터를 불러오는 중 오류 발생';

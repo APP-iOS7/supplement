@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
 
 class _HomeScreen extends StatelessWidget {
   const _HomeScreen({required this.viewModel});
-  final viewModel;
+  final HomeScreenViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +41,66 @@ class _HomeScreen extends StatelessWidget {
           onPressed: () => AuthService().signOut(),
           child: Text('로그아웃'),
         ),
+        Divider(),
+        _recommendations(),
+        Divider(),
       ],
     );
   }
 
-  _supplementRecommendButtonPressed(BuildContext context) {
+  Widget _recommendations() {
+    return SizedBox(
+      height: 200,
+      child: GridView.builder(
+        scrollDirection: Axis.horizontal,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          childAspectRatio: 0.75,
+          mainAxisSpacing: 8,
+        ),
+        itemCount: viewModel.recommendList.length,
+        itemBuilder: (context, index) {
+          final item = viewModel.recommendList[index];
+          return Card(
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (item.imageLink != null)
+                    Expanded(
+                      flex: 2,
+                      child: Image.network(item.imageLink!, fit: BoxFit.cover),
+                    ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          item.price,
+                          style: const TextStyle(color: Colors.blue),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _supplementRecommendButtonPressed(BuildContext context) {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (context) => HealthConcernScreen()));

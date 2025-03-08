@@ -82,7 +82,7 @@ class AuthWrapper extends StatelessWidget {
             if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
               return GetInfoScreen();
             }
-            Provider.of<UserProvider>(context).initUser();
+            Provider.of<UserProvider>(context, listen: false).initUser();
             return MainScreen();
           },
         );

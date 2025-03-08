@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:supplementary_app/models/gemini_answer_model.dart';
+import 'package:supplementary_app/models/recommend_item_model.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/providers/user_provider.dart';
 import 'package:supplementary_app/viewmodels/health_check/result_viewmodel.dart';
@@ -42,7 +42,7 @@ class _ResultScreen extends StatelessWidget {
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      body: FutureBuilder<AnswerModel>(
+      body: FutureBuilder<RecommendItemModel>(
         future: viewModel.getRecommendations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -127,7 +127,7 @@ class _ResultScreen extends StatelessWidget {
 }
 
 class _RecommendationCard extends StatelessWidget {
-  final AnswerModel recommendation;
+  final RecommendItemModel recommendation;
 
   const _RecommendationCard({required this.recommendation});
 

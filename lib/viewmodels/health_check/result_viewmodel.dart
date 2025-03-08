@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:supplementary_app/models/gemini_answer_model.dart';
+import 'package:supplementary_app/models/recommend_item_model.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/providers/user_provider.dart';
 import 'package:supplementary_app/services/gemini_service.dart';
 import 'package:supplementary_app/services/naver_service.dart';
+import 'package:supplementary_app/services/store_service.dart';
 
 class ResultViewModel extends ChangeNotifier {
   final GeminiService _geminiService = GeminiService();
@@ -18,7 +19,7 @@ class ResultViewModel extends ChangeNotifier {
   }) : _userProvider = userProvider,
        _surveyProvider = surveyProvider;
 
-  Future<AnswerModel> getRecommendations() async {
+  Future<RecommendItemModel> getRecommendations() async {
     final recommendation = await _geminiService.getRecommendSupplement(
       user: _userProvider.user!,
       survey: _surveyProvider.supplementSurveyModel!,
@@ -32,7 +33,10 @@ class ResultViewModel extends ChangeNotifier {
     } catch (e) {
       print('이미지 로딩 실패: ${recommendation.name}');
     }
-
+    await StoreService().saveToMyRecommendaions(
+      _userProvider.user!.uid,
+      recommendation,
+    );
     return recommendation;
   }
 }

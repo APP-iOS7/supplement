@@ -12,7 +12,7 @@ class UserProvider with ChangeNotifier {
   Future<void> initUser() async {
     final String uid = _auth.currentUserUid;
     _user = await _store.getUserInfoByUid(uid);
-    print('user init completed $uid');
+    print('유저 정보 로딩 완료. Id: $uid');
     notifyListeners();
   }
 }
