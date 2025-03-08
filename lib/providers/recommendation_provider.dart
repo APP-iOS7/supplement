@@ -4,11 +4,11 @@ import 'package:supplementary_app/models/recommend_item_model.dart';
 import 'package:supplementary_app/services/store_service.dart';
 
 class RecommendationProvider extends ChangeNotifier {
-  final StoreService _storeService;
+  final StoreService _storeService = StoreService();
   List<RecommendItemModel> _recommendations = [];
   StreamSubscription<List<RecommendItemModel>>? _subscription;
 
-  RecommendationProvider(this._storeService) {
+  RecommendationProvider() {
     _startListening();
   }
 

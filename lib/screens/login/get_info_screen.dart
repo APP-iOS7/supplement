@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supplementary_app/screens/main_screen.dart';
 import 'package:supplementary_app/viewmodels/login/get_info_viewmodel.dart';
 
 class GetInfoScreen extends StatelessWidget {
@@ -75,7 +76,14 @@ class GetInfoScreen extends StatelessWidget {
                       ElevatedButton(
                         onPressed:
                             viewModel.canProceed
-                                ? () => viewModel.saveUserInfo()
+                                ? () {
+                                  viewModel.saveUserInfo();
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => const MainScreen(),
+                                    ),
+                                  );
+                                }
                                 : null,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),

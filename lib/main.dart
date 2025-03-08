@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/page_route_provider.dart';
+import 'package:supplementary_app/providers/recommendation_provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/login/get_info_screen.dart';
 import 'package:supplementary_app/screens/login/login_screen.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => SupplementSurveyProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => RecommendationProvider()),
         ChangeNotifierProvider(create: (context) => PageRouteProvider()),
       ],
       child: MaterialApp(
