@@ -14,40 +14,47 @@ class SearchScreen extends StatelessWidget {
       create: (_) => SearchViewModel(),
       child: Consumer<SearchViewModel>(
         builder: (context, viewModel, child) {
-          return Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    _buildSearchBar(context, viewModel),
-                    const SizedBox(height: 20),
-                    _buildSearchResults(viewModel),
-                  ],
-                ),
-              ),
-            ),
-            backgroundColor: Colors.grey[100],
-          );
+          return _SearchScreen(viewModel: viewModel);
         },
       ),
     );
   }
+}
 
-  Widget _buildSearchBar(BuildContext context, SearchViewModel viewModel) {
+class _SearchScreen extends StatelessWidget {
+  const _SearchScreen({required this.viewModel});
+  final SearchViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildSearchBar(context),
+              const SizedBox(height: 20),
+              _buildSearchResults(),
+            ],
+          ),
+        ),
+      ),
+      backgroundColor: Colors.grey[100],
+    );
+  }
+
+  Widget _buildSearchBar(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: _buildSearchTextField(context, viewModel)),
+        Expanded(child: _buildSearchTextField(context)),
         const SizedBox(width: 10),
-        _buildSearchButton(context, viewModel),
+        _buildSearchButton(context),
       ],
     );
   }
 
-  Widget _buildSearchTextField(
-    BuildContext context,
-    SearchViewModel viewModel,
-  ) {
+  Widget _buildSearchTextField(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -76,7 +83,7 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchButton(BuildContext context, SearchViewModel viewModel) {
+  Widget _buildSearchButton(BuildContext context) {
     return ElevatedButton(
       onPressed: viewModel.executeSearch,
       style: ElevatedButton.styleFrom(
@@ -88,7 +95,7 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchResults(SearchViewModel viewModel) {
+  Widget _buildSearchResults() {
     if (viewModel.searchFuture == null) {
       return const Center(
         child: Text(
@@ -128,18 +135,14 @@ class SearchScreen extends StatelessWidget {
             itemCount: snapshot.data!.length,
             itemBuilder:
                 (context, index) =>
-                    _buildResultCard(snapshot.data![index], context, viewModel),
+                    _buildResultCard(snapshot.data![index], context),
           );
         },
       ),
     );
   }
 
-  Widget _buildResultCard(
-    SearchItem item,
-    BuildContext context,
-    SearchViewModel viewModel,
-  ) {
+  Widget _buildResultCard(SearchItem item, BuildContext context) {
     return Card(
       elevation: 3,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),

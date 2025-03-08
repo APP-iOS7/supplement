@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supplementary_app/models/recommend_item_model.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/providers/user_provider.dart';
@@ -13,11 +14,12 @@ class ResultViewModel extends ChangeNotifier {
   final UserProvider _userProvider;
   final SupplementSurveyProvider _surveyProvider;
 
-  ResultViewModel({
-    required UserProvider userProvider,
-    required SupplementSurveyProvider surveyProvider,
-  }) : _userProvider = userProvider,
-       _surveyProvider = surveyProvider;
+  ResultViewModel(BuildContext context)
+    : _userProvider = Provider.of<UserProvider>(context, listen: false),
+      _surveyProvider = Provider.of<SupplementSurveyProvider>(
+        context,
+        listen: false,
+      );
 
   Future<RecommendItemModel> getRecommendations() async {
     final recommendation = await _geminiService.getRecommendSupplement(

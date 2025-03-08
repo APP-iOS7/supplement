@@ -18,18 +18,21 @@ class ExerciseFrequencyScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: const _ExerciseFrequencyScreen(),
+      child: Consumer<ExerciseFrequencyViewModel>(
+        builder: (context, viewModel, child) {
+          return _ExerciseFrequencyScreen(viewModel: viewModel);
+        },
+      ),
     );
   }
 }
 
 class _ExerciseFrequencyScreen extends StatelessWidget {
-  const _ExerciseFrequencyScreen();
+  const _ExerciseFrequencyScreen({required this.viewModel});
+  final ExerciseFrequencyViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<ExerciseFrequencyViewModel>(context);
-
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
