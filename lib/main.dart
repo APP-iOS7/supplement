@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supplementary_app/providers/page_route_provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/login/get_info_screen.dart';
 import 'package:supplementary_app/screens/login/login_screen.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => SupplementSurveyProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => PageRouteProvider()),
       ],
       child: MaterialApp(
         title: '영양제 추천',
@@ -80,6 +82,7 @@ class AuthWrapper extends StatelessWidget {
             if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
               return GetInfoScreen();
             }
+            Provider.of<UserProvider>(context).initUser();
             return MainScreen();
           },
         );

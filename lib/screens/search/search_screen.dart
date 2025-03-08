@@ -15,15 +15,16 @@ class SearchScreen extends StatelessWidget {
       child: Consumer<SearchViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            appBar: AppBar(title: Text('Search')),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  _buildSearchBar(context, viewModel),
-                  const SizedBox(height: 20),
-                  _buildSearchResults(viewModel),
-                ],
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    _buildSearchBar(context, viewModel),
+                    const SizedBox(height: 20),
+                    _buildSearchResults(viewModel),
+                  ],
+                ),
               ),
             ),
             backgroundColor: Colors.grey[100],

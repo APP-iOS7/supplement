@@ -19,7 +19,6 @@ class ResultViewModel extends ChangeNotifier {
        _surveyProvider = surveyProvider;
 
   Future<AnswerModel> getRecommendations() async {
-    await _userProvider.initUser();
     final recommendation = await _geminiService.getRecommendSupplement(
       user: _userProvider.user!,
       survey: _surveyProvider.supplementSurveyModel!,
