@@ -144,10 +144,9 @@ class _SearchScreen extends StatelessWidget {
 
   Widget _buildResultCard(SearchItem item, BuildContext context) {
     return Card(
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        tileColor: Colors.white,
         leading: Image.network(item.image),
         title: Text(
           item.title,
