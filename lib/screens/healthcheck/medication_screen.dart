@@ -63,7 +63,7 @@ class _MedicationScreenView extends StatelessWidget {
               selectedValue: viewModel.selectedOption ?? '',
               onTap: viewModel.selectOption,
             ),
-            
+
             if (viewModel.selectedOption == '복용중인 약 있음')
               Expanded(
                 child: Column(
@@ -88,7 +88,8 @@ class _MedicationScreenView extends StatelessWidget {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
-                                  color: isDarkMode ? Colors.black : Colors.black,
+                                  color:
+                                      isDarkMode ? Colors.black : Colors.black,
                                 ),
                               ),
                               IconButton(
@@ -190,7 +191,10 @@ class _MedicationScreenView extends StatelessWidget {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 style: TextButton.styleFrom(
-                  side: const BorderSide(color: Colors.black, width: 1.0), // 검정색 테두리 추가
+                  side: const BorderSide(
+                    color: Colors.black,
+                    width: 1.0,
+                  ), // 검정색 테두리 추가
                 ),
                 child: Text('취소', style: styleViewModel.optionTextStyle), // 수정
               ),

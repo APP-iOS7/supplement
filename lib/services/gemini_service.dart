@@ -101,7 +101,7 @@ $productName에 대한 상세 정보를 제공해줘.
 반드시 JSON 형식으로 응답해야 하며, 줄바꿈 없이 한 줄 JSON으로 반환해. 
 JSON 코드 블록( ```json ... ``` )을 사용하지 마. 
 추가적인 설명 없이 순수한 JSON 데이터만 반환해. 
-
+이미지 주소는 그대로 사용해줘
 정확한 JSON 형식은 다음과 같아:
 
 {
@@ -121,6 +121,7 @@ JSON 코드 블록( ```json ... ``` )을 사용하지 마.
 }
 
 줄바꿈 없이, 한 줄 JSON 데이터만 응답해.
+모든 내용은 한국어야해
 ''',
             },
           ],
@@ -139,7 +140,6 @@ JSON 코드 블록( ```json ... ``` )을 사용하지 마.
         final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
         final String jsonText =
             jsonResponse['candidates'][0]['content']['parts'][0]['text'];
-
         final parsedJson = jsonDecode(jsonText) as Map<String, dynamic>;
         final detail = parsedJson['detail'] as Map<String, dynamic>;
         return ItemDetail.fromJson(detail);
