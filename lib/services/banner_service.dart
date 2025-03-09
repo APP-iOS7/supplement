@@ -102,7 +102,7 @@ class BannerService {
     }
   }
 
-  // 파이어베이스에 데이터 입력용으로 넣은 건데 혹시 모르니 주석으로 냅둡시다..
+  // 샘플 배너 데이터를 만드는 함수 (앱 처음 실행할 때 테스트용으로 사용)
   //   Future<void> createSampleBanners() async {
   //     try {
   //       // 샘플 배너 3개를 만들어서 Firestore에 저장할 준비
@@ -129,32 +129,34 @@ class BannerService {
   // <p>또한 갑상선이나 심장 질환 검사에서 진단 검사에 오류가 생길 수 있으니 주의하셔야 해요.</p>
 
   // <h2>직접 먹어본 사람들이 뽑은 비오틴 영양제 TOP3 인기 제품 비교!</h2>
-  // <table border="1" cellpadding="5" cellspacing="0" style="width:100%">
-  //   <tr style="background-color:#f4f6fa">
-  //     <th>제품명</th>
-  //     <th>성분 함량 (1일 섭취량 기준)</th>
-  //     <th>가격 (온라인 구매가 기준)</th>
-  //     <th>NutriPick 평점</th>
-  //   </tr>
-  //   <tr>
-  //     <td>나우푸드 비오틴 5000mcg</td>
-  //     <td><span style="color:#00c7c7">비오틴 - 5000μg</span></td>
-  //     <td>₩10,409<br>(120정)</td>
-  //     <td>⭐️ 4.5</td>
-  //   </tr>
-  //   <tr>
-  //     <td>나트롤 비오틴 10000mcg</td>
-  //     <td><span style="color:#00c7c7">비오틴 - 10000μg</span><br><span style="color:#ff69b4">칼슘 - 66mg</span></td>
-  //     <td>₩29,579<br>(200정)</td>
-  //     <td>⭐️ 4.61</td>
-  //   </tr>
-  //   <tr>
-  //     <td>부가 비오틴 5000mcg</td>
-  //     <td><span style="color:#00c7c7">비오틴 - 5000μg</span><br><span style="color:#ff69b4">칼슘 - 148mg</span></td>
-  //     <td>₩27,068<br>(100정)</td>
-  //     <td>⭐️ 4.53</td>
-  //   </tr>
-  // </table>
+  // <div style="overflow-x: auto; width: 100%;">
+  //   <table border="1" cellpadding="5" cellspacing="0" style="width:100%">
+  //     <tr style="background-color:#f4f6fa">
+  //       <th>제품명</th>
+  //       <th>성분 함량(1일 섭취량 기준)</th>
+  //       <th>가격 (온라인 구매가 기준)</th>
+  //       <th>NutriPick 평점</th>
+  //     </tr>
+  //     <tr>
+  //       <td>나우푸드 비오틴 5000mcg</td>
+  //       <td><span style="color:#00c7c7">비오틴 - 5000μg</span></td>
+  //       <td>₩10,409<br>(120정)</td>
+  //       <td>⭐️ 4.5</td>
+  //     </tr>
+  //     <tr>
+  //       <td>나트롤 비오틴 10000mcg</td>
+  //       <td><span style="color:#00c7c7">비오틴 - 10000μg</span><br><span style="color:#ff69b4">칼슘 - 66mg</span></td>
+  //       <td>₩29,579<br>(200정)</td>
+  //       <td>⭐️ 4.61</td>
+  //     </tr>
+  //     <tr>
+  //       <td>부가 비오틴 5000mcg</td>
+  //       <td><span style="color:#00c7c7">비오틴 - 5000μg</span><br><span style="color:#ff69b4">칼슘 - 148mg</span></td>
+  //       <td>₩27,068<br>(100정)</td>
+  //       <td>⭐️ 4.53</td>
+  //     </tr>
+  //   </table>
+  // </div>
 
   // <h2>나우푸드 비오틴 5000mcg</h2>
   // <img src="https://raw.githubusercontent.com/iampeel/fire030701storage/main/banner_magazine_image01_Biotin01.png" alt="나우푸드 비오틴" style="width:100%; max-width:300px; display:block; margin:10px auto;">
@@ -192,48 +194,40 @@ class BannerService {
   // <p>가장 많은 분들이 찾아본 밀크씨슬 인기 제품 4개를 꼼꼼히 비교해 드릴게요!</p>
   // <p>다른 곳에서는 쉽게 찾기 힘든 '직접 먹어본 후기'까지 한 눈에 확인하고 비교해보세요. 👀</p>
 
-  // <table border="1" cellpadding="5" cellspacing="0" style="width:100%">
-  //   <tr style="background-color:#f4f6fa">
-  //     <th>제품명</th>
-  //     <th>성분 함량 (1일 섭취량 기준)</th>
-  //     <th>가격 (온라인 최저가 기준)</th>
-  //     <th>섭취시간/섭취량</th>
-  //   </tr>
-  //   <tr>
-  //     <td>지에넴 건강한 간 밀크씨슬</td>
-  //     <td><span style="color:#00c7c7">실리마린밀크씨슬 130mg</span><br>
-  //         <span style="color:#ff69b4">비타민B1 1.1mg</span><br>
-  //         <span style="color:#ff69b4">비타민B2 1.2mg</span><br>
-  //         <span style="color:#ff69b4">비타민B6 1.4mg</span><br>
-  //         <span style="color:#ff69b4">나이아신(B3) 13.5mg NE</span><br>
-  //         <span style="color:#ff69b4">판토텐산(B5) 4.6mg</span></td>
-  //     <td><strong>₩19,870</strong><br>(180정)</td>
-  //     <td>1일 1회<br>1회당 1정</td>
-  //   </tr>
-  //   <tr>
-  //     <td>나우푸드 실리마린 밀크씨슬 익스트렉스</td>
-  //     <td><span style="color:#00c7c7">실리마린(밀크씨슬) 240mg</span><br>
-  //         <span style="color:#00c7c7">커큐민 700mg</span></td>
-  //     <td><strong>₩11,781</strong><br>(120정)</td>
-  //     <td>1일 1-3회<br>1회당 2정</td>
-  //   </tr>
-  //   <tr>
-  //     <td>쏜리서치 SAT</td>
-  //     <td><span style="color:#00c7c7">실리빈(밀크씨슬) 300mg</span><br>
-  //         <span style="color:#00c7c7">아티초크추출물 300mg</span><br>
-  //         <span style="color:#00c7c7">커큐민 300mg</span></td>
-  //     <td><strong>₩49,052</strong><br>(60정)</td>
-  //     <td>1일 2-3회<br>(아침,저녁 식후)<br>1회당 1캡슐</td>
-  //   </tr>
-  //   <tr>
-  //     <td>캘리포니아골드뉴트리션 실리마린 컴플렉스</td>
-  //     <td><span style="color:#00c7c7">실리마린(밀크씨슬) 240mg</span><br>
-  //         <span style="color:#787e8b">엉겅퀴추출물 100mg</span><br>
-  //         <span style="color:#ff69b4">아티초크추출물 50mg</span></td>
-  //     <td><strong>₩19,076</strong><br>(120정)</td>
-  //     <td>1일 1회<br>1회당 1캡슐</td>
-  //   </tr>
-  // </table>
+  // <div style="overflow-x: auto; width: 100%;">
+  //   <table border="1" cellpadding="5" cellspacing="0" style="width:100%; table-layout: fixed;">
+  //     <tr style="background-color:#f4f6fa">
+  //       <th style="width: 20%; word-wrap: break-word; text-align: left;">제품명</th>
+  //       <th style="width: 40%; word-wrap: break-word; text-align: left;">성분 함량 (1일 섭취량 기준)</th>
+  //       <th style="width: 20%; word-wrap: break-word; text-align: left;">가격 (온라인 최저가 기준)</th>
+  //       <th style="width: 20%; word-wrap: break-word; text-align: left;">섭취시간/섭취량</th>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;">지에넴 건강한 간 밀크씨슬</td>
+  //       <td style="word-wrap: break-word; text-align: left;">실리마린밀크씨슬 130mg<br>비타민B1 1.1mg<br>비타민B2 1.2mg<br>비타민B6 1.4mg<br>나이아신(B3) 13.5mg NE<br>판토텐산(B5) 4.6mg</td>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>₩19,870</strong><br>(180정)</td>
+  //       <td style="word-wrap: break-word; text-align: left;">1일 1회<br>1회당 1정</td>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;">나우푸드 실리마린 밀크씨슬 익스트렉스</td>
+  //       <td style="word-wrap: break-word; text-align: left;">실리마린(밀크씨슬) 240mg<br>커큐민 700mg</td>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>₩11,781</strong><br>(120정)</td>
+  //       <td style="word-wrap: break-word; text-align: left;">1일 1-3회<br>1회당 2정</td>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;">쏜리서치 SAT</td>
+  //       <td style="word-wrap: break-word; text-align: left;">실리빈(밀크씨슬) 300mg<br>아티초크추출물 300mg<br>커큐민 300mg</td>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>₩49,052</strong><br>(60정)</td>
+  //       <td style="word-wrap: break-word; text-align: left;">1일 2-3회<br>(아침,저녁 식후)<br>1회당 1캡슐</td>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;">캘리포니아골드뉴트리션 실리마린 컴플렉스</td>
+  //       <td style="word-wrap: break-word; text-align: left;">실리마린(밀크씨슬) 240mg<br>엉겅퀴추출물 100mg<br>아티초크추출물 50mg</td>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>₩19,076</strong><br>(120정)</td>
+  //       <td style="word-wrap: break-word; text-align: left;">1일 1회<br>1회당 1캡슐</td>
+  //     </tr>
+  //   </table>
+  // </div>
 
   // <h2>지에넴(GNM) 건강한 간 밀크씨슬</h2>
   // <p>지에넴 건강한 간 밀크씨슬은 실리마린 성분이 1일 섭취량인 <strong>1정 기준으로 130mg</strong> 들어있는 타블렛 형태의 제품이에요.</p>
@@ -290,110 +284,39 @@ class BannerService {
   //           description: '''<h1>비맥스 메타, 비맥스 메타비, 비맥스 액티브 한 눈에 비교해 드립니다! 🔍</h1>
   // <p>활성비타민B군을 사용해 피로회복에 효과적인 종합비타민 제품들을 비교해 드릴게요.</p>
 
-  // <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-  // <table border="1" cellpadding="5" cellspacing="0" style="min-width: 800px;">
-  //   <tr style="background-color:#f4f6fa">
-  //     <th></th>
-  //     <th>비맥스 메타</th>
-  //     <th>비맥스 메타비</th>
-  //     <th>비맥스 액티브</th>
-  //   </tr>
-  //   <tr>
-  //     <td><strong>성분 함량 (1일 섭취량 기준)</strong></td>
-  //     <td><span style="color:#00c7c7;font-weight:bold">비타민B1 100mg</span><br>
-  //         ㆍ벤포티아민 95mg<br>
-  //         ㆍ비스벤티아민 5mg<br>
-  //         <span style="color:#00c7c7">비타민B2 100mg</span><br>
-  //         <span style="color:#ff69b4">나이아신아마이드(B3) 10mg NE</span><br>
-  //         <span style="color:#00c7c7">판토텐산(B5) 100mg</span><br>
-  //         <span style="color:#00c7c7">피리독신염산염(B6) 100mg</span><br>
-  //         <span style="color:#00c7c7">비오틴 100μg</span><br>
-  //         <span style="color:#00c7c7">엽산 400μg</span><br>
-  //         <span style="color:#00c7c7">시아노코발라민(B12) 500μg</span><br>
-  //         <span style="color:#00c7c7">비타민D3 25μg</span><br>
-  //         <span style="color:#ff69b4">셀레늄(셀렌) 21.6μg</span><br>
-  //         <span style="color:#00c7c7">아연 24mg</span><br>
-  //         ㆍ산화아연 30mg<br>
-  //         <span style="color:#00c7c7">UDCA 30mg</span><br>
-  //         <span style="color:#ff69b4">마그네슘 60mg</span><br>
-  //         ㆍ산화마그네슘 100mg<br>
-  //         <span style="color:#00c7c7">콜린타르타르산 100mg</span><br>
-  //         <span style="color:#00c7c7">이노시톨 100mg</span></td>
-  //     <td><span style="color:#00c7c7;font-weight:bold">비타민B1 130mg</span><br>
-  //         ㆍ벤포티아민 100mg<br>
-  //         <span style="font-weight:bold">ㆍ비스벤티아민 30mg</span><br>
-  //         <span style="color:#00c7c7">비타민B2 100mg</span><br>
-  //         <span style="color:#ff69b4">나이아신아마이드(B3) 10mg NE</span><br>
-  //         <span style="color:#00c7c7">판토텐산(B5) 100mg</span><br>
-  //         <span style="color:#00c7c7">비타민B6 100mg</span><br>
-  //         <span style="color:#00c7c7">비오틴 100μg</span><br>
-  //         <span style="color:#00c7c7;font-weight:bold">엽산 500μg</span><br>
-  //         <span style="color:#00c7c7;font-weight:bold">하이드록소코발라민(B12) 1000μg</span><br>
-  //         <span style="color:#00c7c7">비타민D3 25μg</span><br>
-  //         <span style="color:#ff69b4">셀레늄(셀렌) 21.6μg</span><br>
-  //         <span style="color:#00c7c7;font-weight:bold">L-시스테인 25mg</span><br>
-  //         <span style="color:#00c7c7">아연 30mg</span><br>
-  //         ㆍ산화아연 37.4mg<br>
-  //         <span style="color:#00c7c7">UDCA 30mg</span><br>
-  //         <span style="color:#ff69b4">마그네슘 60mg</span><br>
-  //         ㆍ산화마그네슘 100mg<br>
-  //         <span style="color:#00c7c7">콜린타르타르산 100mg</span><br>
-  //         <span style="color:#00c7c7">이노시톨 100mg</span></td>
-  //     <td><span style="color:#00c7c7">비타민B1 50mg</span><br>
-  //         ㆍ벤포티아민 50mg<br>
-  //         <span style="color:#00c7c7">비타민B2 50mg</span><br>
-  //         ㆍ비타민B2 45mg<br>
-  //         <span style="font-weight:bold">ㆍ리보플라빈부티레이트 5mg</span><br>
-  //         <span style="color:#00c7c7">나이아신아마이드(B3) 50mg NE</span><br>
-  //         <span style="color:#00c7c7">판토텐산(B5) 50mg</span><br>
-  //         <span style="color:#00c7c7">비타민B6 50mg</span><br>
-  //         ㆍ피리독신염산염 45mg<br>
-  //         <span style="font-weight:bold">ㆍ피리독살포스페이트 5mg</span><br>
-  //         <span style="color:#00c7c7">비오틴 50μg</span><br>
-  //         <span style="color:#ff69b4">엽산 250μg</span><br>
-  //         <span style="color:#00c7c7;font-weight:bold">하이드록소코발라민(B12) 50μg</span><br>
-  //         <span style="color:#ff69b4;font-weight:bold">비타민C 50mg</span><br>
-  //         <span style="color:#00c7c7">비타민D3 25μg</span><br>
-  //         <span style="color:#ff69b4">셀레늄(셀렌) 10.8μg</span><br>
-  //         <span style="color:#00c7c7;font-weight:bold">비타민E(토코페롤아세테이트) 10mg α-TE</span><br>
-  //         <span style="color:#00c7c7">아연 30mg</span><br>
-  //         ㆍ산화아연 37.4mg<br>
-  //         <span style="color:#ff69b4">UDCA 15mg</span><br>
-  //         <span style="color:#ff69b4">마그네슘 60mg</span><br>
-  //         ㆍ산화마그네슘 100mg<br>
-  //         <span style="color:#00c7c7">콜린타르타르산 50mg</span><br>
-  //         <span style="color:#00c7c7">이노시톨 50mg</span><br>
-  //         <span style="color:#ff69b4;font-weight:bold">감마오리자놀 3mg</span></td>
-  //   </tr>
-  //   <tr>
-  //     <td><strong>가격 (*대략적인 구매가로, 정확한 금액은 약국에서 확인하세요)</strong></td>
-  //     <td><span style="color:#787e8b;font-weight:bold">₩60,000~</span><br>
-  //         <span style="color:#787e8b">(120정)</span></td>
-  //     <td><span style="color:#787e8b;font-weight:bold">₩60,000~</span><br>
-  //         <span style="color:#787e8b">(120정)</span></td>
-  //     <td><span style="color:#787e8b;font-weight:bold">₩50,000~</span><br>
-  //         <span style="color:#787e8b">(120정)</span></td>
-  //   </tr>
-  //   <tr>
-  //     <td><strong>NutriPick 평점</strong></td>
-  //     <td><span style="color:#787e8b">⭐️ 4.61</span></td>
-  //     <td><span style="color:#787e8b">⭐️ 4.57</span></td>
-  //     <td><span style="color:#787e8b">⭐️ 4.6</span></td>
-  //   </tr>
-  //   <tr>
-  //     <td><strong>추천하는 분</strong></td>
-  //     <td><span style="color:#787e8b">- 표준 체중의 30~50대 남성</span></td>
-  //     <td><span style="color:#787e8b">- 활동량이 많고, 피로감이 매우 높은 30~50대</span><br>
-  //         <span style="color:#787e8b">- 특히 두뇌활동량이 많은 분</span><br>
-  //         <span style="color:#787e8b">- 체중이 많이 나가는 편인 분</span><br>
-  //         <span style="color:#787e8b">- 채식을 주로 하는 분</span><br>
-  //         <span style="color:#787e8b">- 당뇨약을 복용 중이신 분</span><br>
-  //         <span style="color:#787e8b">- 신경통이 있는 분</span></td>
-  //     <td><span style="color:#787e8b">- 체중이 표준이거나 조금 적은 편인 여성</span><br>
-  //         <span style="color:#787e8b">- 체격이 크지 않은 청소년</span><br>
-  //         <span style="color:#787e8b">- 고함량 비타민을 드시고 속이 불편했던 경험이 있는 분</span></td>
-  //   </tr>
-  // </table>
+  // <div style="overflow-x: auto; width: 100%;">
+  //   <table border="1" cellpadding="5" cellspacing="0" style="width:100%; table-layout: fixed;">
+  //     <tr style="background-color:#f4f6fa">
+  //       <th style="width: 20%; word-wrap: break-word; text-align: left;"></th>
+  //       <th style="width: 26%; word-wrap: break-word; text-align: left;">비맥스 메타</th>
+  //       <th style="width: 27%; word-wrap: break-word; text-align: left;">비맥스 메타비</th>
+  //       <th style="width: 27%; word-wrap: break-word; text-align: left;">비맥스 액티브</th>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>성분 함량 (1일 섭취량 기준)</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;">비타민B1 100mg<br>벤포티아민 95mg<br>비스벤티아민 5mg<br>비타민B2 100mg<br>나이아신아마이드(B3) 10mg NE<br>판토텐산(B5) 100mg<br>피리독신염산염(B6) 100mg<br>비오틴 100μg<br>엽산 400μg<br>시아노코발라민(B12) 500μg<br>비타민D3 25μg<br>셀레늄(셀렌) 21.6μg<br>아연 24mg<br>ㆍ산화아연 30mg<br>UDCA 30mg<br>마그네슘 60mg<br>ㆍ산화마그네슘 100mg<br>콜린타르타르산 100mg<br>이노시톨 100mg</td>
+  //       <td style="word-wrap: break-word; text-align: left;">비타민B1 130mg<br>ㆍ벤포티아민 100mg<br>ㆍ비스벤티아민 30mg<br>비타민B2 100mg<br>나이아신아마이드(B3) 10mg NE<br>판토텐산(B5) 100mg<br>비타민B6 100mg<br>비오틴 100μg<br>엽산 500μg<br>하이드록소코발라민(B12) 1000μg<br>비타민D3 25μg<br>셀레늄(셀렌) 21.6μg<br>L-시스테인 25mg<br>아연 30mg<br>ㆍ산화아연 37.4mg<br>UDCA 30mg<br>마그네슘 60mg<br>ㆍ산화마그네슘 100mg<br>콜린타르타르산 100mg<br>이노시톨 100mg</td>
+  //       <td style="word-wrap: break-word; text-align: left;">비타민B1 50mg<br>ㆍ벤포티아민 50mg<br>비타민B2 50mg<br>ㆍ비타민B2 45mg<br>ㆍ리보플라빈부티레이트 5mg<br>나이아신아마이드(B3) 50mg NE<br>판토텐산(B5) 50mg<br>비타민B6 50mg<br>ㆍ피리독신염산염 45mg<br>ㆍ피리독살포스페이트 5mg<br>비오틴 50μg<br>엽산 250μg<br>하이드록소코발라민(B12) 50μg<br>비타민C 50mg<br>비타민D3 25μg<br>셀레늄(셀렌) 10.8μg<br>비타민E(토코페롤아세테이트) 10mg α-TE<br>아연 30mg<br>ㆍ산화아연 37.4mg<br>UDCA 15mg<br>마그네슘 60mg<br>ㆍ산화마그네슘 100mg<br>콜린타르타르산 50mg<br>이노시톨 50mg<br>감마오리자놀 3mg</td>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>가격 (*대략적인 구매가로, 정확한 금액은 약국에서 확인하세요)</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>₩60,000~</strong><br>(120정)</td>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>₩60,000~</strong><br>(120정)</td>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>₩50,000~</strong><br>(120정)</td>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>NutriPick 평점</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;">⭐️ 4.61</td>
+  //       <td style="word-wrap: break-word; text-align: left;">⭐️ 4.57</td>
+  //       <td style="word-wrap: break-word; text-align: left;">⭐️ 4.6</td>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>추천하는 분</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;">- 표준 체중의 30~50대 남성</td>
+  //       <td style="word-wrap: break-word; text-align: left;">- 활동량이 많고, 피로감이 매우 높은 30~50대<br>- 특히 두뇌활동량이 많은 분<br>- 체중이 많이 나가는 편인 분<br>- 채식을 주로 하는 분<br>- 당뇨약을 복용 중이신 분<br>- 신경통이 있는 분</td>
+  //       <td style="word-wrap: break-word; text-align: left;">- 체중이 표준이거나 조금 적은 편인 여성<br>- 체격이 크지 않은 청소년<br>- 고함량 비타민을 드시고 속이 불편했던 경험이 있는 분</td>
+  //     </tr>
+  //   </table>
   // </div>
 
   // <p>*굵은 글씨의 영양성분은 다른 제품에 비해 성분 함량이 높거나 추가된 성분이에요.</p>
@@ -515,127 +438,49 @@ class BannerService {
   //           description: '''<h1>활력 충전! 액상형 종합비타민 4종 비교해 드려요! 💪</h1>
   // <p>액상형 종합비타민 제품들을 비교해 드릴게요. 흡수가 빠른 액상형으로 더 효과적인 비타민 보충이 가능해요!</p>
 
-  // <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-  // <table border="1" cellpadding="5" cellspacing="0" style="min-width: 800px;">
-  //   <tr style="background-color:#f4f6fa">
-  //     <th>제품명</th>
-  //     <th>성분 함량 (1일 섭취량 대비)</th>
-  //     <th>추천 대상</th>
-  //     <th>가격</th>
-  //     <th>용량</th>
-  //     <th>맛</th>
-  //     <th>NutriPick 평점</th>
-  //   </tr>
-  //   <tr>
-  //     <td><strong>더블<br>더블파워</strong></td>
-  //     <td><span style="color:#008000;font-weight:bold">&lt;총 16종&gt;</span><br>
-  //         <span style="color:#008000;font-weight:bold">밀크씨슬추출물(실리마린) - 130mg</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">비타민B1 - 25㎎ (2,083%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">비타민B2 - 25㎎ (1,786%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">나이아신 - 10㎎ (67%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">판토텐산 - 5㎎ (100%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">비타민B6 - 25㎎ (1,667%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">비오틴 - 900㎍ (3,000%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">엽산 - 400㎍ (100%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">비타민B12 - 2.4㎍ (100%)</span><br>
-  //         <span style="color:#787e8b">비타민C - 100㎎ (100%)</span><br>
-  //         <span style="color:#787e8b">비타민K - 70㎍ (100%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">셀렌 - 55㎍ (100%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">철 - 12㎎ (100%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">아연 - 10㎎ (118%)</span><br>
-  //         <span style="color:#787e8b">망간 - 1.5㎎ (50%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">요오드 - 55㎍ (37%)</span></td>
-  //     <td><span style="color:#787e8b">숙취 및 피로도가 높고,<br>
-  //         나쁜 식습관으로<br>
-  //         간 손상이 우려되는 분</span></td>
-  //     <td><span style="color:#787e8b">34,000원(7개입)<br>
-  //         <span style="font-weight:bold">1병당 약 4,857원</span></span></td>
-  //     <td><span style="color:#787e8b">액상 20ml<br>
-  //         + 정제 1.2g</span></td>
-  //     <td><span style="color:#787e8b">유자맛</span></td>
-  //     <td><span style="color:#787e8b">⭐️ 4.64</span></td>
-  //   </tr>
-  //   <tr>
-  //     <td><strong>마그랩<br>포 에너지</strong></td>
-  //     <td><span style="color:#008000;font-weight:bold">&lt;총 4종&gt;</span><br>
-  //         <span style="color:#787e8b">비타민B1 - 1.2㎎ (100%)</span><br>
-  //         <span style="color:#787e8b">비타민B2 - 1.4㎎ (100%)</span><br>
-  //         <span style="color:#787e8b">비타민B6 - 1.5㎎ (100%)</span><br>
-  //         <span style="color:#008000;font-weight:bold">글루콘산마그네슘 - 160mg (51%)</span></td>
-  //     <td><span style="color:#787e8b">근육이 뭉치거나<br>
-  //         신경이 예민한 분</span></td>
-  //     <td><span style="color:#787e8b">39,000원(10개입)<br>
-  //         <span style="font-weight:bold">1병당 약 3,900원</span></span></td>
-  //     <td><span style="color:#787e8b">액상 25ml</span></td>
-  //     <td><span style="color:#787e8b">레몬라임맛</span></td>
-  //     <td><span style="color:#787e8b">⭐️ 4.25</span></td>
-  //   </tr>
-  //   <tr>
-  //     <td><strong>오메가<br>이뮨</strong></td>
-  //     <td><span style="color:#008000;font-weight:bold">&lt;총 18종&gt;</span><br>
-  //         <span style="color:#787e8b">나이아신 - 70㎎NE (467%)</span><br>
-  //         <span style="color:#787e8b">비타민B6 - 23㎎ (1,533%)</span><br>
-  //         <span style="color:#787e8b">비오틴 - 170㎍ (567%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">엽산 - 800㎍ (200%)</span><br>
-  //         <span style="color:#787e8b">비타민A - 470㎍ RAE (67%)</span><br>
-  //         <span style="color:#787e8b">베타카로틴 - 6㎎</span><br>
-  //         <span style="color:#008000;font-weight:bold">비타민C - 1,000㎎ (1,000%)</span><br>
-  //         <span style="color:#787e8b">비타민E - 150㎎ α-TE (1,364%)</span><br>
-  //         <span style="color:#787e8b">비타민K - 80㎍ (114%)</span><br>
-  //         <span style="color:#787e8b">셀렌 - 50㎍ (91%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">철 - 7.2㎎ (60%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">아연 - 10㎎ (118%)</span><br>
-  //         <span style="color:#787e8b">망간 - 2.0㎎ (67%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">요오드 - 150㎍ (100%)</span><br>
-  //         <span style="color:#787e8b">구리 - 0.5㎎ (63%)</span><br>
-  //         <span style="color:#787e8b">몰리브덴 - 65㎍ (260%)</span><br>
-  //         <span style="color:#787e8b">크롬 - 30㎍ (100%)</span></td>
-  //     <td><span style="color:#787e8b">스트레스나 활동량이 많거나,<br>
-  //         흡연을 하는 분</span></td>
-  //     <td><span style="color:#787e8b">38,000원(7개입)<br>
-  //         <span style="font-weight:bold">1병당 약 5,428원</span></span></td>
-  //     <td><span style="color:#787e8b">액상 20ml<br>
-  //         + 정제 919mg<br>
-  //         (노란색:447mg<br>
-  //         +흰색:472mg)</span></td>
-  //     <td><span style="color:#787e8b">패션프루트향,<br>
-  //         오렌지향,<br>
-  //         파인애플향</span></td>
-  //     <td><span style="color:#787e8b">⭐️ 4.57</span></td>
-  //   </tr>
-  //   <tr>
-  //     <td><strong>아임비타<br>멀티비타민<br>이뮨샷</strong></td>
-  //     <td><span style="color:#008000;font-weight:bold">&lt;총 18종&gt;</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">비타민B1 - 48㎎ (4,000%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">비타민B2 - 56㎎ (4,000%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">판토텐산 - 25㎎ (500%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">비타민B6 - 60㎎ (4,000%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">비오틴 - 1,200㎍ (4,000%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">비타민B12 - 96㎍ (4,000%)</span><br>
-  //         <span style="color:#787e8b">베타카로틴 - 6㎎</span><br>
-  //         <span style="color:#787e8b">비타민C - 100㎎ (100%)</span><br>
-  //         <span style="color:#008000;font-weight:bold">비타민D - 10㎍ (100%)</span><br>
-  //         <span style="color:#787e8b">비타민E - 11㎎ α-TE (100%)</span><br>
-  //         <span style="color:#787e8b">비타민K - 70㎍ (100%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">셀렌 - 55㎍ (100%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">아연 - 17㎎ (200%)</span><br>
-  //         <span style="color:#787e8b">망간 - 3㎎ (100%)</span><br>
-  //         <span style="color:#787e8b;font-weight:bold">요오드 - 150㎍ (100%)</span><br>
-  //         <span style="color:#787e8b">구리 - 0.8㎎ (100%)</span><br>
-  //         <span style="color:#787e8b">몰리브덴 - 25㎍ (100%)</span><br>
-  //         <span style="color:#787e8b">크롬 - 30㎍ (100%)</span></td>
-  //     <td><span style="color:#787e8b">면역력이 떨어지고,<br>
-  //         평소 건강한 식단을<br>
-  //         챙기시기 어려운 분</span></td>
-  //     <td><span style="color:#787e8b">25,000원(7개입)<br>
-  //         <span style="font-weight:bold">1병당 약 3,571원</span></span></td>
-  //     <td><span style="color:#787e8b">액상 20ml<br>
-  //         + 정제 700mg<br>
-  //         + 캡슐 500mg</span></td>
-  //     <td><span style="color:#787e8b">자몽맛</span></td>
-  //     <td><span style="color:#787e8b">⭐️ 4.65</span></td>
-  //   </tr>
-  // </table>
+  // <div style="overflow-x: auto; width: 100%;">
+  //   <table border="1" cellpadding="5" cellspacing="0" style="min-width: 800px; width: 100%; table-layout: fixed;">
+  //     <tr style="background-color:#f4f6fa">
+  //       <th style="width: 14%; word-wrap: break-word; text-align: left;">제품명</th>
+  //       <th style="width: 25%; word-wrap: break-word; text-align: left;">성분 함량 (1일 섭취량 대비)</th>
+  //       <th style="width: 15%; word-wrap: break-word; text-align: left;">추천 대상</th>
+  //       <th style="width: 12%; word-wrap: break-word; text-align: left;">가격</th>
+  //       <th style="width: 12%; word-wrap: break-word; text-align: left;">용량</th>
+  //       <th style="width: 12%; word-wrap: break-word; text-align: left;">맛</th>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>더블<br>더블파워</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;">총 16종<br>밀크씨슬추출물(실리마린) - 130mg<br>비타민B1 - 25㎎ (2,083%)<br>비타민B2 - 25㎎ (1,786%)<br>나이아신 - 10㎎ (67%)<br>판토텐산 - 5㎎ (100%)<br>비타민B6 - 25㎎ (1,667%)<br>비오틴 - 900㎍ (3,000%)<br>엽산 - 400㎍ (100%)<br>비타민B12 - 2.4㎍ (100%)<br>비타민C - 100㎎ (100%)<br>비타민K - 70㎍ (100%)<br>셀렌 - 55㎍ (100%)<br>철 - 12㎎ (100%)<br>아연 - 10㎎ (118%)<br>망간 - 1.5㎎ (50%)<br>요오드 - 55㎍ (37%)</td>
+  //       <td style="word-wrap: break-word; text-align: left;">숙취 및 피로도가 높고,<br>나쁜 식습관으로<br>간 손상이 우려되는 분</td>
+  //       <td style="word-wrap: break-word; text-align: left;">34,000원(7개입)<br><strong>1병당 약 4,857원</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;">액상 20ml<br>+ 정제 1.2g</td>
+  //       <td style="word-wrap: break-word; text-align: left;">유자맛</td>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>마그랩<br>포 에너지</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;">총 4종<br>비타민B1 - 1.2㎎ (100%)<br>비타민B2 - 1.4㎎ (100%)<br>비타민B6 - 1.5㎎ (100%)<br>글루콘산마그네슘 - 160mg (51%)</td>
+  //       <td style="word-wrap: break-word; text-align: left;">근육이 뭉치거나<br>신경이 예민한 분</td>
+  //       <td style="word-wrap: break-word; text-align: left;">39,000원(10개입)<br><strong>1병당 약 3,900원</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;">액상 25ml</td>
+  //       <td style="word-wrap: break-word; text-align: left;">레몬라임맛</td>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>오메가<br>이뮨</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;">총 18종<br>나이아신 - 70㎎NE (467%)<br>비타민B6 - 23㎎ (1,533%)<br>비오틴 - 170㎍ (567%)<br>엽산 - 800㎍ (200%)<br>비타민A - 470㎍ RAE (67%)<br>베타카로틴 - 6㎎<br>비타민C - 1,000㎎ (1,000%)<br>비타민E - 150㎎ α-TE (1,364%)<br>비타민K - 80㎍ (114%)<br>셀렌 - 50㎍ (91%)<br>철 - 7.2㎎ (60%)<br>아연 - 10㎎ (118%)<br>망간 - 2.0㎎ (67%)<br>요오드 - 150㎍ (100%)<br>구리 - 0.5㎎ (63%)<br>몰리브덴 - 65㎍ (260%)<br>크롬 - 30㎍ (100%)</td>
+  //       <td style="word-wrap: break-word; text-align: left;">스트레스나 활동량이 많거나,<br>흡연을 하는 분</td>
+  //       <td style="word-wrap: break-word; text-align: left;">38,000원(7개입)<br><strong>1병당 약 5,428원</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;">액상 20ml<br>+ 정제 919mg<br>(노란색:447mg<br>+흰색:472mg)</td>
+  //       <td style="word-wrap: break-word; text-align: left;">패션프루트향,<br>오렌지향,<br>파인애플향</td>
+  //     </tr>
+  //     <tr>
+  //       <td style="word-wrap: break-word; text-align: left;"><strong>아임비타<br>멀티비타민<br>이뮨샷</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;">총 18종<br>비타민B1 - 48㎎ (4,000%)<br>비타민B2 - 56㎎ (4,000%)<br>판토텐산 - 25㎎ (500%)<br>비타민B6 - 60㎎ (4,000%)<br>비오틴 - 1,200㎍ (4,000%)<br>비타민B12 - 96㎍ (4,000%)<br>베타카로틴 - 6㎎<br>비타민C - 100㎎ (100%)<br>비타민D - 10㎍ (100%)<br>비타민E - 11㎎ α-TE (100%)<br>비타민K - 70㎍ (100%)<br>셀렌 - 55㎍ (100%)<br>아연 - 17㎎ (200%)<br>망간 - 3㎎ (100%)<br>요오드 - 150㎍ (100%)<br>구리 - 0.8㎎ (100%)<br>몰리브덴 - 25㎍ (100%)<br>크롬 - 30㎍ (100%)</td>
+  //       <td style="word-wrap: break-word; text-align: left;">면역력이 떨어지고,<br>평소 건강한 식단을<br>챙기시기 어려운 분</td>
+  //       <td style="word-wrap: break-word; text-align: left;">25,000원(7개입)<br><strong>1병당 약 3,571원</strong></td>
+  //       <td style="word-wrap: break-word; text-align: left;">액상 20ml<br>+ 정제 700mg<br>+ 캡슐 500mg</td>
+  //       <td style="word-wrap: break-word; text-align: left;">자몽맛</td>
+  //     </tr>
+  //   </table>
   // </div>
 
   // <h2>더블 더블파워</h2>
