@@ -17,10 +17,7 @@ import 'package:supplementary_app/widgets/loading.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // 테마 로딩 대기
   await Future.delayed(const Duration(milliseconds: 200));
-
   runApp(const MyApp());
 }
 
@@ -59,26 +56,8 @@ class MyApp extends StatelessWidget {
                       ),
                       useMaterial3: true,
                     ),
-            theme:
-                theme.isDarkMode
-                    ? theme.darkTheme
-                    : ThemeData(
-                      colorScheme: ColorScheme.fromSeed(
-                        seedColor: const Color(0xFF51B47B),
-                        primary: const Color(0xFF51B47B),
-                        secondary: const Color(0xFF6D6D6D),
-                      ),
-                      elevatedButtonTheme: ElevatedButtonThemeData(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF51B47B),
-                          foregroundColor: Colors.white,
-                        ),
-                      ),
-                      useMaterial3: true,
-                    ),
             home: const AuthWrapper(),
           );
-        },
         },
       ),
     );
@@ -101,25 +80,26 @@ class AuthWrapper extends StatelessWidget {
           return const LoginScreen();
         }
 
-        final user = snapshot.data!;
-        return FutureBuilder<DocumentSnapshot>(
-          future:
-              FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(user.uid)
-                  .get(),
-          builder: (context, userSnapshot) {
-            if (userSnapshot.connectionState == ConnectionState.waiting) {
-              return Scaffold(body: Loading());
-            }
+        return _buildUserCheck(context, snapshot.data!);
+      },
+    );
+  }
 
-            if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
-              return const GetInfoScreen();
-            }
-            Provider.of<UserProvider>(context, listen: false).initUser();
-            return MainScreen();
-          },
-        );
+  Widget _buildUserCheck(BuildContext context, User user) {
+    return FutureBuilder<DocumentSnapshot>(
+      future:
+          FirebaseFirestore.instance.collection('users').doc(user.uid).get(),
+      builder: (context, userSnapshot) {
+        if (userSnapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(body: Loading());
+        }
+
+        if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
+          return GetInfoScreen();
+        }
+
+        Provider.of<UserProvider>(context, listen: false).initUser();
+        return MainScreen();
       },
     );
   }
