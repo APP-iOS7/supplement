@@ -14,9 +14,6 @@ import 'package:supplementary_app/providers/user_provider.dart';
 import 'package:supplementary_app/providers/theme_provider.dart';
 import 'package:supplementary_app/widgets/loading.dart';
 
-// 전역 ThemeProvider 인스턴스 생성
-final themeProvider = ThemeProvider();
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -38,7 +35,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => RecommendationProvider()),
         ChangeNotifierProvider(create: (context) => PageRouteProvider()),
-        ChangeNotifierProvider.value(value: themeProvider), // 전역 인스턴스 사용
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ],
       child: Builder(
         builder: (context) {
@@ -62,8 +59,26 @@ class MyApp extends StatelessWidget {
                       ),
                       useMaterial3: true,
                     ),
+            theme:
+                theme.isDarkMode
+                    ? theme.darkTheme
+                    : ThemeData(
+                      colorScheme: ColorScheme.fromSeed(
+                        seedColor: const Color(0xFF51B47B),
+                        primary: const Color(0xFF51B47B),
+                        secondary: const Color(0xFF6D6D6D),
+                      ),
+                      elevatedButtonTheme: ElevatedButtonThemeData(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF51B47B),
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                      useMaterial3: true,
+                    ),
             home: const AuthWrapper(),
           );
+        },
         },
       ),
     );
