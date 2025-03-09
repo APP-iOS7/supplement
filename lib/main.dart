@@ -17,7 +17,6 @@ import 'package:supplementary_app/widgets/loading.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Future.delayed(const Duration(milliseconds: 200));
   runApp(const MyApp());
 }
 
