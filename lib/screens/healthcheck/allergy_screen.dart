@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/medication_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/allergy_viewmodel.dart';
-import 'package:supplementary_app/widgets/option_card.dart';
+import 'package:supplementary_app/viewmodels/health_check/health_check_style_viewmodel.dart';
+import 'package:supplementary_app/widgets/option_card.dart'; // Add this import
 
 class AllergyScreen extends StatelessWidget {
   const AllergyScreen({super.key});
@@ -20,7 +21,7 @@ class AllergyScreen extends StatelessWidget {
           ),
       child: Consumer<AllergyViewModel>(
         builder: (context, viewModel, child) {
-          return _AllergyScreen(viewModel: viewModel);
+          return _AllergyScreen(viewModel: viewModel); // const 제거
         },
       ),
     );
@@ -28,8 +29,9 @@ class AllergyScreen extends StatelessWidget {
 }
 
 class _AllergyScreen extends StatelessWidget {
-  const _AllergyScreen({required this.viewModel});
+  _AllergyScreen({required this.viewModel}); // const 제거
   final AllergyViewModel viewModel;
+  final styleViewModel = HealthCheckStyleViewModel(); // 추가
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +46,26 @@ class _AllergyScreen extends StatelessWidget {
               children: [
                 _buildHeader(),
                 const SizedBox(height: 30),
-                _buildOptions(context, viewModel),
+                // Replace _buildOptions with OptionCard widgets
+                OptionCard(
+                  title: '알러지가 없어요',
+                  value: '알러지가 없어요',
+                  selectedValue: viewModel.selectedOption ?? '',
+                  onTap: viewModel.selectOption,
+                ),
+                const SizedBox(height: 16),
+                OptionCard(
+                  title: '알러지가 있어요',
+                  value: '알러지가 있어요',
+                  selectedValue: viewModel.selectedOption ?? '',
+                  onTap: viewModel.selectOption,
+                ),
                 if (viewModel.selectedOption == '알러지가 있어요')
-                  _buildAllergySelectionSection(context, viewModel),
+                  Expanded(
+                    child: _buildAllergySelectionSection(context, viewModel),
+                  )
+                else
+                  const Spacer(), // Add spacer to push button to bottom
                 _buildNextButton(context, viewModel),
               ],
             ),
@@ -74,22 +93,46 @@ class _AllergyScreen extends StatelessWidget {
   }
 
   Widget _buildOptions(BuildContext context, AllergyViewModel viewModel) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       children: [
-        OptionCard(
-          title: '알러지가 없어요',
-          value: '알러지가 없어요',
-          selectedValue: viewModel.selectedOption ?? '',
-          onTap: viewModel.selectOption,
-        ),
+        _buildOptionCard(context, isDarkMode, '알러지가 없어요', viewModel),
         const SizedBox(height: 16),
-        OptionCard(
-          title: '알러지가 있어요',
-          value: '알러지가 있어요',
-          selectedValue: viewModel.selectedOption ?? '',
-          onTap: viewModel.selectOption,
-        ),
+        _buildOptionCard(context, isDarkMode, '알러지가 있어요', viewModel),
       ],
+    );
+  }
+
+  Widget _buildOptionCard(
+    BuildContext context,
+    bool isDarkMode,
+    String value,
+    AllergyViewModel viewModel,
+  ) {
+    final isSelected = value == viewModel.selectedOption;
+    
+    return GestureDetector(
+      onTap: () => viewModel.selectOption(value),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+        decoration: BoxDecoration(
+          color: isSelected 
+              ? Theme.of(context).colorScheme.primary 
+              : Colors.white, // 항상 흰색 배경
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected 
+                ? Theme.of(context).colorScheme.primary 
+                : Colors.grey.withOpacity(0.3),
+          ),
+        ),
+        child: Text(
+          value,
+          style: styleViewModel.optionTextStyle, // 수정
+        ),
+      ),
     );
   }
 
@@ -97,26 +140,24 @@ class _AllergyScreen extends StatelessWidget {
     BuildContext context,
     AllergyViewModel viewModel,
   ) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildAllergyTypeChips(context, viewModel),
-                  if (viewModel.selectedAllergies.contains('특정 알러지') &&
-                      viewModel.selectedAllergies.isNotEmpty)
-                    _buildSpecificAllergyInput(context, viewModel),
-                ],
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildAllergyTypeChips(context, viewModel),
+                if (viewModel.selectedAllergies.contains('특정 알러지') &&
+                    viewModel.selectedAllergies.isNotEmpty)
+                  _buildSpecificAllergyInput(context, viewModel),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -141,11 +182,13 @@ class _AllergyScreen extends StatelessWidget {
     String type,
     bool isSelected,
   ) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return FilterChip(
       selected: isSelected,
       backgroundColor: Colors.grey.shade100,
       selectedColor: Theme.of(context).colorScheme.primaryContainer,
-      checkmarkColor: Theme.of(context).colorScheme.primary,
+      checkmarkColor: Colors.red, // 체크마크 색상을 빨간색으로 변경
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side:
@@ -153,7 +196,12 @@ class _AllergyScreen extends StatelessWidget {
                 ? BorderSide(color: Theme.of(context).colorScheme.primary)
                 : BorderSide.none,
       ),
-      label: Text(type),
+      label: Text(
+        type,
+        style: const TextStyle(
+          color: Colors.black, // 항상 검정색 텍스트
+        ),
+      ),
       onSelected: (selected) {
         viewModel.toggleAllergySelection(type, selected);
         if (selected && type == '특정 알러지') {
@@ -167,6 +215,8 @@ class _AllergyScreen extends StatelessWidget {
     BuildContext context,
     AllergyViewModel viewModel,
   ) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: Container(
@@ -194,7 +244,7 @@ class _AllergyScreen extends StatelessWidget {
             Expanded(
               child: Text(
                 viewModel.specificAllergyInput,
-                style: const TextStyle(color: Colors.black87),
+                style: const TextStyle(color: Colors.black), // 항상 검정색 텍스트
               ),
             ),
             IconButton(
@@ -234,20 +284,16 @@ class _AllergyScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               '다음',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: styleViewModel.buttonTextStyle, // 수정
             ),
             if (viewModel.selectedAllergies.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
                   '${viewModel.selectedAllergies.length}개',
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  style: styleViewModel.optionTextStyle, // 수정
                 ),
               ),
           ],
@@ -281,7 +327,10 @@ class _AllergyScreen extends StatelessWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('취소'),
+                style: TextButton.styleFrom(
+                  side: const BorderSide(color: Colors.black, width: 1.0), // 검정색 테두리 추가
+                ),
+                child: Text('취소', style: styleViewModel.optionTextStyle),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -291,7 +340,7 @@ class _AllergyScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
-                child: const Text('확인', style: TextStyle(color: Colors.white)),
+                child: Text('확인', style: styleViewModel.optionTextStyle),
               ),
             ],
           ),
