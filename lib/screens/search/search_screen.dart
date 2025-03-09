@@ -27,6 +27,8 @@ class _SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -40,11 +42,13 @@ class _SearchScreen extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: Colors.grey[100],
+      backgroundColor: isDarkMode ? Colors.black : Colors.grey[100],
     );
   }
 
   Widget _buildSearchBar(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return Row(
       children: [
         Expanded(child: _buildSearchTextField(context)),
@@ -55,16 +59,18 @@ class _SearchScreen extends StatelessWidget {
   }
 
   Widget _buildSearchTextField(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? Colors.grey[800] : Colors.white,
         borderRadius: BorderRadius.circular(30),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Colors.grey,
+            color: isDarkMode ? Colors.black54 : Colors.grey,
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -72,103 +78,143 @@ class _SearchScreen extends StatelessWidget {
         controller: viewModel.controller,
         decoration: InputDecoration(
           hintText: 'Search...',
+          hintStyle: TextStyle(
+            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+          ),
           border: InputBorder.none,
           prefixIcon: Icon(
             Icons.search,
             color: Theme.of(context).colorScheme.primary,
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        ),
+        style: TextStyle(
+          color: isDarkMode ? Colors.white : Colors.black, // 다크모드에서는 흰색, 라이트모드에서는 검정색
         ),
       ),
-    );
-  }
-
-  Widget _buildSearchButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: viewModel.executeSearch,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      ),
-      child: const Icon(Icons.search, color: Colors.white),
     );
   }
 
   Widget _buildSearchResults() {
-    if (viewModel.searchFuture == null) {
-      return const Center(
-        child: Text(
-          '검색어를 입력하세요',
-          style: TextStyle(fontSize: 18, color: Colors.grey),
-        ),
-      );
-    }
-
-    return Expanded(
-      child: FutureBuilder<List<SearchItem>>(
-        future: viewModel.searchFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Loading();
-          }
-
-          if (snapshot.hasError) {
-            return Center(
+    return Builder(
+      builder: (context) {
+        final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+        
+        if (viewModel.searchFuture == null) {
+          return Expanded(
+            child: Center(
               child: Text(
-                '오류가 발생했습니다: ${snapshot.error}',
-                style: const TextStyle(fontSize: 18, color: Colors.red),
+                '검색어를 입력하세요',
+                style: TextStyle(
+                  fontSize: 18, 
+                  color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                ),
               ),
-            );
-          }
-
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                '검색 결과가 없습니다',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
-              ),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder:
-                (context, index) =>
-                    _buildResultCard(snapshot.data![index], context),
+            ),
           );
-        },
-      ),
+        }
+
+        return Expanded(
+          child: FutureBuilder<List<SearchItem>>(
+            future: viewModel.searchFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Loading();
+              }
+
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '오류가 발생했습니다: ${snapshot.error}',
+                    style: TextStyle(
+                      fontSize: 18, 
+                      color: Colors.red,
+                    ),
+                  ),
+                );
+              }
+
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(
+                  child: Text(
+                    '검색 결과가 없습니다',
+                    style: TextStyle(
+                      fontSize: 18, 
+                      color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) =>
+                    _buildResultCard(snapshot.data![index], context),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
   Widget _buildResultCard(SearchItem item, BuildContext context) {
-    return Card(
-      child: ListTile(
+      final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+      
+      return Card(
+        elevation: 3,
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        tileColor: Colors.white,
-        leading: Image.network(item.image),
-        title: Text(
-          item.title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        subtitle: Row(
-          children: [Text('${item.lprice}원'), Spacer(), Text(item.brand)],
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => ItemDetailScreen(
-                    itemTitle: item.title,
-                    imageUrl: item.image,
-                    price: item.lprice,
-                  ),
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
+        child: ListTile(
+          leading: Image.network(item.image),
+          title: Text(
+            item.title,
+            style: TextStyle(
+              fontSize: 18, 
+              fontWeight: FontWeight.w500,
+              color: isDarkMode ? Colors.white : Colors.black,
             ),
-          );
-        },
-      ),
-    );
-  }
+          ),
+          subtitle: Row(
+            children: [
+              Text(
+                '${item.lprice}원', 
+                style: TextStyle(color: isDarkMode ? Colors.grey[400] : Colors.grey[700]),
+              ), 
+              const Spacer(), 
+              Text(
+                item.brand,
+                style: TextStyle(color: isDarkMode ? Colors.grey[400] : Colors.grey[700]),
+              ),
+            ],
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ItemDetailScreen(
+                  itemTitle: item.title,
+                  imageUrl: item.image,
+                  price: item.lprice,
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+  Widget _buildSearchButton(BuildContext context) {
+      return ElevatedButton(
+        onPressed: viewModel.executeSearch,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        ),
+        child: const Icon(Icons.search, color: Colors.white),
+      );
+    }
 }
+
