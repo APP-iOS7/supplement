@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/allergy_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/drinking_viewmodel.dart';
-import 'package:supplementary_app/widgets/option_card.dart';
+import 'package:supplementary_app/viewmodels/health_check/health_check_style_viewmodel.dart';
+import 'package:supplementary_app/widgets/option_card.dart'; // 추가
 
 class DrinkingScreen extends StatelessWidget {
   const DrinkingScreen({super.key});
@@ -20,7 +21,7 @@ class DrinkingScreen extends StatelessWidget {
           ),
       child: Consumer<DrinkingViewModel>(
         builder: (context, viewModel, child) {
-          return _DrinkingScreen(viewModel: viewModel);
+          return _DrinkingScreen(viewModel: viewModel); // const 제거
         },
       ),
     );
@@ -28,11 +29,14 @@ class DrinkingScreen extends StatelessWidget {
 }
 
 class _DrinkingScreen extends StatelessWidget {
-  const _DrinkingScreen({required this.viewModel});
+  _DrinkingScreen({required this.viewModel}); // const 제거
   final DrinkingViewModel viewModel;
+  final styleViewModel = HealthCheckStyleViewModel();
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -50,6 +54,7 @@ class _DrinkingScreen extends StatelessWidget {
               style: TextStyle(color: Colors.grey, fontSize: 16),
             ),
             const SizedBox(height: 30),
+            // _buildOptionCard 대신 OptionCard 위젯 사용
             OptionCard(
               title: '비음주',
               value: '비음주',
@@ -66,6 +71,38 @@ class _DrinkingScreen extends StatelessWidget {
             const Spacer(),
             _buildNextButton(context, viewModel),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionCard(
+    BuildContext context,
+    bool isDarkMode,
+    String value,
+    DrinkingViewModel viewModel,
+  ) {
+    final isSelected = value == viewModel.selectedOption;
+    
+    return GestureDetector(
+      onTap: () => viewModel.setSelectedOption(value),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+        decoration: BoxDecoration(
+          color: isSelected 
+              ? Theme.of(context).colorScheme.primary 
+              : Colors.white, // 항상 흰색 배경
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected 
+                ? Theme.of(context).colorScheme.primary 
+                : Colors.grey.withOpacity(0.3),
+          ),
+        ),
+        child: Text(
+          value,
+          style: styleViewModel.optionTextStyle, // 수정
         ),
       ),
     );
@@ -94,13 +131,9 @@ class _DrinkingScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text(
+        child: Text(
           '다음',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: styleViewModel.buttonTextStyle, // 수정
         ),
       ),
     );

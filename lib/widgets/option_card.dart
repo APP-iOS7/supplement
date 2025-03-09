@@ -46,6 +46,7 @@ class OptionCard extends StatelessWidget {
                 title,
                 style: TextStyle(
                   fontSize: 18,
+                  color: Colors.black, // 텍스트 색상을 검정색으로 변경
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),

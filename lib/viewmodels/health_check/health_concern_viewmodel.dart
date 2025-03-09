@@ -14,6 +14,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
     {
       'title': '체중 감량/근육 증가',
@@ -22,6 +23,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
     {
       'title': '피로 회복',
@@ -29,6 +31,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
     {
       'title': '피부 건강',
@@ -36,6 +39,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
     {
       'title': '심혈관 건강',
@@ -43,6 +47,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
     {
       'title': '뇌 기능 & 기억력',
@@ -50,6 +55,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
     {
       'title': '눈 건강',
@@ -57,6 +63,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
     {
       'title': '소화 건강 / 장 건강',
@@ -64,6 +71,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
     {
       'title': '혈당 조절',
@@ -71,6 +79,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
     {
       'title': '갱년기 건강',
@@ -78,6 +87,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
     {
       'title': '스트레스 완화',
@@ -85,6 +95,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
     {
       'title': '치아 건강',
@@ -92,6 +103,7 @@ class HealthConcernViewModel extends ChangeNotifier {
       'color': const Color.fromARGB(255, 255, 231, 247),
       'isSelected': false,
       'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
     },
   ];
 

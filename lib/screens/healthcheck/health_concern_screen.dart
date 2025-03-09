@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/smoking_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/health_concern_viewmodel.dart';
+import 'package:supplementary_app/viewmodels/health_check/health_check_style_viewmodel.dart'; // 추가
 
 class HealthConcernScreen extends StatelessWidget {
   const HealthConcernScreen({super.key});
@@ -23,6 +24,8 @@ class HealthConcernScreen extends StatelessWidget {
 }
 
 class _HealthConcernScreen extends StatelessWidget {
+  final styleViewModel = HealthCheckStyleViewModel(); // 추가
+  
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<HealthConcernViewModel>(
@@ -87,22 +90,22 @@ class _HealthConcernScreen extends StatelessWidget {
     HealthConcernViewModel viewModel,
     int index,
   ) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return GestureDetector(
       onTap: () => viewModel.toggleSelection(index),
       child: Container(
         decoration: BoxDecoration(
-          color:
-              concern['isSelected']
-                  ? Theme.of(context).colorScheme.primaryContainer
-                  : Colors.grey.shade100,
+          color: concern['isSelected']
+              ? Theme.of(context).colorScheme.primaryContainer
+              : (isDarkMode ? Colors.white : Color.fromARGB(255, 173, 238, 171)),
           borderRadius: BorderRadius.circular(16),
-          border:
-              concern['isSelected']
-                  ? Border.all(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 2,
-                  )
-                  : null,
+          border: concern['isSelected']
+              ? Border.all(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 2,
+                )
+              : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -135,7 +138,11 @@ class _HealthConcernScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               concern['title'],
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: Colors.black, // 항상 검정색으로 설정
+              ),
             ),
           ],
         ),
@@ -169,22 +176,54 @@ class _HealthConcernScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               '확인',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: styleViewModel.buttonTextStyle, // 수정
             ),
             const Spacer(),
             Text(
               '${viewModel.selectedCount}/${viewModel.maxSelections}',
-              style: const TextStyle(color: Colors.white, fontSize: 16),
+              style: styleViewModel.optionTextStyle, // 수정
             ),
           ],
         ),
       ),
     );
   }
+}
+
+// 파일 하단의 buildHealthConcernItem 함수도 수정
+Widget buildHealthConcernItem(BuildContext context, int index) {
+  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  final viewModel = Provider.of<HealthConcernViewModel>(context);
+  final concern = viewModel.healthConcerns[index];
+  final styleViewModel = HealthCheckStyleViewModel(); // 추가
+  
+  return GestureDetector(
+    onTap: () => viewModel.toggleSelection(index),
+    child: Container(
+      decoration: BoxDecoration(
+        color: concern['isSelected'] 
+            ? Theme.of(context).colorScheme.primary 
+            : (isDarkMode ? Colors.white : concern['color']),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(concern['icon'], width: 40, height: 40),
+          const SizedBox(height: 8),
+          Text(
+            concern['title'],
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black, // 항상 검정색으로 설정
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+  );
 }

@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/result_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/exercise_frequency_viewmodel.dart';
-import 'package:supplementary_app/widgets/option_card.dart';
+import 'package:supplementary_app/widgets/option_card.dart'; // Add this import
+import 'package:supplementary_app/viewmodels/health_check/health_check_style_viewmodel.dart'; // Add this import
 
 class ExerciseFrequencyScreen extends StatelessWidget {
   const ExerciseFrequencyScreen({super.key});
@@ -30,9 +31,12 @@ class ExerciseFrequencyScreen extends StatelessWidget {
 class _ExerciseFrequencyScreen extends StatelessWidget {
   const _ExerciseFrequencyScreen({required this.viewModel});
   final ExerciseFrequencyViewModel viewModel;
-
+  
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final styleViewModel = HealthCheckStyleViewModel(); // Add style view model
+    
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -51,17 +55,16 @@ class _ExerciseFrequencyScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
+            // Replace custom cards with OptionCard widgets
             ...viewModel.exerciseOptions.map(
-              (option) => Column(
-                children: [
-                  OptionCard(
-                    title: option['title']!,
-                    value: option['value']!,
-                    selectedValue: viewModel.selectedOption ?? '',
-                    onTap: viewModel.selectOption,
-                  ),
-                  const SizedBox(height: 16),
-                ],
+              (option) => Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: OptionCard(
+                  title: option['title']!,
+                  value: option['value']!,
+                  selectedValue: viewModel.selectedOption ?? '',
+                  onTap: viewModel.selectOption,
+                ),
               ),
             ),
 
@@ -90,10 +93,10 @@ class _ExerciseFrequencyScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   '결과 보기',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -105,4 +108,6 @@ class _ExerciseFrequencyScreen extends StatelessWidget {
       ),
     );
   }
+  
+  // You can remove this custom option card widget as we're now using OptionCard
 }
