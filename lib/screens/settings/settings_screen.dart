@@ -14,23 +14,25 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: const Text('설정')),
       body: ListView(
         children: [
-          _themeToggle(themeProvider),
-          _editMyInfo(),
-          const Divider(height: 16, color: Colors.white),
-          _versionInfo(),
-          _signOut(),
+          _themeToggle(context, themeProvider),
+          _editMyInfo(context),
+          const Divider(height: 16),
+          _versionInfo(context),
+          _signOut(context),
         ],
       ),
     );
   }
 
-  Widget _themeToggle(ThemeProvider themeProvider) {
+  Widget _themeToggle(BuildContext context, ThemeProvider themeProvider) {
+    final isCurrentlyDark = themeProvider.isDarkMode;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -39,16 +41,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Row(
             children: [
               Icon(
-                themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                color: themeProvider.isDarkMode ? Colors.white : Colors.amber,
+                isCurrentlyDark ? Icons.dark_mode : Icons.light_mode,
+                color: isCurrentlyDark ? null : Colors.amber,
+                size: 24,
               ),
               const SizedBox(width: 12),
-              const Text('다크/라이트 모드', style: TextStyle(fontSize: 16)),
+              Text(
+                '다크 모드',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
+              ),
             ],
           ),
           Switch(
-            value: themeProvider.isDarkMode,
-            activeColor: const Color(0xFF51B47B),
+            value: isCurrentlyDark,
             onChanged: (value) => themeProvider.toggleTheme(),
           ),
         ],
@@ -56,31 +63,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  ListTile _versionInfo() {
-    return ListTile(
-      title: Text('버전 정보', style: TextStyle(fontSize: 16)),
-      trailing: Text(
-        '1.0.0',
-        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-      ),
+  ListTile _versionInfo(BuildContext context) {
+    return const ListTile(
+      leading: Icon(Icons.info_outline),
+      title: Text('버전 정보'),
+      trailing: Text('1.0.0'),
     );
   }
 
-  ListTile _signOut() {
+  ListTile _signOut(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.logout, color: Colors.red[400]),
+      leading: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
       title: Text(
         '로그아웃',
-        style: TextStyle(color: Colors.red[400], fontSize: 16),
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
       onTap: () => AuthService().signOut(),
     );
   }
 
-  ListTile _editMyInfo() {
+  ListTile _editMyInfo(BuildContext context) {
     return ListTile(
-      title: Text('내 정보 수정', style: TextStyle(fontSize: 16)),
-      trailing: Icon(Icons.chevron_right),
+      leading: const Icon(Icons.person_outline),
+      title: const Text('내 정보 수정'),
+      trailing: const Icon(Icons.chevron_right),
       onTap:
           () => Navigator.pushReplacement(
             context,

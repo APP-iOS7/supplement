@@ -5,10 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemeProvider with ChangeNotifier {
   bool _isDarkMode = false;
   bool get isDarkMode => _isDarkMode;
-  
-  // 테마 변경 중인지 확인하는 플래그 추가
-  bool _isChangingTheme = false;
-  bool get isChangingTheme => _isChangingTheme;
 
   ThemeProvider() {
     _loadThemeFromPrefs();
@@ -25,43 +21,117 @@ class ThemeProvider with ChangeNotifier {
     }
   }
 
-  // 테마 모드 전환 - 상태 변경 최소화
+  // 테마 모드 전환
   void toggleTheme() async {
-    if (_isChangingTheme) return; // 이미 변경 중이면 무시
-    
-    _isChangingTheme = true;
     _isDarkMode = !_isDarkMode;
     notifyListeners();
-    
+
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isDarkMode', _isDarkMode);
     } catch (e) {
       print('테마 설정 저장 오류: $e');
-    } finally {
-      _isChangingTheme = false;
     }
   }
 
   // 다크 테마 설정
   ThemeData get darkTheme => ThemeData(
     brightness: Brightness.dark,
-    primaryColor: const Color(0xFF2E2E2E),
+    primaryColor: const Color(0xFF51B47B),
     scaffoldBackgroundColor: const Color(0xFF121212),
-    colorScheme: ColorScheme.dark(
-      primary: const Color(0xFF51B47B),
-      secondary: Colors.grey[600]!,
+    colorScheme: const ColorScheme.dark(
+      primary: Color(0xFF51B47B),
+      secondary: Color(0xFF84C4AE),
+      tertiary: Color(0xFFFFB74D),
+      error: Color(0xFFE57373),
+      surface: Color(0xFF1E1E1E),
     ),
+    iconTheme: const IconThemeData(color: Colors.white70, size: 24),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF51B47B),
         foregroundColor: Colors.white,
+        elevation: 2,
       ),
     ),
+    cardTheme: const CardTheme(color: Color(0xFF2A2A2A), elevation: 2),
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFF1E1E1E),
       foregroundColor: Colors.white,
+      elevation: 0,
+      iconTheme: IconThemeData(color: Colors.white),
     ),
-    useMaterial3: true,
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Color(0xFF1E1E1E),
+      selectedItemColor: Color(0xFF51B47B),
+      unselectedItemColor: Colors.white70,
+    ),
+    textTheme: const TextTheme(
+      headlineMedium: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+      titleLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      titleMedium: TextStyle(color: Colors.white),
+      bodyLarge: TextStyle(color: Colors.white),
+      bodyMedium: TextStyle(color: Colors.white70),
+      bodySmall: TextStyle(color: Colors.white60),
+    ),
+    dividerTheme: const DividerThemeData(
+      color: Color(0xFF3A3A3A),
+      thickness: 1,
+    ),
+  );
+
+  // 라이트 테마 설정
+  ThemeData get lightTheme => ThemeData(
+    brightness: Brightness.light,
+    primaryColor: const Color(0xFF51B47B),
+    scaffoldBackgroundColor: Colors.white,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: const Color(0xFF51B47B),
+      primary: const Color(0xFF51B47B),
+      secondary: const Color(0xFF84C4AE),
+      tertiary: const Color(0xFFFF9800),
+      error: const Color(0xFFB00020),
+    ),
+    iconTheme: const IconThemeData(color: Color(0xFF424242), size: 24),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF51B47B),
+        foregroundColor: Colors.white,
+        elevation: 2,
+      ),
+    ),
+    cardTheme: const CardTheme(color: Colors.white, elevation: 1),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFF51B47B),
+      foregroundColor: Colors.white,
+      elevation: 0,
+      iconTheme: IconThemeData(color: Colors.white),
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Colors.white,
+      selectedItemColor: Color(0xFF51B47B),
+      unselectedItemColor: Color(0xFF757575),
+    ),
+    textTheme: const TextTheme(
+      headlineMedium: TextStyle(
+        color: Color(0xFF212121),
+        fontWeight: FontWeight.bold,
+      ),
+      titleLarge: TextStyle(
+        color: Color(0xFF212121),
+        fontWeight: FontWeight.bold,
+      ),
+      titleMedium: TextStyle(color: Color(0xFF212121)),
+      bodyLarge: TextStyle(color: Color(0xFF212121)),
+      bodyMedium: TextStyle(color: Color(0xFF424242)),
+      bodySmall: TextStyle(color: Color(0xFF616161)),
+    ),
+    dividerTheme: const DividerThemeData(
+      color: Color(0xFFE0E0E0),
+      thickness: 1,
+    ),
   );
 }

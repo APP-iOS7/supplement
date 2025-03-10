@@ -37,29 +37,33 @@ class ItemDetailScreen extends StatelessWidget {
             return Center(
               child: Text(
                 '오류가 발생했습니다: ${snapshot.error}',
-                style: const TextStyle(fontSize: 18, color: Colors.red),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.error,
+                ),
               ),
             );
           }
 
           if (!snapshot.hasData) {
             return const Center(
-              child: Text(
-                '정보를 불러올 수 없습니다',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
-              ),
+              child: Text('정보를 불러올 수 없습니다', style: TextStyle(fontSize: 18)),
             );
           }
 
           final itemDetail = snapshot.data!;
-          return _buildDetailContent(itemDetail, imageUrl);
+          return _buildDetailContent(context, itemDetail, imageUrl);
         },
       ),
     );
   }
 }
 
-Widget _buildDetailContent(ItemDetail itemDetail, String imageUrl) {
+Widget _buildDetailContent(
+  BuildContext context,
+  ItemDetail itemDetail,
+  String imageUrl,
+) {
   return SingleChildScrollView(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -70,9 +74,9 @@ Widget _buildDetailContent(ItemDetail itemDetail, String imageUrl) {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTitleSection(itemDetail.name),
+              _buildTitleSection(context, itemDetail.name),
               const SizedBox(height: 16),
-              _buildPriceAndRatingRow(itemDetail),
+              _buildPriceAndRatingRow(context, itemDetail),
               const SizedBox(height: 24),
               _buildInfoCard('제품 정보', [
                 _buildInfoRow('제조사', itemDetail.manufacturer),
@@ -101,7 +105,6 @@ Widget _buildImageSection(String imageUrl) {
   return Container(
     height: 300,
     decoration: BoxDecoration(
-      color: Colors.white,
       boxShadow: [
         BoxShadow(
           color: Colors.black.withOpacity(0.1),
@@ -110,83 +113,52 @@ Widget _buildImageSection(String imageUrl) {
         ),
       ],
     ),
-    child: Stack(
-      children: [
-        Center(
-          child: Image.network(imageUrl, fit: BoxFit.contain, height: 250),
-        ),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Container(
-            height: 50,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Colors.white.withOpacity(0.8),
-                  Colors.white.withOpacity(0.0),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
+    child: Center(
+      child: Image.network(imageUrl, fit: BoxFit.contain, height: 250),
     ),
   );
 }
 
-Widget _buildTitleSection(String name) {
+Widget _buildTitleSection(BuildContext context, String name) {
   return Text(
     name,
-    style: const TextStyle(
-      fontSize: 24,
-      fontWeight: FontWeight.bold,
-      color: Colors.black87,
-    ),
+    style: Theme.of(
+      context,
+    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
   );
 }
 
-Widget _buildPriceAndRatingRow(ItemDetail itemDetail) {
+Widget _buildPriceAndRatingRow(BuildContext context, ItemDetail itemDetail) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.blue.shade50,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          itemDetail.price,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.blue.shade700,
+      Card(
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Text(
+            itemDetail.price,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
       ),
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.orange.shade50,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.star, color: Colors.orange, size: 20),
-            const SizedBox(width: 4),
-            Text(
-              itemDetail.rating.toString(),
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.orange,
+      Card(
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(
+            children: [
+              const Icon(Icons.star, color: Colors.amber, size: 20),
+              const SizedBox(width: 4),
+              Text(
+                itemDetail.rating.toString(),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ],
@@ -195,7 +167,6 @@ Widget _buildPriceAndRatingRow(ItemDetail itemDetail) {
 
 Widget _buildInfoCard(String title, List<Widget> content) {
   return Card(
-    elevation: 2,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     child: Padding(
       padding: const EdgeInsets.all(16),
@@ -204,11 +175,7 @@ Widget _buildInfoCard(String title, List<Widget> content) {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           ...content,
@@ -226,17 +193,14 @@ Widget _buildInfoRow(String label, String content) {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Colors.grey.shade600,
+            color: Colors.grey,
           ),
         ),
         const SizedBox(height: 4),
-        Text(
-          content,
-          style: const TextStyle(fontSize: 16, color: Colors.black87),
-        ),
+        Text(content),
       ],
     ),
   );
