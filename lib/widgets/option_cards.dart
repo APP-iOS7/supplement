@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class OptionCard extends StatelessWidget {
+class SurveyOptionCard extends StatelessWidget {
   final String title;
-  final String value;
-  final String? selectedValue;
-  final Function(String) onTap;
+  final bool value;
+  final bool? selectedValue;
+  final Function() onTap;
 
-  const OptionCard({
+  const SurveyOptionCard({
     required this.title,
     required this.value,
     required this.selectedValue,
@@ -19,7 +19,7 @@ class OptionCard extends StatelessWidget {
     final isSelected = selectedValue == value;
 
     return GestureDetector(
-      onTap: () => onTap(value),
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 80,
@@ -68,26 +68,26 @@ class OptionCard extends StatelessWidget {
   }
 }
 
-class SurveyOptionCard extends StatelessWidget {
+class ExerciseOptionCard extends StatelessWidget {
   final String title;
-  final bool value;
-  final bool? selectedValue;
-  final Function() onTap;
+  final String value;
+  final String selectedValue;
+  final Function(String) onTap;
 
-  const SurveyOptionCard({
+  const ExerciseOptionCard({
+    super.key,
     required this.title,
     required this.value,
     required this.selectedValue,
     required this.onTap,
-    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = selectedValue == value;
+    final isSelected = value == selectedValue;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => onTap(value),
       child: Container(
         width: double.infinity,
         height: 80,
