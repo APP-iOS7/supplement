@@ -172,7 +172,7 @@ class _BannerScreenState extends State<BannerScreen> {
         // 배너가 있을 때
         return CarouselBanner(
           bannerItems: _bannerItems, // 배너 목록 전달
-          height: 240, // 높이 200
+          height: 250, // 높이 200
           onBannerTap: _handleBannerTap, // 배너 클릭 시 실행할 함수 전달
         );
       }
