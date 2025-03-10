@@ -315,7 +315,8 @@ class BannerDetailScreen extends StatelessWidget {
               children: [
                 // 헤더 행 생성
                 TableRow(
-                  decoration: BoxDecoration(color: Colors.grey[200]), // 헤더 배경색
+                  // ✅ 여길 삭제하면 됨
+                  // decoration: BoxDecoration(color: Colors.grey[200]), // 헤더 배경색
                   children:
                       headers.map((header) {
                         // HTML 태그 제거 후 텍스트 추출
