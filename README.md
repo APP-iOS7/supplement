@@ -7,7 +7,6 @@ NutriPick은 개인 맞춤형 영양제 추천 플랫폼으로, 사용자의 생
 ### Frontend
 - Flutter 3.x
 - Provider (상태관리)
-- Material Design 3
 
 ### Backend
 - Firebase
@@ -89,7 +88,7 @@ NutriPick은 개인 맞춤형 영양제 추천 플랫폼으로, 사용자의 생
 
 
 ## 개발 기간
-2025.02.06 ~ 2025.02.11 (6일)
+2025.03.06 ~ 2025.03.11 (6일)
 
 ## 상세 기능
 
@@ -131,5 +130,3 @@ NutriPick은 개인 맞춤형 영양제 추천 플랫폼으로, 사용자의 생
 - Provider 패턴을 활용한 상태 관리
 - Firebase 실시간 데이터베이스 연동
 - REST API 통신 구현
-- Material Design 3 적용
-- 반응형 UI 구현
