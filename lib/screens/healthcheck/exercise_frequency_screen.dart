@@ -4,6 +4,7 @@ import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/result_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/exercise_frequency_viewmodel.dart';
 import 'package:supplementary_app/widgets/option_card.dart';
+import 'package:supplementary_app/widgets/next_button.dart';
 
 class ExerciseFrequencyScreen extends StatelessWidget {
   const ExerciseFrequencyScreen({super.key});
@@ -65,38 +66,10 @@ class _ExerciseFrequencyScreen extends StatelessWidget {
 
             const Spacer(),
 
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed:
-                    viewModel.selectedOption != null
-                        ? () {
-                          viewModel.addToSurvey();
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ResultScreen(),
-                            ),
-                            (route) => false,
-                          );
-                        }
-                        : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  '결과 보기',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            NextButton(
+              canProceed: viewModel.selectedOption != null,
+              nextPage: const ResultScreen(),
+              onTap: viewModel.addToSurvey,
             ),
           ],
         ),
