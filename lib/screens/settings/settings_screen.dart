@@ -82,7 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       title: Text('내 정보 수정', style: TextStyle(fontSize: 16)),
       trailing: Icon(Icons.chevron_right),
       onTap:
-          () => Navigator.push(
+          () => Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => GetInfoScreen()),
           ),

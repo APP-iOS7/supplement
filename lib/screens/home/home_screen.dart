@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/screens/healthcheck/health_concern_screen.dart';
 import 'package:supplementary_app/screens/search/item_detail_screen.dart';
-import 'package:supplementary_app/services/auth_service.dart';
 import 'package:supplementary_app/screens/banner/banner_screen.dart';
 import 'package:supplementary_app/viewmodels/home/home_screen_view_model.dart';
 // 로티 애니메이션 라이브러리 추가
