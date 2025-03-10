@@ -5,6 +5,7 @@ import 'package:supplementary_app/screens/healthcheck/exercise_frequency_screen.
 import 'package:supplementary_app/viewmodels/health_check/medication_viewmodel.dart';
 import 'package:supplementary_app/widgets/option_card.dart';
 import 'package:supplementary_app/viewmodels/health_check/health_check_style_viewmodel.dart'; // 추가
+import 'package:supplementary_app/widgets/next_button.dart';
 
 class MedicationScreen extends StatelessWidget {
   const MedicationScreen({super.key});
@@ -128,38 +129,10 @@ class _MedicationScreenView extends StatelessWidget {
             else
               const Spacer(),
 
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed:
-                    viewModel.isNextButtonEnabled
-                        ? () {
-                          viewModel.addToSurvey();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => const ExerciseFrequencyScreen(),
-                            ),
-                          );
-                        }
-                        : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  '다음',
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ), // 직접 검정색 스타일 지정
-                ),
-              ),
+            NextButton(
+              canProceed: viewModel.isNextButtonEnabled,
+              nextPage: const ExerciseFrequencyScreen(),
+              onTap: viewModel.addToSurvey,
             ),
           ],
         ),

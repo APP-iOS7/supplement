@@ -5,6 +5,7 @@ import 'package:supplementary_app/screens/healthcheck/allergy_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/drinking_viewmodel.dart';
 import 'package:supplementary_app/viewmodels/health_check/health_check_style_viewmodel.dart';
 import 'package:supplementary_app/widgets/option_card.dart'; // 추가
+import 'package:supplementary_app/widgets/next_button.dart';
 
 class DrinkingScreen extends StatelessWidget {
   const DrinkingScreen({super.key});
@@ -35,8 +36,6 @@ class _DrinkingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -69,7 +68,11 @@ class _DrinkingScreen extends StatelessWidget {
               onTap: viewModel.setSelectedOption,
             ),
             const Spacer(),
-            _buildNextButton(context, viewModel),
+            NextButton(
+              canProceed: viewModel.selectedOption != null,
+              nextPage: const AllergyScreen(),
+              onTap: viewModel.saveDrinkingStatus,
+            ),
           ],
         ),
       ),
@@ -83,57 +86,28 @@ class _DrinkingScreen extends StatelessWidget {
     DrinkingViewModel viewModel,
   ) {
     final isSelected = value == viewModel.selectedOption;
-    
+
     return GestureDetector(
       onTap: () => viewModel.setSelectedOption(value),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         decoration: BoxDecoration(
-          color: isSelected 
-              ? Theme.of(context).colorScheme.primary 
-              : Colors.white, // 항상 흰색 배경
+          color:
+              isSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.white, // 항상 흰색 배경
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected 
-                ? Theme.of(context).colorScheme.primary 
-                : Colors.grey.withOpacity(0.3),
+            color:
+                isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.grey.withOpacity(0.3),
           ),
         ),
         child: Text(
           value,
           style: styleViewModel.optionTextStyle, // 수정
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNextButton(BuildContext context, DrinkingViewModel viewModel) {
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: ElevatedButton(
-        onPressed:
-            viewModel.selectedOption != null
-                ? () {
-                  viewModel.saveDrinkingStatus();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AllergyScreen(),
-                    ),
-                  );
-                }
-                : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Text(
-          '다음',
-          style: styleViewModel.buttonTextStyle, // 수정
         ),
       ),
     );
