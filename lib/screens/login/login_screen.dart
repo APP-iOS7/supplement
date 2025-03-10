@@ -48,10 +48,16 @@ class _LoginScreen extends StatelessWidget {
                         ),
                       ),
 
-                      Image.asset(
-                        'assets/images/Pick03.gif',
-                        width: 250,
-                        height: 150,
+                      // Image.asset(
+                      //   'assets/images/Pick03.gif',
+                      //   width: 250,
+                      //   height: 150,
+                      // ),
+                      Lottie.asset(
+                        'assets/animations/main_logo05.json',
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.contain,
                       ),
                       const SizedBox(height: 8),
                       Text(
