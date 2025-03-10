@@ -28,11 +28,6 @@ class _ResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('맞춤 영양제 추천'),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
       body: FutureBuilder<RecommendItemModel>(
         future: viewModel.getRecommendations(),
         builder: (context, snapshot) {
@@ -68,6 +63,7 @@ class _ResultScreen extends StatelessWidget {
 
           return Column(
             children: [
+              SizedBox(height: 120),
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(16),

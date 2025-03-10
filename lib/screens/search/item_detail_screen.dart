@@ -25,7 +25,7 @@ class ItemDetailScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('상세 정보')),
+      appBar: AppBar(title: const Text('')),
       body: FutureBuilder<ItemDetail>(
         future: viewModel.getItemDetail(),
         builder: (context, snapshot) {

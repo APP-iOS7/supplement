@@ -17,7 +17,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('설정')),
       body: ListView(
         children: [
           _themeToggle(context, themeProvider),

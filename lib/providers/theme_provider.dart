@@ -37,6 +37,7 @@ class ThemeProvider with ChangeNotifier {
   // 다크 테마 설정
   ThemeData get darkTheme => ThemeData(
     brightness: Brightness.dark,
+    fontFamily: "MaruBuri",
     primaryColor: const Color(0xFF51B47B),
     scaffoldBackgroundColor: const Color(0xFF121212),
     colorScheme: const ColorScheme.dark(
@@ -61,10 +62,10 @@ class ThemeProvider with ChangeNotifier {
       elevation: 0,
       iconTheme: IconThemeData(color: Colors.white),
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    navigationBarTheme: const NavigationBarThemeData(
       backgroundColor: Color(0xFF1E1E1E),
-      selectedItemColor: Color(0xFF51B47B),
-      unselectedItemColor: Colors.white70,
+      indicatorColor: Color(0xFF51B47B),
+      surfaceTintColor: Colors.white70,
     ),
     textTheme: const TextTheme(
       headlineMedium: TextStyle(
@@ -86,6 +87,7 @@ class ThemeProvider with ChangeNotifier {
   // 라이트 테마 설정
   ThemeData get lightTheme => ThemeData(
     brightness: Brightness.light,
+    fontFamily: "MaruBuri",
     primaryColor: const Color(0xFF51B47B),
     scaffoldBackgroundColor: Colors.white,
     colorScheme: ColorScheme.fromSeed(
@@ -105,15 +107,15 @@ class ThemeProvider with ChangeNotifier {
     ),
     cardTheme: const CardTheme(color: Colors.white, elevation: 1),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF51B47B),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       foregroundColor: Colors.white,
       elevation: 0,
-      iconTheme: IconThemeData(color: Colors.white),
+      iconTheme: IconThemeData(color: Color(0xFF51B47B)),
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    navigationBarTheme: const NavigationBarThemeData(
       backgroundColor: Colors.white,
-      selectedItemColor: Color(0xFF51B47B),
-      unselectedItemColor: Color(0xFF757575),
+      indicatorColor: Color(0xFF51B47B),
+      surfaceTintColor: Colors.white70,
     ),
     textTheme: const TextTheme(
       headlineMedium: TextStyle(
