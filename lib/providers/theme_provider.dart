@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -93,7 +92,6 @@ class ThemeProvider with ChangeNotifier {
     colorScheme: ColorScheme.fromSeed(
       seedColor: const Color(0xFF51B47B),
       primary: const Color(0xFF51B47B),
-      secondary: const Color(0xFF84C4AE),
       tertiary: const Color(0xFFFF9800),
       error: const Color(0xFFB00020),
     ),
@@ -105,7 +103,7 @@ class ThemeProvider with ChangeNotifier {
         elevation: 2,
       ),
     ),
-    cardTheme: const CardTheme(color: Colors.white, elevation: 1),
+    cardTheme: const CardTheme(color: Colors.white),
     appBarTheme: const AppBarTheme(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       foregroundColor: Colors.white,

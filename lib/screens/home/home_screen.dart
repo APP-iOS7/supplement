@@ -189,7 +189,8 @@ class _HomeScreen extends StatelessWidget {
                               child: SizedBox(
                                 width: double.infinity,
                                 child: Image.network(
-                                  item.imageLink!,
+                                  item.imageLink ??
+                                      'https://via.placeholder.com/500',
                                   fit: BoxFit.cover,
                                 ),
                               ),
