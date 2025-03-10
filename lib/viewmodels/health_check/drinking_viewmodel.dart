@@ -9,15 +9,14 @@ class DrinkingViewModel extends ChangeNotifier {
     : _surveyProvider = surveyProvider;
 
   bool? get isDrinker => _isDrinker;
-  String? get selectedOption =>
-      _isDrinker == null
-          ? null
-          : _isDrinker!
-          ? '음주'
-          : '비음주';
 
-  void setSelectedOption(String value) {
-    _isDrinker = value == '음주';
+  void setToDrinker() {
+    _isDrinker = true;
+    notifyListeners();
+  }
+
+  void setToNonDrinker() {
+    _isDrinker = false;
     notifyListeners();
   }
 

@@ -3,22 +3,26 @@ import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 
 class MedicationViewModel extends ChangeNotifier {
   final SupplementSurveyProvider _surveyProvider;
+  bool? _hasMedication;
+  String medicationInput = '';
 
   MedicationViewModel({required SupplementSurveyProvider surveyProvider})
     : _surveyProvider = surveyProvider;
 
-  String? selectedOption;
-  String medicationInput = '';
+  bool? get hasMedication => _hasMedication;
 
-  bool get isNextButtonEnabled =>
-      selectedOption != null &&
-      (selectedOption != '복용중인 약 있음' || medicationInput.isNotEmpty);
+  bool get canProceed =>
+      _hasMedication != null &&
+      (_hasMedication == false || medicationInput.isNotEmpty);
 
-  void selectOption(String value) {
-    selectedOption = value;
-    if (value == '복용중인 약 없음') {
-      medicationInput = '';
-    }
+  void setHasMedication() {
+    _hasMedication = true;
+    notifyListeners();
+  }
+
+  void setHasNoMedication() {
+    _hasMedication = false;
+    medicationInput = '';
     notifyListeners();
   }
 
@@ -33,15 +37,21 @@ class MedicationViewModel extends ChangeNotifier {
   }
 
   void addToSurvey() {
-    List<String> medications = [];
-    if (selectedOption == '복용중인 약 있음' && medicationInput.isNotEmpty) {
-      medications =
+    if (_hasMedication == null) return;
+
+    if (_hasMedication == false) {
+      _surveyProvider.addPrescribedDrugs([]);
+      return;
+    }
+
+    if (medicationInput.isNotEmpty) {
+      final medications =
           medicationInput
               .split(',')
               .map((e) => e.trim())
               .where((e) => e.isNotEmpty)
               .toList();
+      _surveyProvider.addPrescribedDrugs(medications);
     }
-    _surveyProvider.addPrescribedDrugs(medications);
   }
 }

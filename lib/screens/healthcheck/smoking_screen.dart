@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/drinking_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/smoking_viewmodel.dart';
-import 'package:supplementary_app/widgets/option_card.dart';
 import 'package:supplementary_app/widgets/next_button.dart';
+import 'package:supplementary_app/widgets/option_cards.dart';
 
 class SmokingScreen extends StatelessWidget {
   const SmokingScreen({super.key});

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/exercise_frequency_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/medication_viewmodel.dart';
-import 'package:supplementary_app/widgets/option_card.dart';
+import 'package:supplementary_app/widgets/option_cards.dart';
 import 'package:supplementary_app/widgets/next_button.dart';
 
 class MedicationScreen extends StatelessWidget {
@@ -30,6 +30,7 @@ class _MedicationScreenView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<MedicationViewModel>(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(),
@@ -38,93 +39,32 @@ class _MedicationScreenView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '복용중인 약이 있다면\n알려주세요',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            Text('복용중인 약이 있다면\n알려주세요', style: theme.textTheme.headlineMedium),
             const SizedBox(height: 10),
             Text(
               '영양제와 함께 복용시 주의해야 할\n약물이 있는지 확인해드릴게요',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 30),
-            OptionCard(
+            SurveyOptionCard(
               title: '복용중인 약 없음',
-              value: '복용중인 약 없음',
-              selectedValue: viewModel.selectedOption ?? '',
-              onTap: viewModel.selectOption,
+              value: false,
+              selectedValue: viewModel.hasMedication,
+              onTap: viewModel.setHasNoMedication,
             ),
             const SizedBox(height: 16),
-            OptionCard(
+            SurveyOptionCard(
               title: '복용중인 약 있음',
-              value: '복용중인 약 있음',
-              selectedValue: viewModel.selectedOption ?? '',
-              onTap: viewModel.selectOption,
+              value: true,
+              selectedValue: viewModel.hasMedication,
+              onTap: viewModel.setHasMedication,
             ),
-            if (viewModel.selectedOption == '복용중인 약 있음')
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '복용중인 약을 입력해주세요',
-                                style: Theme.of(context).textTheme.titleMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.edit, size: 20),
-                                color: Theme.of(context).colorScheme.primary,
-                                onPressed:
-                                    () => _showMedicationDialog(
-                                      context,
-                                      viewModel,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          if (viewModel.medicationInput.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                viewModel.medicationInput,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '여러 약을 복용 중이라면 쉼표(,)로 구분해주세요',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodySmall?.copyWith(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )
+            if (viewModel.hasMedication == true)
+              Expanded(child: _buildMedicationInput(context, viewModel))
             else
               const Spacer(),
             NextButton(
-              canProceed: viewModel.isNextButtonEnabled,
+              canProceed: viewModel.canProceed,
               nextPage: const ExerciseFrequencyScreen(),
               onTap: viewModel.addToSurvey,
             ),
@@ -134,10 +74,70 @@ class _MedicationScreenView extends StatelessWidget {
     );
   }
 
+  Widget _buildMedicationInput(
+    BuildContext context,
+    MedicationViewModel viewModel,
+  ) {
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: theme.colorScheme.primary.withOpacity(0.5),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '복용중인 약을 입력해주세요',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.edit, size: 20),
+                    color: theme.colorScheme.primary,
+                    onPressed: () => _showMedicationDialog(context, viewModel),
+                  ),
+                ],
+              ),
+              if (viewModel.medicationInput.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    viewModel.medicationInput,
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+              const SizedBox(height: 8),
+              Text(
+                '여러 약을 복용 중이라면 쉼표(,)로 구분해주세요',
+                style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   void _showMedicationDialog(
     BuildContext context,
     MedicationViewModel viewModel,
   ) {
+    final theme = Theme.of(context);
     final controller = TextEditingController(text: viewModel.medicationInput);
 
     showDialog(
@@ -158,14 +158,15 @@ class _MedicationScreenView extends StatelessWidget {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 style: TextButton.styleFrom(
-                  side: const BorderSide(color: Colors.black, width: 1.0),
+                  side: BorderSide(
+                    color: theme.colorScheme.onSurface,
+                    width: 1.0,
+                  ),
                 ),
-                child: const Text(
+                child: Text(
                   '취소',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -175,13 +176,12 @@ class _MedicationScreenView extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  backgroundColor: theme.colorScheme.primary,
                 ),
-                child: const Text(
+                child: Text(
                   '확인',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: theme.colorScheme.onPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
