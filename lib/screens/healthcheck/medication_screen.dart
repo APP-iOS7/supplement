@@ -4,7 +4,6 @@ import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/exercise_frequency_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/medication_viewmodel.dart';
 import 'package:supplementary_app/widgets/option_card.dart';
-import 'package:supplementary_app/viewmodels/health_check/health_check_style_viewmodel.dart'; // 추가
 import 'package:supplementary_app/widgets/next_button.dart';
 
 class MedicationScreen extends StatelessWidget {
@@ -20,14 +19,13 @@ class MedicationScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: _MedicationScreenView(), // const 제거
+      child: const _MedicationScreenView(),
     );
   }
 }
 
 class _MedicationScreenView extends StatelessWidget {
-  _MedicationScreenView(); // const 제거
-  final styleViewModel = HealthCheckStyleViewModel();
+  const _MedicationScreenView();
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +62,6 @@ class _MedicationScreenView extends StatelessWidget {
               selectedValue: viewModel.selectedOption ?? '',
               onTap: viewModel.selectOption,
             ),
-
             if (viewModel.selectedOption == '복용중인 약 있음')
               Expanded(
                 child: Column(
@@ -128,7 +125,6 @@ class _MedicationScreenView extends StatelessWidget {
               )
             else
               const Spacer(),
-
             NextButton(
               canProceed: viewModel.isNextButtonEnabled,
               nextPage: const ExerciseFrequencyScreen(),
@@ -164,12 +160,16 @@ class _MedicationScreenView extends StatelessWidget {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 style: TextButton.styleFrom(
-                  side: const BorderSide(
-                    color: Colors.black,
-                    width: 1.0,
-                  ), // 검정색 테두리 추가
+                  side: const BorderSide(color: Colors.black, width: 1.0),
                 ),
-                child: Text('취소', style: styleViewModel.optionTextStyle), // 수정
+                child: const Text(
+                  '취소',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -177,9 +177,16 @@ class _MedicationScreenView extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 81, 186, 123),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
-                child: Text('확인', style: styleViewModel.buttonTextStyle), // 수정
+                child: const Text(
+                  '확인',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),

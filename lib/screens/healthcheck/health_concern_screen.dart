@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/smoking_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/health_concern_viewmodel.dart';
-import 'package:supplementary_app/viewmodels/health_check/health_check_style_viewmodel.dart'; // 추가
 
 class HealthConcernScreen extends StatelessWidget {
   const HealthConcernScreen({super.key});
@@ -18,14 +17,14 @@ class HealthConcernScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: _HealthConcernScreen(),
+      child: const _HealthConcernScreen(),
     );
   }
 }
 
 class _HealthConcernScreen extends StatelessWidget {
-  final styleViewModel = HealthCheckStyleViewModel(); // 추가
-  
+  const _HealthConcernScreen();
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<HealthConcernViewModel>(
@@ -37,8 +36,13 @@ class _HealthConcernScreen extends StatelessWidget {
       appBar: AppBar(),
       body: Column(
         children: [
-          _buildHeader(viewModel),
-          _buildGridView(viewModel),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [_buildHeader(viewModel), _buildGridView(viewModel)],
+              ),
+            ),
+          ),
           _buildFooter(context, viewModel),
         ],
       ),
@@ -66,21 +70,21 @@ class _HealthConcernScreen extends StatelessWidget {
   }
 
   Widget _buildGridView(HealthConcernViewModel viewModel) {
-    return Expanded(
-      child: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 0.85,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-        ),
-        itemCount: viewModel.healthConcerns.length,
-        itemBuilder: (context, index) {
-          final concern = viewModel.healthConcerns[index];
-          return _buildGridItem(context, concern, viewModel, index);
-        },
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 0.85,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
       ),
+      itemCount: viewModel.healthConcerns.length,
+      itemBuilder: (context, index) {
+        final concern = viewModel.healthConcerns[index];
+        return _buildGridItem(context, concern, viewModel, index);
+      },
     );
   }
 
@@ -91,21 +95,25 @@ class _HealthConcernScreen extends StatelessWidget {
     int index,
   ) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     return GestureDetector(
       onTap: () => viewModel.toggleSelection(index),
       child: Container(
         decoration: BoxDecoration(
-          color: concern['isSelected']
-              ? Theme.of(context).colorScheme.primaryContainer
-              : (isDarkMode ? Colors.white : Color.fromARGB(255, 173, 238, 171)),
+          color:
+              concern['isSelected']
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : (isDarkMode
+                      ? Colors.white
+                      : Color.fromARGB(255, 173, 238, 171)),
           borderRadius: BorderRadius.circular(16),
-          border: concern['isSelected']
-              ? Border.all(
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 2,
-                )
-              : null,
+          border:
+              concern['isSelected']
+                  ? Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 2,
+                  )
+                  : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -157,7 +165,7 @@ class _HealthConcernScreen extends StatelessWidget {
         onPressed:
             viewModel.selectedCount > 0
                 ? () {
-                  viewModel.addToSurvey(); // 선택된 데이터 저장
+                  viewModel.addToSurvey();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -176,14 +184,22 @@ class _HealthConcernScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               '확인',
-              style: styleViewModel.buttonTextStyle, // 수정
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const Spacer(),
             Text(
               '${viewModel.selectedCount}/${viewModel.maxSelections}',
-              style: styleViewModel.optionTextStyle, // 수정
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         ),
@@ -197,15 +213,15 @@ Widget buildHealthConcernItem(BuildContext context, int index) {
   final isDarkMode = Theme.of(context).brightness == Brightness.dark;
   final viewModel = Provider.of<HealthConcernViewModel>(context);
   final concern = viewModel.healthConcerns[index];
-  final styleViewModel = HealthCheckStyleViewModel(); // 추가
-  
+
   return GestureDetector(
     onTap: () => viewModel.toggleSelection(index),
     child: Container(
       decoration: BoxDecoration(
-        color: concern['isSelected'] 
-            ? Theme.of(context).colorScheme.primary 
-            : (isDarkMode ? Colors.white : concern['color']),
+        color:
+            concern['isSelected']
+                ? Theme.of(context).colorScheme.primary
+                : (isDarkMode ? Colors.white : concern['color']),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -217,7 +233,7 @@ Widget buildHealthConcernItem(BuildContext context, int index) {
             concern['title'],
             style: const TextStyle(
               fontSize: 14,
-              color: Colors.black, // 항상 검정색으로 설정
+              color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
