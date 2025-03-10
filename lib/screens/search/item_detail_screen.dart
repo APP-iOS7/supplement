@@ -102,17 +102,8 @@ Widget _buildDetailContent(
 }
 
 Widget _buildImageSection(String imageUrl) {
-  return Container(
+  return SizedBox(
     height: 300,
-    decoration: BoxDecoration(
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
     child: Center(
       child: Image.network(imageUrl, fit: BoxFit.contain, height: 250),
     ),
