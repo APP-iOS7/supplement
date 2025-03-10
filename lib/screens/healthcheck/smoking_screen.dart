@@ -30,6 +30,7 @@ class _SmokingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<SmokingViewModel>(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(),
@@ -38,32 +39,29 @@ class _SmokingScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '흡연 여부에 대해\n알려주세요',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+            Text('흡연 여부에 대해\n알려주세요', style: theme.textTheme.headlineMedium),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               '흡연을 하시는 경우 조심해야 할\n영양 성분이 있어요',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 30),
-            OptionCard(
+            SurveyOptionCard(
               title: '비흡연',
-              value: '비흡연',
-              selectedValue: viewModel.selectedOption ?? '',
-              onTap: viewModel.setSelectedOption,
+              value: false,
+              selectedValue: viewModel.isSmoker,
+              onTap: viewModel.setToNonSmoker,
             ),
             const SizedBox(height: 16),
-            OptionCard(
+            SurveyOptionCard(
               title: '흡연',
-              value: '흡연',
-              selectedValue: viewModel.selectedOption ?? '',
-              onTap: viewModel.setSelectedOption,
+              value: true,
+              selectedValue: viewModel.isSmoker,
+              onTap: viewModel.setToSmoker,
             ),
             const Spacer(),
             NextButton(
-              canProceed: viewModel.selectedOption != null,
+              canProceed: viewModel.isSmoker != null,
               nextPage: const DrinkingScreen(),
               onTap: viewModel.saveSmokingStatus,
             ),
