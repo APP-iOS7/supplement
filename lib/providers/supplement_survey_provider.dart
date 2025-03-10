@@ -19,7 +19,7 @@ class SupplementSurveyProvider with ChangeNotifier {
     }
   }
 
-  void addSmokingStatus(bool isSmoker) {
+  void updateSmokingStatus(bool isSmoker) {
     if (supplementSurveyModel != null) {
       supplementSurveyModel!.isSmoker = isSmoker;
       print('smoker: $isSmoker');
@@ -27,7 +27,7 @@ class SupplementSurveyProvider with ChangeNotifier {
     }
   }
 
-  void addDrinkingStatus(bool isDrinker) {
+  void updateDrinkingStatus(bool isDrinker) {
     if (supplementSurveyModel != null) {
       supplementSurveyModel!.isDrinker = isDrinker;
       print('$isDrinker');

@@ -10,19 +10,23 @@ class DrinkingViewModel extends ChangeNotifier {
 
   bool? get isDrinker => _isDrinker;
 
-  void setToDrinker() {
-    _isDrinker = true;
-    notifyListeners();
+  void setToDrinker(bool value) {
+    if (value) {
+      _isDrinker = true;
+      notifyListeners();
+    }
   }
 
-  void setToNonDrinker() {
-    _isDrinker = false;
-    notifyListeners();
+  void setToNonDrinker(bool value) {
+    if (!value) {
+      _isDrinker = false;
+      notifyListeners();
+    }
   }
 
   void saveDrinkingStatus() {
     if (_isDrinker != null) {
-      _surveyProvider.addDrinkingStatus(_isDrinker!);
+      _surveyProvider.updateDrinkingStatus(_isDrinker!);
     }
   }
 }

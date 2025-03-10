@@ -10,19 +10,23 @@ class SmokingViewModel extends ChangeNotifier {
 
   bool? get isSmoker => _isSmoker;
 
-  void setToSmoker() {
-    _isSmoker = true;
-    notifyListeners();
+  void setToSmoker(bool value) {
+    if (value) {
+      _isSmoker = true;
+      notifyListeners();
+    }
   }
 
-  void setToNonSmoker() {
-    _isSmoker = false;
-    notifyListeners();
+  void setToNonSmoker(bool value) {
+    if (!value) {
+      _isSmoker = false;
+      notifyListeners();
+    }
   }
 
   void saveSmokingStatus() {
     if (_isSmoker != null) {
-      _surveyProvider.addSmokingStatus(_isSmoker!);
+      _surveyProvider.updateSmokingStatus(_isSmoker!);
     }
   }
 }

@@ -49,18 +49,18 @@ class _AllergyScreen extends StatelessWidget {
               style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 30),
-            SurveyOptionCard(
+            OptionCard<bool>(
               title: '알러지가 없어요',
               value: false,
               selectedValue: viewModel.hasAllergy,
-              onTap: viewModel.setHasNoAllergy,
+              onTap: viewModel.setAllergy,
             ),
             const SizedBox(height: 16),
-            SurveyOptionCard(
+            OptionCard<bool>(
               title: '알러지가 있어요',
               value: true,
               selectedValue: viewModel.hasAllergy,
-              onTap: viewModel.setHasAllergy,
+              onTap: viewModel.setAllergy,
             ),
             if (viewModel.hasAllergy == true)
               Expanded(child: _buildAllergySelectionSection(context, viewModel))
@@ -164,9 +164,9 @@ class _AllergyScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+          color: theme.colorScheme.primaryContainer.withAlpha(77),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: theme.colorScheme.primary.withOpacity(0.5)),
+          border: Border.all(color: theme.colorScheme.primary.withAlpha(128)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
