@@ -41,12 +41,7 @@ class _HomeScreen extends StatelessWidget {
               child: Text('추천 해 드렸어요!', style: TextStyle(fontSize: 25)),
             ),
             _recommendations(),
-            Divider(),
             itemRecommendButton(context),
-            ElevatedButton(
-              onPressed: () => AuthService().signOut(),
-              child: Text('로그아웃'),
-            ),
           ],
         ),
       ),
@@ -59,15 +54,42 @@ class _HomeScreen extends StatelessWidget {
           () => Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => HealthConcernScreen()),
           ),
-      child: Text('추천해줘'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color(0xFF66BB6A),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
+        minimumSize: Size(
+          MediaQuery.of(context).size.width * 2 / 3,
+          60,
+        ), // 화면 너비의 2/3
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center, // 중앙 정렬
+        mainAxisSize: MainAxisSize.min, // 콘텐츠에 맞게 크기 조정
+        children: [
+          // 아보카도 이모티콘
+          Icon(Icons.eco, color: Colors.lightGreen[200], size: 24),
+
+          SizedBox(width: 10), // 이모티콘과 텍스트 사이 간격
+          // 텍스트
+          Text(
+            '내 몸에 꼭 맞는 영양제 찾으러 가기',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _recommendations() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: 280,
+        height: 260,
         width: 150,
         child:
             viewModel.recommendList.isEmpty
@@ -121,7 +143,7 @@ class _HomeScreen extends StatelessWidget {
                             Expanded(
                               flex: 2,
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(4.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
