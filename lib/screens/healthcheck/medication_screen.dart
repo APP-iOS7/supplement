@@ -30,7 +30,6 @@ class _MedicationScreenView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<MedicationViewModel>(context);
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(),
@@ -39,14 +38,16 @@ class _MedicationScreenView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               '복용중인 약이 있다면\n알려주세요',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               '영양제와 함께 복용시 주의해야 할\n약물이 있는지 확인해드릴게요',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 30),
             OptionCard(
@@ -71,9 +72,11 @@ class _MedicationScreenView extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade300),
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,12 +86,8 @@ class _MedicationScreenView extends StatelessWidget {
                             children: [
                               Text(
                                 '복용중인 약을 입력해주세요',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color:
-                                      isDarkMode ? Colors.black : Colors.black,
-                                ),
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               IconButton(
                                 icon: const Icon(Icons.edit, size: 20),
@@ -106,16 +105,15 @@ class _MedicationScreenView extends StatelessWidget {
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Text(
                                 viewModel.medicationInput,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ),
                           const SizedBox(height: 8),
-                          const Text(
+                          Text(
                             '여러 약을 복용 중이라면 쉼표(,)로 구분해주세요',
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: Colors.grey),
                           ),
                         ],
                       ),

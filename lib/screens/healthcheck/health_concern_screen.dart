@@ -94,8 +94,6 @@ class _HealthConcernScreen extends StatelessWidget {
     HealthConcernViewModel viewModel,
     int index,
   ) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     return GestureDetector(
       onTap: () => viewModel.toggleSelection(index),
       child: Container(
@@ -103,9 +101,7 @@ class _HealthConcernScreen extends StatelessWidget {
           color:
               concern['isSelected']
                   ? Theme.of(context).colorScheme.primaryContainer
-                  : (isDarkMode
-                      ? Colors.white
-                      : Color.fromARGB(255, 173, 238, 171)),
+                  : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
           border:
               concern['isSelected']
@@ -127,7 +123,9 @@ class _HealthConcernScreen extends StatelessWidget {
                 ),
                 child: Text(
                   concern['tag'],
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: Colors.white),
                 ),
               ),
             const SizedBox(height: 8),
@@ -139,18 +137,16 @@ class _HealthConcernScreen extends StatelessWidget {
                 return Icon(
                   Icons.healing,
                   size: 60,
-                  color: Colors.blue.shade700,
+                  color: Theme.of(context).colorScheme.primary,
                 );
               },
             ),
             const SizedBox(height: 8),
             Text(
               concern['title'],
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: Colors.black, // 항상 검정색으로 설정
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -208,9 +204,7 @@ class _HealthConcernScreen extends StatelessWidget {
   }
 }
 
-// 파일 하단의 buildHealthConcernItem 함수도 수정
 Widget buildHealthConcernItem(BuildContext context, int index) {
-  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
   final viewModel = Provider.of<HealthConcernViewModel>(context);
   final concern = viewModel.healthConcerns[index];
 
@@ -221,7 +215,7 @@ Widget buildHealthConcernItem(BuildContext context, int index) {
         color:
             concern['isSelected']
                 ? Theme.of(context).colorScheme.primary
-                : (isDarkMode ? Colors.white : concern['color']),
+                : Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -231,11 +225,9 @@ Widget buildHealthConcernItem(BuildContext context, int index) {
           const SizedBox(height: 8),
           Text(
             concern['title'],
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
         ],
