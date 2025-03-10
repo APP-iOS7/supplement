@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/screens/healthcheck/health_concern_screen.dart';
 import 'package:supplementary_app/screens/search/item_detail_screen.dart';
-import 'package:supplementary_app/services/auth_service.dart';
 import 'package:supplementary_app/screens/banner/banner_screen.dart';
 import 'package:supplementary_app/viewmodels/home/home_screen_view_model.dart';
 // 로티 애니메이션 라이브러리 추가
@@ -54,10 +53,10 @@ class _HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center, // 세로 중앙 정렬
           crossAxisAlignment: CrossAxisAlignment.stretch, // 가로로 꽉 채움
           children: [
-            BannerScreen(), // 상단 배너 화면 표시
-            Divider(), // 배너와 추천 섹션 사이 구분선
+            const BannerScreen(), // 상단 배너 화면 표시
+            const Divider(), // 배너와 추천 섹션 사이 구분선
             // 구분선과 제목 사이 간격
-            SizedBox(height: halfPadding),
+            const SizedBox(height: halfPadding),
             // 제목 영역
             Padding(
               padding: const EdgeInsets.symmetric(
@@ -66,17 +65,17 @@ class _HomeScreen extends StatelessWidget {
               ),
               child: Text(
                 '추천해 드렸어요!', // 추천 섹션 제목
-                style: TextStyle(fontSize: 25), // 제목 글자 크기
+                style: Theme.of(context).textTheme.headlineMedium, // 제목 글자 스타일
               ),
             ),
             // 제목과 추천 목록 사이 간격
-            SizedBox(height: halfPadding),
-            _recommendations(), // 추천 영양제 목록 표시
+            const SizedBox(height: halfPadding),
+            _recommendations(context), // 추천 영양제 목록 표시
             // 카드와 버튼 사이 간격
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             itemRecommendButton(context), // 추천 버튼 위젯
             // 버튼과 네비게이션 바 사이 간격
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
           ],
         ),
       ),
@@ -90,11 +89,12 @@ class _HomeScreen extends StatelessWidget {
         onPressed:
             () => Navigator.of(context).push(
               // 버튼 클릭 시 HealthConcernScreen으로 이동
-              MaterialPageRoute(builder: (context) => HealthConcernScreen()),
+              MaterialPageRoute(
+                builder: (context) => const HealthConcernScreen(),
+              ),
             ),
-        // 버튼 스타일 설정
+        // 테마의 버튼 스타일 사용
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFF51B47B), // 녹색 배경
           padding: const EdgeInsets.symmetric(
             vertical: 15, // 세로 패딩
             horizontal: 40, // 가로 패딩
@@ -120,15 +120,13 @@ class _HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 10), // 아이콘과 텍스트 사이 간격
+            const SizedBox(width: 10), // 아이콘과 텍스트 사이 간격
             // 버튼 텍스트
             Text(
               '내 몸에 꼭 맞는 영양제 찾으러 가기',
-              style: TextStyle(
-                color: Colors.white, // 흰색 텍스트
-                fontSize: 18, // 글자 크기
-                fontWeight: FontWeight.bold, // 굵은 글씨
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -137,15 +135,15 @@ class _HomeScreen extends StatelessWidget {
   }
 
   // 추천 영양제 목록 위젯
-  Widget _recommendations() {
+  Widget _recommendations(BuildContext context) {
     return Padding(
       // 좌우 패딩만 적용
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: SizedBox(
-        height: 270, // 목록 높이
+        height: 300, // 목록 높이
         child:
             viewModel.recommendList.isEmpty
-                ? const Center(
+                ? Center(
                   // 추천 목록이 비어 있을 경우 메시지 표시
                   child: Text(
                     '추천받은 영양제가 없어요\n추천을 받아보세요',
@@ -209,23 +207,18 @@ class _HomeScreen extends StatelessWidget {
                                       item.name,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 13,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium?.copyWith(
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                     // 텍스트 간격
                                     const SizedBox(height: smallPadding),
                                     // 가격
-                                    Text(
-                                      item.price,
-                                      style: TextStyle(fontSize: 13),
-                                    ),
+                                    Text(item.price),
                                     // 평점
-                                    Text(
-                                      '평점: ${item.rating}',
-                                      style: TextStyle(fontSize: 13),
-                                    ),
+                                    Text('평점: ${item.rating}'),
                                   ],
                                 ),
                               ),

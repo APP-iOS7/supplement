@@ -21,10 +21,12 @@ class _LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<LoginScreenViewModel>(context);
+    final theme = Theme.of(context);
     // 버튼 너비 - 화면 너비의 80%로 설정
     double buttonWidth = MediaQuery.of(context).size.width * 0.8;
 
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -52,11 +54,10 @@ class _LoginScreen extends StatelessWidget {
                         height: 150,
                       ),
                       const SizedBox(height: 8),
-                      const Text(
+                      Text(
                         '당신에게 맞는 영양제를 추천해드립니다',
-                        style: TextStyle(
+                        style: theme.textTheme.bodyLarge?.copyWith(
                           fontSize: 18,
-                          color: Color.fromARGB(255, 33, 33, 33),
                         ),
                       ),
                     ],
@@ -74,7 +75,7 @@ class _LoginScreen extends StatelessWidget {
                             width: buttonWidth,
                             child: SignInWithAppleButton(
                               onPressed: vm.signInWithApple,
-                              style: SignInWithAppleButtonStyle.black,
+                              style: _getAppleButtonStyle(theme),
                               height: 44,
                             ),
                           ),
@@ -89,16 +90,7 @@ class _LoginScreen extends StatelessWidget {
                           height: 44,
                           child: ElevatedButton(
                             onPressed: vm.signInWithGoogle,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black87,
-                              elevation: 1,
-                              padding: EdgeInsets.zero, // 패딩 제거
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                side: BorderSide(color: Colors.grey.shade300),
-                              ),
-                            ),
+                            style: _getGoogleButtonStyle(theme),
                             child: Center(
                               child: Row(
                                 mainAxisSize:
@@ -110,11 +102,12 @@ class _LoginScreen extends StatelessWidget {
                                     height: 18,
                                   ),
                                   const SizedBox(width: 8),
-                                  const Text(
+                                  Text(
                                     "Google로 로그인",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
+                                      color: theme.textTheme.labelLarge?.color,
                                     ),
                                   ),
                                 ],
@@ -130,6 +123,30 @@ class _LoginScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  SignInWithAppleButtonStyle _getAppleButtonStyle(ThemeData theme) {
+    // 다크 테마면 흰색 버튼, 라이트 테마면 검은색 버튼
+    return theme.scaffoldBackgroundColor.computeLuminance() < 0.5
+        ? SignInWithAppleButtonStyle.white
+        : SignInWithAppleButtonStyle.black;
+  }
+
+  ButtonStyle _getGoogleButtonStyle(ThemeData theme) {
+    // 테마에 맞게 구글 로그인 버튼 스타일 반환
+    final isDarkBackground =
+        theme.scaffoldBackgroundColor.computeLuminance() < 0.5;
+
+    return ElevatedButton.styleFrom(
+      backgroundColor: isDarkBackground ? theme.cardColor : Colors.white,
+      foregroundColor: theme.textTheme.labelLarge?.color,
+      elevation: 1,
+      padding: EdgeInsets.zero, // 패딩 제거
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: theme.dividerColor),
       ),
     );
   }

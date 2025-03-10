@@ -24,10 +24,22 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: NavigationBar(
-        destinations: [
-          NavigationDestination(icon: Icon(Icons.home), label: '홈'),
-          NavigationDestination(icon: Icon(Icons.search), label: '검색'),
-          NavigationDestination(icon: Icon(Icons.person), label: '마이페이지'),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: '홈',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.search_outlined),
+            selectedIcon: Icon(Icons.search),
+            label: '검색',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: '마이페이지',
+          ),
         ],
         selectedIndex: _currentIndex,
         onDestinationSelected: (value) {
