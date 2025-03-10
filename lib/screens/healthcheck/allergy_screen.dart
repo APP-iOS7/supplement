@@ -134,13 +134,11 @@ class _AllergyScreen extends StatelessWidget {
     String type,
     bool isSelected,
   ) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     return FilterChip(
       selected: isSelected,
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       selectedColor: Theme.of(context).colorScheme.primaryContainer,
-      checkmarkColor: Colors.red, // 체크마크 색상을 빨간색으로 변경
+      checkmarkColor: Theme.of(context).colorScheme.error,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side:
@@ -148,12 +146,7 @@ class _AllergyScreen extends StatelessWidget {
                 ? BorderSide(color: Theme.of(context).colorScheme.primary)
                 : BorderSide.none,
       ),
-      label: Text(
-        type,
-        style: const TextStyle(
-          color: Colors.black, // 항상 검정색 텍스트
-        ),
-      ),
+      label: Text(type, style: Theme.of(context).textTheme.bodyMedium),
       onSelected: (selected) {
         viewModel.toggleAllergySelection(type, selected);
         if (selected && type == '특정 알러지') {
@@ -167,8 +160,6 @@ class _AllergyScreen extends StatelessWidget {
     BuildContext context,
     AllergyViewModel viewModel,
   ) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: Container(
@@ -187,7 +178,7 @@ class _AllergyScreen extends StatelessWidget {
           children: [
             Text(
               '특정 알러지:',
-              style: TextStyle(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
               ),
@@ -196,7 +187,7 @@ class _AllergyScreen extends StatelessWidget {
             Expanded(
               child: Text(
                 viewModel.specificAllergyInput,
-                style: const TextStyle(color: Colors.black), // 항상 검정색 텍스트
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
             IconButton(
