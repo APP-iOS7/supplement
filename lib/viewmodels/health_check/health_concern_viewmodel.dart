@@ -1,0 +1,135 @@
+import 'package:flutter/material.dart';
+import 'package:supplementary_app/providers/supplement_survey_provider.dart';
+
+class HealthConcernViewModel extends ChangeNotifier {
+  final SupplementSurveyProvider _surveyProvider;
+
+  HealthConcernViewModel({required SupplementSurveyProvider surveyProvider})
+    : _surveyProvider = surveyProvider;
+
+  final List<Map<String, dynamic>> healthConcerns = [
+    {
+      'title': '면역력 강화',
+      'icon': 'assets/icons/immune.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+    {
+      'title': '체중 감량/근육 증가',
+      'fontSize': 1,
+      'icon': 'assets/icons/muscle.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+    {
+      'title': '피로 회복',
+      'icon': 'assets/icons/tiredness.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+    {
+      'title': '피부 건강',
+      'icon': 'assets/icons/depilation.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+    {
+      'title': '심혈관 건강',
+      'icon': 'assets/icons/heart.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+    {
+      'title': '뇌 기능 & 기억력',
+      'icon': 'assets/icons/brainstorm.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+    {
+      'title': '눈 건강',
+      'icon': 'assets/icons/eyes.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+    {
+      'title': '소화 건강 / 장 건강',
+      'icon': 'assets/icons/stomach.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+    {
+      'title': '혈당 조절',
+      'icon': 'assets/icons/sugarblood.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+    {
+      'title': '갱년기 건강',
+      'icon': 'assets/icons/menopause.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+    {
+      'title': '스트레스 완화',
+      'icon': 'assets/icons/headache.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+    {
+      'title': '치아 건강',
+      'icon': 'assets/icons/tooth.png',
+      'color': const Color.fromARGB(255, 255, 231, 247),
+      'isSelected': false,
+      'tag': '',
+      'darkModeTextColor': Colors.black, // 다크모드에서 텍스트 색상
+    },
+  ];
+
+  int _selectedCount = 0;
+  final int maxSelections = 8;
+
+  int get selectedCount => _selectedCount;
+
+  void toggleSelection(int index) {
+    if (healthConcerns[index]['isSelected']) {
+      healthConcerns[index]['isSelected'] = false;
+      _selectedCount--;
+    } else if (_selectedCount < maxSelections) {
+      healthConcerns[index]['isSelected'] = true;
+      _selectedCount++;
+    }
+    notifyListeners();
+  }
+
+  void addToSurvey() {
+    List<String> selectedConcerns =
+        healthConcerns
+            .where((concern) => concern['isSelected'])
+            .map((concern) => concern['title'] as String)
+            .toList();
+
+    _surveyProvider.addGoals(selectedConcerns);
+  }
+}

@@ -1,16 +1,135 @@
-# supplementary_app
+# NutriPick - 맞춤형 영양제 추천 서비스
 
-A new Flutter project.
+## 프로젝트 소개
+NutriPick은 개인 맞춤형 영양제 추천 플랫폼으로, 사용자의 생활습관과 건강 상태를 분석하여 최적의 영양제를 추천해주는 서비스입니다.
 
-## Getting Started
+## 기술 스택
+### Frontend
+- Flutter 3.x
+- Provider (상태관리)
+- Material Design 3
 
-This project is a starting point for a Flutter application.
+### Backend
+- Firebase
+  - Authentication (사용자 인증)
+  - Cloud Firestore (데이터베이스)
+  - Firebase Storage (이미지 저장)
 
-A few resources to get you started if this is your first Flutter project:
+### API 통신
+- Naver Shopping API
+  - 제품 검색 (search/shop.json)
+  - 상품 이미지 조회
+  - 가격 정보 실시간 조회
+- HTTP 통신
+  - http 패키지 사용
+  - RESTful API 통신
+  - JSON 데이터 처리
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 주요 기능
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 1. 사용자 맞춤 설문조사
+- 건강 목표 설정
+- 생활습관 분석 (음주/흡연)
+- 알레르기 정보
+- 운동 빈도
+- 복용중인 약물 정보
+
+### 2. 영양제 정보 검색 및 조회
+- 실시간 영양제 검색
+- 상세 정보 제공
+  - 주요 성분
+  - 효능/효과
+  - 복용 방법
+  - 부작용
+  - 주의사항
+
+### 3. AI 기반 맞춤형 추천
+- 설문 데이터 기반 분석
+- 개인화된 영양제 추천
+- 성분 상호작용 확인
+
+### 4. 제품 정보 제공
+- 네이버 쇼핑 API 연동
+  - 실시간 가격 정보 조회
+  - 제품 이미지 자동 수집
+- 상세 제품 정보
+  - 영양 성분 정보
+  - 복용 방법
+  - 주의사항
+  - 부작용 정보
+  - 가격 추이 분석
+
+## 실행 환경
+- Flutter >= 3.0.0
+- Dart >= 3.0.0
+- iOS 12.0 이상
+- Android API 21 이상
+
+## 팀원 소개
+
+### 최범수
+- 담당: 
+  - API 연동
+  - 데이터 모델링
+  - 프로젝트 구조 설계
+  - 상태관리 아텍처 구현
+
+
+### 김기은
+- 담당:
+  - UI 컴포넌트 개발
+  - 테마 및 다크모드 적용
+  - UI/UX 디자인
+  - 사용성 테스트
+
+### 천문필
+- 담당:
+  - Firebase 인증
+  - 애니메이션 구현
+
+
+## 개발 기간
+2025.02.06 ~ 2025.02.11 (6일)
+
+## 상세 기능
+
+### 1. 사용자 인증 시스템
+- Firebase Authentication 기반 로그인/회원가입
+- 사용자 프로필 관리
+- 자동 로그인 지원
+
+### 2. 맞춤형 설문 시스템
+- 건강 목표 설정
+  - 체중 관리
+  - 면역력 강화
+  - 피부 건강
+  - 수면 개선
+- 생활습관 분석
+  - 흡연 여부
+  - 음주 빈도
+  - 운동 빈도
+- 건강 정보
+  - 알레르기
+  - 복용중인 약물
+  - 기존 질환
+
+### 3. 제품 추천 시스템
+- Firebase Firestore 기반 실시간 데이터 처리
+- 사용자 설문 기반 맞춤형 추천
+- 성분 상호작용 분석
+- 실시간 가격 정보 업데이트
+
+### 4. 제품 정보 제공
+- 네이버 쇼핑 API 연동
+- 상세 제품 정보
+  - 영양 성분 정보
+  - 복용 방법
+  - 주의사항
+  - 부작용 정보
+
+## 기술적 특징
+- Provider 패턴을 활용한 상태 관리
+- Firebase 실시간 데이터베이스 연동
+- REST API 통신 구현
+- Material Design 3 적용
+- 반응형 UI 구현
