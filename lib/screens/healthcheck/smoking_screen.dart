@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/drinking_screen.dart';
-import 'package:supplementary_app/viewmodels/health_check/health_check_style_viewmodel.dart';
 import 'package:supplementary_app/viewmodels/health_check/smoking_viewmodel.dart';
 import 'package:supplementary_app/widgets/option_card.dart';
 import 'package:supplementary_app/widgets/next_button.dart';
@@ -20,13 +19,13 @@ class SmokingScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: _SmokingScreen(),
+      child: const _SmokingScreen(),
     );
   }
 }
 
 class _SmokingScreen extends StatelessWidget {
-  final styleViewModel = HealthCheckStyleViewModel();
+  const _SmokingScreen();
 
   @override
   Widget build(BuildContext context) {
