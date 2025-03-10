@@ -46,18 +46,18 @@ class _MedicationScreenView extends StatelessWidget {
               style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 30),
-            SurveyOptionCard(
+            OptionCard<bool>(
               title: '복용중인 약 없음',
               value: false,
               selectedValue: viewModel.hasMedication,
-              onTap: viewModel.setHasNoMedication,
+              onTap: viewModel.setMedication,
             ),
             const SizedBox(height: 16),
-            SurveyOptionCard(
+            OptionCard<bool>(
               title: '복용중인 약 있음',
               value: true,
               selectedValue: viewModel.hasMedication,
-              onTap: viewModel.setHasMedication,
+              onTap: viewModel.setMedication,
             ),
             if (viewModel.hasMedication == true)
               Expanded(child: _buildMedicationInput(context, viewModel))

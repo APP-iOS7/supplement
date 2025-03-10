@@ -46,14 +46,14 @@ class _SmokingScreen extends StatelessWidget {
               style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 30),
-            SurveyOptionCard(
+            OptionCard<bool>(
               title: '비흡연',
               value: false,
               selectedValue: viewModel.isSmoker,
               onTap: viewModel.setToNonSmoker,
             ),
             const SizedBox(height: 16),
-            SurveyOptionCard(
+            OptionCard<bool>(
               title: '흡연',
               value: true,
               selectedValue: viewModel.isSmoker,

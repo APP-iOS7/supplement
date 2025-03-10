@@ -20,15 +20,8 @@ class AllergyViewModel extends ChangeNotifier {
       (!selectedAllergies.contains('특정 알러지') ||
           specificAllergyInput.isNotEmpty);
 
-  void setHasAllergy() {
-    _hasAllergy = true;
-    notifyListeners();
-  }
-
-  void setHasNoAllergy() {
-    _hasAllergy = false;
-    selectedAllergies.clear();
-    specificAllergyInput = '';
+  void setAllergy(bool value) {
+    _hasAllergy = value;
     notifyListeners();
   }
 

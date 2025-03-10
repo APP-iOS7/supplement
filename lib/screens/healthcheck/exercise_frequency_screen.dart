@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/result_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/exercise_frequency_viewmodel.dart';
-import 'package:supplementary_app/widgets/exercise_option_card.dart';
+import 'package:supplementary_app/widgets/option_cards.dart';
 import 'package:supplementary_app/widgets/next_button.dart';
 
 class ExerciseFrequencyScreen extends StatelessWidget {
@@ -49,10 +49,10 @@ class _ExerciseFrequencyScreen extends StatelessWidget {
             ...viewModel.exerciseOptions.map(
               (option) => Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
-                child: ExerciseOptionCard(
-                  title: option['title']!,
-                  value: option['value']!,
-                  selectedValue: viewModel.selectedOption ?? '',
+                child: OptionCard<int>(
+                  title: option['title'],
+                  value: option['value'],
+                  selectedValue: viewModel.selectedOption,
                   onTap: viewModel.selectOption,
                 ),
               ),

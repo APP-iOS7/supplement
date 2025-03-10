@@ -15,14 +15,8 @@ class MedicationViewModel extends ChangeNotifier {
       _hasMedication != null &&
       (_hasMedication == false || medicationInput.isNotEmpty);
 
-  void setHasMedication() {
-    _hasMedication = true;
-    notifyListeners();
-  }
-
-  void setHasNoMedication() {
-    _hasMedication = false;
-    medicationInput = '';
+  void setMedication(bool value) {
+    _hasMedication = value;
     notifyListeners();
   }
 
