@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/theme_provider.dart';
 import 'package:supplementary_app/screens/login/get_info_screen.dart';
+import 'package:supplementary_app/screens/login/login_screen.dart';
 import 'package:supplementary_app/services/auth_service.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -77,7 +78,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
         '로그아웃',
         style: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
-      onTap: () => AuthService().signOut(),
+      onTap: () async {
+        // 로그아웃 확인 다이얼로그 표시
+        final shouldLogout = await showDialog<bool>(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: const Text('로그아웃'),
+                content: const Text('정말 로그아웃 하시겠습니까?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('취소'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: Text(
+                      '로그아웃',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+        );
+
+        if (shouldLogout == true) {
+          await AuthService().signOut();
+          if (context.mounted) {
+            // 로그아웃 후 로그인 화면으로 이동하고 이전 스택 제거
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+              (route) => false,
+            );
+          }
+        }
+      },
     );
   }
 
