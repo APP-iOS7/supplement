@@ -79,7 +79,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         style: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
       onTap: () async {
-        // 로그아웃 확인 다이얼로그 표시
         final shouldLogout = await showDialog<bool>(
           context: context,
           builder:
@@ -92,7 +91,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: const Text('취소'),
                   ),
                   TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                      AuthService().signOut();
+                    },
                     child: Text(
                       '로그아웃',
                       style: TextStyle(
@@ -107,7 +109,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         if (shouldLogout == true) {
           await AuthService().signOut();
           if (context.mounted) {
-            // 로그아웃 후 로그인 화면으로 이동하고 이전 스택 제거
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const LoginScreen()),
               (route) => false,
