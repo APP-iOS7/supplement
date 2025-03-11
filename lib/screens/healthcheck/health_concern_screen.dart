@@ -164,12 +164,18 @@ class _HealthConcernScreen extends StatelessWidget {
             Text(
               '확인',
               style: theme.textTheme.titleLarge?.copyWith(
-                color: theme.colorScheme.onPrimary,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const Spacer(),
-            Text('${viewModel.selectedCount}/${viewModel.maxSelections}'),
+            Text(
+              '${viewModel.selectedCount}/${viewModel.maxSelections}',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
       ),

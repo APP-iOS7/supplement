@@ -123,34 +123,19 @@ Widget _buildPriceAndRatingRow(BuildContext context, ItemDetail itemDetail) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Card(
-        margin: EdgeInsets.zero,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Text(
-            itemDetail.price,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
+      Text(
+        itemDetail.price,
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
-      Card(
-        margin: EdgeInsets.zero,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            children: [
-              const Icon(Icons.star, color: Colors.amber, size: 20),
-              const SizedBox(width: 4),
-              Text(
-                itemDetail.rating.toString(),
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+      Row(
+        children: [
+          const Icon(Icons.star, color: Colors.amber, size: 20),
+          const SizedBox(width: 4),
+          Text(
+            itemDetail.rating.toString(),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-        ),
+        ],
       ),
     ],
   );

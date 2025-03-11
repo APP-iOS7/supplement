@@ -96,9 +96,10 @@ class _HomeScreen extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               '내 몸에 꼭 맞는 영양제 찾으러 가기',
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ],
         ),

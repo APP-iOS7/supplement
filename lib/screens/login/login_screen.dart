@@ -47,12 +47,6 @@ class _LoginScreen extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-
-                      // Image.asset(
-                      //   'assets/images/Pick03.gif',
-                      //   width: 250,
-                      //   height: 150,
-                      // ),
                       Lottie.asset(
                         'assets/animations/main_logo05.json',
                         width: 200,
@@ -103,7 +97,7 @@ class _LoginScreen extends StatelessWidget {
                                     MainAxisSize.min, // 중요: 내용물에 맞게 크기 조절
                                 children: [
                                   Image.asset(
-                                    'assets/images/g-logo.png',
+                                    'assets/images/t_g_logo.png',
                                     width: 18,
                                     height: 18,
                                   ),

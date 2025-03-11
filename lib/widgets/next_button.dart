@@ -35,7 +35,7 @@ class NextButton extends StatelessWidget {
       child: Text(
         '확인',
         style: theme.textTheme.titleLarge?.copyWith(
-          color: theme.colorScheme.onPrimary,
+          color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
       ),

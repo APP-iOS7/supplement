@@ -95,7 +95,7 @@ class _ResultScreen extends StatelessWidget {
                   child: Text(
                     '홈으로 돌아가기',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

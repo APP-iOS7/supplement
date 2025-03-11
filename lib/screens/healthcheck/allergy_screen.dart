@@ -123,11 +123,12 @@ class _AllergyScreen extends StatelessWidget {
     bool isSelected,
   ) {
     final theme = Theme.of(context);
+
     return FilterChip(
       selected: isSelected,
       backgroundColor: theme.colorScheme.surface,
       selectedColor: theme.colorScheme.primaryContainer,
-      checkmarkColor: theme.colorScheme.primary,
+      checkmarkColor: Colors.red,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side:
@@ -140,7 +141,9 @@ class _AllergyScreen extends StatelessWidget {
         style: theme.textTheme.bodyMedium?.copyWith(
           color:
               isSelected
-                  ? theme.colorScheme.primary
+                  ? (theme.brightness == Brightness.dark
+                      ? Colors.white
+                      : theme.colorScheme.onPrimaryContainer)
                   : theme.colorScheme.onSurface,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),
