@@ -21,13 +21,13 @@ class HealthConcernViewModel extends ChangeNotifier {
 
   final List<HealthConcern> healthConcerns = [
     HealthConcern(title: '면역력 강화', iconPath: 'assets/icons/immune.png'),
-    HealthConcern(title: '체중 감량/근육 증가', iconPath: 'assets/icons/muscle.png'),
+    HealthConcern(title: '체중 감량\n근육 증가', iconPath: 'assets/icons/muscle.png'),
     HealthConcern(title: '피로 회복', iconPath: 'assets/icons/tiredness.png'),
     HealthConcern(title: '피부 건강', iconPath: 'assets/icons/depilation.png'),
     HealthConcern(title: '심혈관 건강', iconPath: 'assets/icons/heart.png'),
     HealthConcern(title: '뇌 기능 & 기억력', iconPath: 'assets/icons/brainstorm.png'),
     HealthConcern(title: '눈 건강', iconPath: 'assets/icons/eyes.png'),
-    HealthConcern(title: '소화 건강 / 장 건강', iconPath: 'assets/icons/stomach.png'),
+    HealthConcern(title: '소화 건강\n장 건강', iconPath: 'assets/icons/stomach.png'),
     HealthConcern(title: '혈당 조절', iconPath: 'assets/icons/sugarblood.png'),
     HealthConcern(title: '갱년기 건강', iconPath: 'assets/icons/menopause.png'),
     HealthConcern(title: '스트레스 완화', iconPath: 'assets/icons/headache.png'),
