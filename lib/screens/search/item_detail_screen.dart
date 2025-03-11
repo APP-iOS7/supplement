@@ -124,7 +124,7 @@ Widget _buildPriceAndRatingRow(BuildContext context, ItemDetail itemDetail) {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(
-        itemDetail.price,
+        '${itemDetail.price}원',
         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
       Row(

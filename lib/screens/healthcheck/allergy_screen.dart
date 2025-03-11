@@ -225,12 +225,6 @@ class _AllergyScreen extends StatelessWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                style: TextButton.styleFrom(
-                  side: BorderSide(
-                    color: theme.colorScheme.onSurface,
-                    width: 1.0,
-                  ),
-                ),
                 child: Text(
                   '취소',
                   style: theme.textTheme.labelLarge?.copyWith(
