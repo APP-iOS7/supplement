@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class OptionCard extends StatelessWidget {
+class OptionCard<T> extends StatelessWidget {
   final String title;
-  final String value;
-  final String selectedValue;
-  final Function(String) onTap;
+  final T value;
+  final T? selectedValue;
+  final Function(T) onTap;
 
   const OptionCard({
     required this.title,
@@ -16,6 +16,7 @@ class OptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final isSelected = selectedValue == value;
 
     return GestureDetector(
@@ -26,16 +27,16 @@ class OptionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color:
               isSelected
-                  ? Theme.of(context).colorScheme.primaryContainer
-                  : Colors.grey.shade100,
+                  ? theme.colorScheme.primaryContainer
+                  : theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
           border:
               isSelected
-                  ? Border.all(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 2,
-                  )
-                  : null,
+                  ? Border.all(color: theme.colorScheme.primary, width: 2)
+                  : Border.all(
+                    color: theme.colorScheme.outline.withAlpha(51),
+                    width: 1,
+                  ),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -44,8 +45,7 @@ class OptionCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 18,
+                style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
@@ -54,10 +54,14 @@ class OptionCard extends StatelessWidget {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: theme.colorScheme.primary,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.check, color: Colors.white, size: 16),
+                  child: Icon(
+                    Icons.check,
+                    color: theme.colorScheme.onPrimary,
+                    size: 16,
+                  ),
                 ),
             ],
           ),

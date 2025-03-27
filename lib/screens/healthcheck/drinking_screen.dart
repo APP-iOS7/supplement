@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/allergy_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/drinking_viewmodel.dart';
-import 'package:supplementary_app/widgets/option_card.dart';
+import 'package:supplementary_app/widgets/option_cards.dart';
+import 'package:supplementary_app/widgets/next_button.dart';
 
 class DrinkingScreen extends StatelessWidget {
   const DrinkingScreen({super.key});
@@ -29,6 +30,7 @@ class _DrinkingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<DrinkingViewModel>(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(),
@@ -37,67 +39,33 @@ class _DrinkingScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '음주 여부에 대해\n알려주세요',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+            Text('음주 여부에 대해\n알려주세요', style: theme.textTheme.headlineMedium),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               '음주를 하시는 경우 조심해야 할\n영양 성분이 있어요',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 30),
-            OptionCard(
+            OptionCard<bool>(
               title: '비음주',
-              value: '비음주',
-              selectedValue: viewModel.selectedOption ?? '',
-              onTap: viewModel.setSelectedOption,
+              value: false,
+              selectedValue: viewModel.isDrinker,
+              onTap: viewModel.setToNonDrinker,
             ),
             const SizedBox(height: 16),
-            OptionCard(
+            OptionCard<bool>(
               title: '음주',
-              value: '음주',
-              selectedValue: viewModel.selectedOption ?? '',
-              onTap: viewModel.setSelectedOption,
+              value: true,
+              selectedValue: viewModel.isDrinker,
+              onTap: viewModel.setToDrinker,
             ),
             const Spacer(),
-            _buildNextButton(context, viewModel),
+            NextButton(
+              canProceed: viewModel.isDrinker != null,
+              nextPage: const AllergyScreen(),
+              onTap: viewModel.saveDrinkingStatus,
+            ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNextButton(BuildContext context, DrinkingViewModel viewModel) {
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: ElevatedButton(
-        onPressed:
-            viewModel.selectedOption != null
-                ? () {
-                  viewModel.saveDrinkingStatus();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AllergyScreen(),
-                    ),
-                  );
-                }
-                : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: const Text(
-          '다음',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
         ),
       ),
     );

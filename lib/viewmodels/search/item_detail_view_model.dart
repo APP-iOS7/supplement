@@ -2,37 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:supplementary_app/models/item_detail_model.dart';
 import 'package:supplementary_app/services/gemini_service.dart';
 
-class ItemDetailViewModel extends ChangeNotifier {
+class ItemDetailViewModel {
+  final BuildContext context;
+  final String itemTitle;
+  final String imageUrl;
+  final String price;
   final GeminiService _geminiService = GeminiService();
 
-  ItemDetail? _itemDetail;
-  bool _isLoading = false;
-  String? _error;
+  ItemDetailViewModel({
+    required this.context,
+    required this.itemTitle,
+    required this.imageUrl,
+    required this.price,
+  });
 
-  ItemDetail? get itemDetail => _itemDetail;
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-
-  Future<void> fetchItemDetail(
-    String itemTitle,
-    String imageUrl,
-    String price,
-  ) async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
-    try {
-      _itemDetail = await _geminiService.getDetailByName(
-        itemTitle,
-        imageUrl,
-        price,
-      );
-    } catch (e) {
-      _error = e.toString();
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+  Future<ItemDetail> getItemDetail() async {
+    return await _geminiService.getDetailByName(itemTitle, imageUrl, price);
   }
 }

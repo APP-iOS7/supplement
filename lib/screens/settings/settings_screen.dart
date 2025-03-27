@@ -1,99 +1,134 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:supplementary_app/providers/theme_provider.dart';
+import 'package:supplementary_app/screens/login/get_info_screen.dart';
+import 'package:supplementary_app/screens/login/login_screen.dart';
+import 'package:supplementary_app/services/auth_service.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
   @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('설정', style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {
-              // Handle notification action
-            },
-          ),
-        ],
-      ),
       body: ListView(
         children: [
-          // Personal Settings Section
-          _buildSettingItem(context, '내 정보 수정', Icons.chevron_right),
-          _buildSettingItem(context, '알림 설정', Icons.chevron_right),
-          _buildSettingItem(context, '진동 설정', Icons.chevron_right),
-          _buildSettingItem(context, '개인화 설정', Icons.chevron_right),
-
-          // Divider
-          const Divider(height: 16, thickness: 8, color: Color(0xFFF5F5F5)),
-
-          // Service Settings Section
-          _buildSettingItem(context, '서비스 이용약관', Icons.chevron_right),
-          _buildSettingItem(context, '개인정보 처리방침', Icons.chevron_right),
-          _buildSettingItem(context, '청소년 보호 약관', Icons.chevron_right),
-          _buildSettingItem(context, '고객센터', Icons.chevron_right),
-
-          // Divider
-          const Divider(height: 16, thickness: 8, color: Color(0xFFF5F5F5)),
-
-          // Version Info
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('버전 정보', style: TextStyle(fontSize: 16)),
-                Text(
-                  '1.2.3',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                ),
-              ],
-            ),
-          ),
-
-          // Logout Button
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Icon(Icons.logout, color: Colors.red[400]),
-                const SizedBox(width: 8),
-                Text(
-                  '로그아웃',
-                  style: TextStyle(color: Colors.red[400], fontSize: 16),
-                ),
-              ],
-            ),
-          ),
-
-          // Bottom padding
-          const SizedBox(height: 40),
+          _themeToggle(context, themeProvider),
+          _editMyInfo(context),
+          const Divider(height: 16),
+          _versionInfo(context),
+          _signOut(context),
         ],
       ),
     );
   }
 
-  Widget _buildSettingItem(
-    BuildContext context,
-    String title,
-    IconData trailingIcon,
-  ) {
-    return InkWell(
-      onTap: () {
-        // Handle tap on setting item
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(title, style: const TextStyle(fontSize: 16)),
-            Icon(trailingIcon, color: Colors.grey),
-          ],
-        ),
+  Widget _themeToggle(BuildContext context, ThemeProvider themeProvider) {
+    final isCurrentlyDark = themeProvider.isDarkMode;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Icon(
+                isCurrentlyDark ? Icons.dark_mode : Icons.light_mode,
+                color: isCurrentlyDark ? null : Colors.amber,
+                size: 24,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '다크 모드',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+          Switch(
+            value: isCurrentlyDark,
+            onChanged: (value) => themeProvider.toggleTheme(),
+          ),
+        ],
       ),
+    );
+  }
+
+  ListTile _versionInfo(BuildContext context) {
+    return const ListTile(
+      leading: Icon(Icons.info_outline),
+      title: Text('버전 정보'),
+      trailing: Text('1.0.0'),
+    );
+  }
+
+  ListTile _signOut(BuildContext context) {
+    return ListTile(
+      leading: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
+      title: Text(
+        '로그아웃',
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
+      ),
+      onTap: () async {
+        final shouldLogout = await showDialog<bool>(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: const Text('로그아웃'),
+                content: const Text('정말 로그아웃 하시겠습니까?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('취소'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                      AuthService().signOut();
+                    },
+                    child: Text(
+                      '로그아웃',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+        );
+
+        if (shouldLogout == true) {
+          await AuthService().signOut();
+          if (context.mounted) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+              (route) => false,
+            );
+          }
+        }
+      },
+    );
+  }
+
+  ListTile _editMyInfo(BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.person_outline),
+      title: const Text('내 정보 수정'),
+      trailing: const Icon(Icons.chevron_right),
+      onTap:
+          () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => GetInfoScreen()),
+          ),
     );
   }
 }

@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/drinking_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/smoking_viewmodel.dart';
-import 'package:supplementary_app/widgets/option_card.dart';
+import 'package:supplementary_app/widgets/next_button.dart';
+import 'package:supplementary_app/widgets/option_cards.dart';
 
 class SmokingScreen extends StatelessWidget {
   const SmokingScreen({super.key});
@@ -18,17 +19,18 @@ class SmokingScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: const _SmokingScreenContent(),
+      child: const _SmokingScreen(),
     );
   }
 }
 
-class _SmokingScreenContent extends StatelessWidget {
-  const _SmokingScreenContent();
+class _SmokingScreen extends StatelessWidget {
+  const _SmokingScreen();
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<SmokingViewModel>(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(),
@@ -37,61 +39,31 @@ class _SmokingScreenContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '흡연 여부에 대해\n알려주세요',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+            Text('흡연 여부에 대해\n알려주세요', style: theme.textTheme.headlineMedium),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               '흡연을 하시는 경우 조심해야 할\n영양 성분이 있어요',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 30),
-            OptionCard(
+            OptionCard<bool>(
               title: '비흡연',
-              value: '비흡연',
-              selectedValue: viewModel.selectedOption ?? '',
-              onTap: viewModel.setSelectedOption,
+              value: false,
+              selectedValue: viewModel.isSmoker,
+              onTap: viewModel.setToNonSmoker,
             ),
             const SizedBox(height: 16),
-            OptionCard(
+            OptionCard<bool>(
               title: '흡연',
-              value: '흡연',
-              selectedValue: viewModel.selectedOption ?? '',
-              onTap: viewModel.setSelectedOption,
+              value: true,
+              selectedValue: viewModel.isSmoker,
+              onTap: viewModel.setToSmoker,
             ),
             const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed:
-                    viewModel.selectedOption != null
-                        ? () {
-                          viewModel.saveSmokingStatus();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const DrinkingScreen(),
-                            ),
-                          );
-                        }
-                        : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  '다음',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            NextButton(
+              canProceed: viewModel.isSmoker != null,
+              nextPage: const DrinkingScreen(),
+              onTap: viewModel.saveSmokingStatus,
             ),
           ],
         ),

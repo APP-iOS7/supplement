@@ -7,50 +7,21 @@ class AllergyViewModel extends ChangeNotifier {
   AllergyViewModel({required SupplementSurveyProvider surveyProvider})
     : _surveyProvider = surveyProvider;
 
-  String? selectedOption;
   final List<String> allergyTypes = ['견과류', '갑각류', '대두', '글루텐', '특정 알러지'];
   List<String> selectedAllergies = [];
   String specificAllergyInput = '';
+  bool? _hasAllergy;
 
-  bool get isNextButtonEnabled =>
-      selectedOption != null &&
-      (selectedOption != '알러지가 있어요' || selectedAllergies.isNotEmpty) &&
+  bool? get hasAllergy => _hasAllergy;
+
+  bool get canProceed =>
+      _hasAllergy != null &&
+      (_hasAllergy == false || selectedAllergies.isNotEmpty) &&
       (!selectedAllergies.contains('특정 알러지') ||
           specificAllergyInput.isNotEmpty);
 
-  void setSelectedOption(String option) {
-    selectedOption = option;
-    if (option == '알러지가 없어요') {
-      selectedAllergies.clear();
-      specificAllergyInput = '';
-    }
-    notifyListeners();
-  }
-
-  void toggleAllergy(String type) {
-    if (selectedAllergies.contains(type)) {
-      selectedAllergies.remove(type);
-      if (type == '특정 알러지') {
-        specificAllergyInput = '';
-      }
-    } else {
-      selectedAllergies.add(type);
-    }
-    notifyListeners();
-  }
-
-  void setSpecificAllergy(String input) {
-    specificAllergyInput = input;
-    notifyListeners();
-  }
-
-  void clearAllergies() {
-    selectedAllergies.clear();
-    notifyListeners();
-  }
-
-  void clearSpecificAllergyInput() {
-    specificAllergyInput = '';
+  void setAllergy(bool value) {
+    _hasAllergy = value;
     notifyListeners();
   }
 
@@ -71,21 +42,24 @@ class AllergyViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addToSurvey() {
-    List<String> allergies = List.from(selectedAllergies);
-    if (allergies.contains('특정 알러지') && specificAllergyInput.isNotEmpty) {
-      allergies.add(specificAllergyInput);
-    }
-    allergies.remove('특정 알러지');
-    _surveyProvider.addAlergies(allergies);
+  void clearSpecificAllergyInput() {
+    specificAllergyInput = '';
+    notifyListeners();
   }
 
-  void selectOption(String value) {
-    selectedOption = value;
-    if (value == '알러지가 없어요') {
-      clearAllergies();
-      clearSpecificAllergyInput();
+  void addToSurvey() {
+    if (_hasAllergy == null) return;
+
+    if (_hasAllergy == false) {
+      _surveyProvider.addAlergies([]);
+      return;
     }
-    notifyListeners();
+
+    List<String> allergies = List.from(selectedAllergies);
+    if (allergies.contains('특정 알러지') && specificAllergyInput.isNotEmpty) {
+      allergies.remove('특정 알러지');
+      allergies.add(specificAllergyInput);
+    }
+    _surveyProvider.addAlergies(allergies);
   }
 }

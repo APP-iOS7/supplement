@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:supplementary_app/providers/supplement_survey_provider.dart';
 import 'package:supplementary_app/screens/healthcheck/result_screen.dart';
 import 'package:supplementary_app/viewmodels/health_check/exercise_frequency_viewmodel.dart';
-import 'package:supplementary_app/widgets/option_card.dart';
+import 'package:supplementary_app/widgets/option_cards.dart';
+import 'package:supplementary_app/widgets/next_button.dart';
 
 class ExerciseFrequencyScreen extends StatelessWidget {
   const ExerciseFrequencyScreen({super.key});
@@ -18,17 +19,18 @@ class ExerciseFrequencyScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: const _ExerciseFrequencyScreenView(),
+      child: const _ExerciseFrequencyScreen(),
     );
   }
 }
 
-class _ExerciseFrequencyScreenView extends StatelessWidget {
-  const _ExerciseFrequencyScreenView();
+class _ExerciseFrequencyScreen extends StatelessWidget {
+  const _ExerciseFrequencyScreen();
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ExerciseFrequencyViewModel>(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(),
@@ -37,65 +39,29 @@ class _ExerciseFrequencyScreenView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '운동 빈도',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+            Text('운동 빈도', style: theme.textTheme.headlineMedium),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               '운동을 얼마나 자주 하나요?',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 30),
-
             ...viewModel.exerciseOptions.map(
-              (option) => Column(
-                children: [
-                  OptionCard(
-                    title: option['title']!,
-                    value: option['value']!,
-                    selectedValue: viewModel.selectedOption ?? '',
-                    onTap: viewModel.selectOption,
-                  ),
-                  const SizedBox(height: 16),
-                ],
+              (option) => Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: OptionCard<int>(
+                  title: option['title'],
+                  value: option['value'],
+                  selectedValue: viewModel.selectedOption,
+                  onTap: viewModel.selectOption,
+                ),
               ),
             ),
-
             const Spacer(),
-
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed:
-                    viewModel.selectedOption != null
-                        ? () {
-                          viewModel.addToSurvey();
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ResultScreen(),
-                            ),
-                            (route) => false,
-                          );
-                        }
-                        : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  '결과 보기',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            NextButton(
+              canProceed: viewModel.selectedOption != null,
+              nextPage: const ResultScreen(),
+              onTap: viewModel.addToSurvey,
             ),
           ],
         ),

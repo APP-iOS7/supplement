@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:supplementary_app/models/item_detail_model.dart';
 import 'package:supplementary_app/viewmodels/search/item_detail_view_model.dart';
 import 'package:supplementary_app/widgets/loading.dart';
@@ -18,113 +17,135 @@ class ItemDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) {
-        final viewModel = ItemDetailViewModel();
-        viewModel.fetchItemDetail(itemTitle, imageUrl, price);
-        return viewModel;
-      },
-      child: Consumer<ItemDetailViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.isLoading) {
-            return Scaffold(body: Loading());
+    final viewModel = ItemDetailViewModel(
+      context: context,
+      itemTitle: itemTitle,
+      imageUrl: imageUrl,
+      price: price,
+    );
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('')),
+      body: FutureBuilder<ItemDetail>(
+        future: viewModel.getItemDetail(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Loading();
           }
 
-          if (viewModel.error != null) {
-            return Scaffold(
-              appBar: AppBar(title: const Text('상세 정보')),
-              body: Center(
-                child: Text(
-                  '오류가 발생했습니다: ${viewModel.error}',
-                  style: const TextStyle(fontSize: 18, color: Colors.red),
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                '오류가 발생했습니다: ${snapshot.error}',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.error,
                 ),
               ),
             );
           }
 
-          if (viewModel.itemDetail == null) {
-            return Scaffold(
-              appBar: AppBar(title: Text('상세 정보')),
-              body: Center(
-                child: Text(
-                  '정보를 불러올 수 없습니다',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
-                ),
-              ),
+          if (!snapshot.hasData) {
+            return const Center(
+              child: Text('정보를 불러올 수 없습니다', style: TextStyle(fontSize: 18)),
             );
           }
 
-          return Scaffold(
-            appBar: AppBar(title: Text(viewModel.itemDetail!.name)),
-            body: _buildDetailContent(viewModel.itemDetail!),
-          );
+          final itemDetail = snapshot.data!;
+          return _buildDetailContent(context, itemDetail, imageUrl);
         },
       ),
     );
   }
+}
 
-  Widget _buildDetailContent(ItemDetail itemDetail) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.network(itemDetail.imageUrl),
-          Text(
-            itemDetail.name,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+Widget _buildDetailContent(
+  BuildContext context,
+  ItemDetail itemDetail,
+  String imageUrl,
+) {
+  return SingleChildScrollView(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildImageSection(imageUrl),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTitleSection(context, itemDetail.name),
+              const SizedBox(height: 16),
+              _buildPriceAndRatingRow(context, itemDetail),
+              const SizedBox(height: 24),
+              _buildInfoCard('제품 정보', [
+                _buildInfoRow('제조사', itemDetail.manufacturer),
+                _buildInfoRow('설명', itemDetail.description),
+              ]),
+              const SizedBox(height: 16),
+              _buildInfoCard('성분 및 기능', [
+                _buildInfoRow('성분', itemDetail.ingredients.join(', ')),
+                _buildInfoRow('기능성', itemDetail.functionality),
+              ]),
+              const SizedBox(height: 16),
+              _buildInfoCard('복용 정보', [
+                _buildInfoRow('복용법', itemDetail.dosage),
+                _buildInfoRow('부작용', itemDetail.sideEffects),
+                _buildInfoRow('주의사항', itemDetail.caution),
+              ]),
+            ],
           ),
-          const SizedBox(height: 20),
-          _buildPriceSection(itemDetail.price),
-          _buildSection('제조사', itemDetail.manufacturer),
-          _buildSection('설명', itemDetail.description),
-          _buildSection('성분', itemDetail.ingredients.join(', ')),
-          _buildSection('기능성', itemDetail.functionality),
-          _buildSection('복용법', itemDetail.dosage),
-          _buildSection('부작용', itemDetail.sideEffects),
-          _buildSection('주의사항', itemDetail.caution),
-          _buildRatingSection(itemDetail.rating),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPriceSection(String price) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Text(
-        '가격: $price',
-        style: const TextStyle(
-          fontSize: 20,
-          color: Colors.blue,
-          fontWeight: FontWeight.bold,
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 
-  Widget _buildRatingSection(double rating) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: Row(
+Widget _buildImageSection(String imageUrl) {
+  return SizedBox(
+    height: 300,
+    child: Center(
+      child: Image.network(imageUrl, fit: BoxFit.contain, height: 250),
+    ),
+  );
+}
+
+Widget _buildTitleSection(BuildContext context, String name) {
+  return Text(
+    name,
+    style: Theme.of(
+      context,
+    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+  );
+}
+
+Widget _buildPriceAndRatingRow(BuildContext context, ItemDetail itemDetail) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        '${itemDetail.price}원',
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+      Row(
         children: [
-          const Text('평점: ', style: TextStyle(fontSize: 18)),
+          const Icon(Icons.star, color: Colors.amber, size: 20),
+          const SizedBox(width: 4),
           Text(
-            rating.toString(),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.orange,
-            ),
+            itemDetail.rating.toString(),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ],
       ),
-    );
-  }
+    ],
+  );
+}
 
-  Widget _buildSection(String title, String content) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+Widget _buildInfoCard(String title, List<Widget> content) {
+  return Card(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -132,10 +153,31 @@ class ItemDetailScreen extends StatelessWidget {
             title,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 4),
-          Text(content, style: const TextStyle(fontSize: 16)),
+          const SizedBox(height: 12),
+          ...content,
         ],
       ),
-    );
-  }
+    ),
+  );
+}
+
+Widget _buildInfoRow(String label, String content) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(content),
+      ],
+    ),
+  );
 }

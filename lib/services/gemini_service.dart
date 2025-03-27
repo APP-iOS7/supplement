@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:supplementary_app/models/gemini_answer_model.dart';
+import 'package:supplementary_app/models/recommend_item_model.dart';
 import 'package:supplementary_app/models/item_detail_model.dart';
 import 'package:supplementary_app/models/supplement_survey_model.dart';
 import 'package:supplementary_app/models/user_model.dart';
@@ -10,7 +10,7 @@ class GeminiService {
   final String _baseUrl =
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${Secrets.geminiApi}';
 
-  Future<AnswerModel> getRecommendSupplement({
+  Future<RecommendItemModel> getRecommendSupplement({
     required UserModel user,
     required SupplementSurveyModel survey,
   }) async {
@@ -26,6 +26,7 @@ class GeminiService {
 ]
 이를 위해 도움이 되는 영양제 제품 1개를 추천해줘. 
 브랜드명을 포함한 정확한 제품명을 제공해줘. 
+가격은 원 단위로 포멧팅을 해서 제공해줘. ex) 10,000
 반드시 JSON 형식으로 응답해야 하며, 줄바꿈 없이 한 줄 JSON으로 반환해. 
 JSON 코드 블록( ```json ... ``` )을 사용하지 마. 
 추가적인 설명 없이 순수한 JSON 데이터만 반환해. 
@@ -73,7 +74,7 @@ JSON 코드 블록( ```json ... ``` )을 사용하지 마.
         final parsedJson = jsonDecode(jsonText) as Map<String, dynamic>;
         final recommendation =
             parsedJson['recommendation'] as Map<String, dynamic>;
-        return AnswerModel.fromJson(recommendation);
+        return RecommendItemModel.fromJson(recommendation);
       } catch (e) {
         print('JSON 파싱 오류: $e');
         throw '데이터를 불러오는 중 오류 발생';
@@ -101,7 +102,8 @@ $productName에 대한 상세 정보를 제공해줘.
 반드시 JSON 형식으로 응답해야 하며, 줄바꿈 없이 한 줄 JSON으로 반환해. 
 JSON 코드 블록( ```json ... ``` )을 사용하지 마. 
 추가적인 설명 없이 순수한 JSON 데이터만 반환해. 
-
+가격은 원 단위로 포멧팅을 해서 제공해줘.ex) 10,000
+이미지 주소는 그대로 사용해줘
 정확한 JSON 형식은 다음과 같아:
 
 {
@@ -121,6 +123,7 @@ JSON 코드 블록( ```json ... ``` )을 사용하지 마.
 }
 
 줄바꿈 없이, 한 줄 JSON 데이터만 응답해.
+모든 내용은 한국어야해
 ''',
             },
           ],
@@ -139,7 +142,6 @@ JSON 코드 블록( ```json ... ``` )을 사용하지 마.
         final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
         final String jsonText =
             jsonResponse['candidates'][0]['content']['parts'][0]['text'];
-
         final parsedJson = jsonDecode(jsonText) as Map<String, dynamic>;
         final detail = parsedJson['detail'] as Map<String, dynamic>;
         return ItemDetail.fromJson(detail);

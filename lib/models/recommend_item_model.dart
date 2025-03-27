@@ -1,4 +1,4 @@
-class AnswerModel {
+class RecommendItemModel {
   String name;
   String caution;
   String functionality;
@@ -13,7 +13,7 @@ class AnswerModel {
   double rating;
   String? imageLink;
 
-  AnswerModel({
+  RecommendItemModel({
     required this.name,
     required this.caution,
     required this.functionality,
@@ -29,8 +29,8 @@ class AnswerModel {
     this.imageLink,
   });
 
-  factory AnswerModel.fromJson(Map<String, dynamic> json) {
-    return AnswerModel(
+  factory RecommendItemModel.fromJson(Map<String, dynamic> json) {
+    return RecommendItemModel(
       name: json['name'],
       caution: json['caution'],
       functionality: json['functionality'],

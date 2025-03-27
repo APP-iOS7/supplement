@@ -14,87 +14,66 @@ class SearchScreen extends StatelessWidget {
       create: (_) => SearchViewModel(),
       child: Consumer<SearchViewModel>(
         builder: (context, viewModel, child) {
-          return Scaffold(
-            appBar: AppBar(title: Text('Search')),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  _buildSearchBar(context, viewModel),
-                  const SizedBox(height: 20),
-                  _buildSearchResults(viewModel),
-                ],
-              ),
-            ),
-            backgroundColor: Colors.grey[100],
-          );
+          return _SearchScreen(viewModel: viewModel);
         },
       ),
     );
   }
+}
 
-  Widget _buildSearchBar(BuildContext context, SearchViewModel viewModel) {
+class _SearchScreen extends StatelessWidget {
+  const _SearchScreen({required this.viewModel});
+  final SearchViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildSearchBar(context),
+              const SizedBox(height: 20),
+              _buildSearchResults(context),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchBar(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: _buildSearchTextField(context, viewModel)),
+        Expanded(child: _buildSearchTextField(context)),
         const SizedBox(width: 10),
-        _buildSearchButton(context, viewModel),
+        _buildSearchButton(context),
       ],
     );
   }
 
-  Widget _buildSearchTextField(
-    BuildContext context,
-    SearchViewModel viewModel,
-  ) {
+  Widget _buildSearchTextField(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(30),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: Color(0xFF51B47B)),
       ),
       child: TextField(
         controller: viewModel.controller,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           hintText: 'Search...',
           border: InputBorder.none,
-          prefixIcon: Icon(
-            Icons.search,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+          prefixIcon: Icon(Icons.search),
           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
       ),
     );
   }
 
-  Widget _buildSearchButton(BuildContext context, SearchViewModel viewModel) {
-    return ElevatedButton(
-      onPressed: viewModel.executeSearch,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      ),
-      child: const Icon(Icons.search, color: Colors.white),
-    );
-  }
-
-  Widget _buildSearchResults(SearchViewModel viewModel) {
+  Widget _buildSearchResults(BuildContext context) {
     if (viewModel.searchFuture == null) {
-      return const Center(
-        child: Text(
-          '검색어를 입력하세요',
-          style: TextStyle(fontSize: 18, color: Colors.grey),
-        ),
-      );
+      return const Expanded(child: Center(child: Text('검색어를 입력하세요')));
     }
 
     return Expanded(
@@ -109,48 +88,38 @@ class SearchScreen extends StatelessWidget {
             return Center(
               child: Text(
                 '오류가 발생했습니다: ${snapshot.error}',
-                style: const TextStyle(fontSize: 18, color: Colors.red),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.error,
+                ),
               ),
             );
           }
 
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                '검색 결과가 없습니다',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
-              ),
-            );
+            return const Center(child: Text('검색 결과가 없습니다'));
           }
 
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder:
                 (context, index) =>
-                    _buildResultCard(snapshot.data![index], context, viewModel),
+                    _buildResultCard(snapshot.data![index], context),
           );
         },
       ),
     );
   }
 
-  Widget _buildResultCard(
-    SearchItem item,
-    BuildContext context,
-    SearchViewModel viewModel,
-  ) {
+  Widget _buildResultCard(SearchItem item, BuildContext context) {
     return Card(
-      elevation: 3,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: ListTile(
         leading: Image.network(item.image),
-        title: Text(
-          item.title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
+        title: Text(item.title),
         subtitle: Row(
-          children: [Text('${item.lprice}원'), Spacer(), Text(item.brand)],
+          children: [Text('${item.lprice}원'), const Spacer(), Text(item.brand)],
         ),
         onTap: () {
           Navigator.push(
@@ -166,6 +135,13 @@ class SearchScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildSearchButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: viewModel.executeSearch,
+      child: Icon(Icons.search, color: Colors.white),
     );
   }
 }

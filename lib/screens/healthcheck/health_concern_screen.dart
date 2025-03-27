@@ -17,125 +17,115 @@ class HealthConcernScreen extends StatelessWidget {
               listen: false,
             ),
           ),
-      child: _HealthConcernScreen(),
+      child: const _HealthConcernScreen(),
     );
   }
 }
 
 class _HealthConcernScreen extends StatelessWidget {
+  const _HealthConcernScreen();
+
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<HealthConcernViewModel>(
-      context,
-      listen: true,
-    );
+    final viewModel = Provider.of<HealthConcernViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(),
       body: Column(
         children: [
-          _buildHeader(viewModel),
-          _buildGridView(viewModel),
-          _buildFooter(context, viewModel),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildTitle(context, viewModel),
+                  _buildGridView(context, viewModel),
+                ],
+              ),
+            ),
+          ),
+          _buildButton(context, viewModel),
         ],
       ),
     );
   }
 
-  Widget _buildHeader(HealthConcernViewModel viewModel) {
+  Widget _buildTitle(BuildContext context, HealthConcernViewModel viewModel) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             '고민되시거나 개선하고 싶은\n건강고민을 선택해주세요',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 10),
           Text(
             '최대 ${viewModel.maxSelections}개 선택',
-            style: TextStyle(color: Colors.grey, fontSize: 16),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildGridView(HealthConcernViewModel viewModel) {
-    return Expanded(
-      child: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 0.85,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-        ),
-        itemCount: viewModel.healthConcerns.length,
-        itemBuilder: (context, index) {
-          final concern = viewModel.healthConcerns[index];
-          return _buildGridItem(context, concern, viewModel, index);
-        },
+  Widget _buildGridView(
+    BuildContext context,
+    HealthConcernViewModel viewModel,
+  ) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 0.85,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
       ),
+      itemCount: viewModel.healthConcerns.length,
+      itemBuilder: (context, index) {
+        final concern = viewModel.healthConcerns[index];
+        return _buildGridItem(context, concern, viewModel, index);
+      },
     );
   }
 
   Widget _buildGridItem(
     BuildContext context,
-    Map<String, dynamic> concern,
+    HealthConcern concern,
     HealthConcernViewModel viewModel,
     int index,
   ) {
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: () => viewModel.toggleSelection(index),
       child: Container(
         decoration: BoxDecoration(
           color:
-              concern['isSelected']
-                  ? Theme.of(context).colorScheme.primaryContainer
-                  : Colors.grey.shade100,
+              concern.isSelected
+                  ? theme.colorScheme.primaryContainer
+                  : theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
           border:
-              concern['isSelected']
-                  ? Border.all(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 2,
-                  )
+              concern.isSelected
+                  ? Border.all(color: theme.colorScheme.primary, width: 2)
                   : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (concern['tag'].isNotEmpty)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.purple.shade300,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  concern['tag'],
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
-                ),
-              ),
-            const SizedBox(height: 8),
-            Image.asset(
-              concern['icon'],
-              width: 60,
-              height: 60,
-              errorBuilder: (context, error, stackTrace) {
-                return Icon(
-                  Icons.healing,
-                  size: 60,
-                  color: Colors.blue.shade700,
-                );
-              },
-            ),
+            Image.asset(concern.iconPath, width: 60, height: 60),
             const SizedBox(height: 8),
             Text(
-              concern['title'],
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+              concern.title,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
@@ -143,14 +133,16 @@ class _HealthConcernScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter(BuildContext context, HealthConcernViewModel viewModel) {
+  Widget _buildButton(BuildContext context, HealthConcernViewModel viewModel) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: ElevatedButton(
         onPressed:
             viewModel.selectedCount > 0
                 ? () {
-                  viewModel.addToSurvey(); // 선택된 데이터 저장
+                  viewModel.addToSurvey();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -160,7 +152,7 @@ class _HealthConcernScreen extends StatelessWidget {
                 }
                 : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: theme.colorScheme.primary,
           minimumSize: const Size(double.infinity, 56),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -169,18 +161,20 @@ class _HealthConcernScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               '확인',
-              style: TextStyle(
+              style: theme.textTheme.titleLarge?.copyWith(
                 color: Colors.white,
-                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const Spacer(),
             Text(
               '${viewModel.selectedCount}/${viewModel.maxSelections}',
-              style: const TextStyle(color: Colors.white, fontSize: 16),
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
