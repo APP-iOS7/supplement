@@ -73,7 +73,7 @@ app.*.map.json
 /android/app/release
 
 # Api keys
-secrets.dart
+# secrets.dart
 
 # test
 test.dart
