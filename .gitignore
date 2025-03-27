@@ -74,3 +74,6 @@ app.*.map.json
 
 # Api keys
 secrets.dart
+
+# test
+test.dart
